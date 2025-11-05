@@ -12,6 +12,21 @@ const BLOG_IMAGES = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "otkaz-ugovora-vodic-2025",
+    title: "Otkaz ugovora o radu (FBiH & RS) – praktični vodič za 2025",
+    excerpt: "Kompletan pregled pravila o prestanku radnog odnosa otkazom u FBiH i RS, sa ključnim razlikama, rokovima i postupovnim koracima.",
+    content: `Kompletan vodič sa svim detaljima...`,
+    date: "2025-01-29",
+    readMinutes: 12,
+    tags: ["Radno pravo", "FBiH", "RS", "Vodič 2025"],
+    author: {
+      name: "Andrić Law",
+      role: "Advokatski ured"
+    },
+    featured: true,
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
+  },
+  {
     slug: "otkaz-ugovora-o-radu-fbih",
     title: "Otkaz ugovora o radu – vodič za poslodavce u FBiH",
     excerpt: "Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova.",
