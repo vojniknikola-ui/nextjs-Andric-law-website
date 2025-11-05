@@ -79,7 +79,7 @@ export default function AndricLawLanding() {
 function QuickActions() {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-      <a href="https://wa.me/38761000000" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full px-5 py-3 bg-[#25D366] hover:bg-[#1DA851] text-white shadow-lg border border-white/10">
+      <a href="https://wa.me/38761000000" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full px-5 py-3 bg-[#128C7E] hover:bg-[#075E54] text-white font-semibold shadow-lg border border-white/10">
         <MessageSquare className="size-4" /> WhatsApp
       </a>
       <a href="tel:+38761000000" className="inline-flex items-center gap-2 rounded-full px-5 py-3 bg-white/90 hover:bg-white text-slate-900 font-semibold shadow-lg border border-white/10">
