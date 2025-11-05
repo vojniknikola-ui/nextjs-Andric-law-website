@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 export default function AndricLawLanding() {
-  const kontaktRef = useRef(null);
+  const kontaktRef = useRef<HTMLElement>(null);
 
   const scrollToKontakt = () => {
     kontaktRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
