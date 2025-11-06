@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { ServiceCard } from './ServiceCard';
 import { ServiceModal } from './ServiceModal';
 import {
-  Scale, FileText, Briefcase, ShieldCheck, Handshake, Gavel,
-  TrendingUp, Users, Award
+  Scale, FileText, Briefcase, ShieldCheck, Handshake, Gavel
 } from 'lucide-react';
 
 const services = [
@@ -139,12 +138,6 @@ const services = [
   },
 ];
 
-const stats = [
-  { icon: <TrendingUp className="size-5" />, value: "500+", label: "Uspješnih slučajeva" },
-  { icon: <Users className="size-5" />, value: "200+", label: "Zadovoljnih klijenata" },
-  { icon: <Award className="size-5" />, value: "15+", label: "Godina iskustva" },
-];
-
 export function ServicesSection() {
   const [openModal, setOpenModal] = useState(false);
   const [activeService, setActiveService] = useState<any>(null);
@@ -182,30 +175,6 @@ export function ServicesSection() {
               Konzistentan pristup i jasna dokumentacija, prilagođeno kompanijama i osnivačima. 
               Fokus na preventivi i smanjenju pravnih rizika.
             </p>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="group relative rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-6 hover:border-white/20 hover:shadow-xl hover:shadow-black/10 transition-all duration-300"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="size-12 rounded-xl bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center text-zinc-300 group-hover:scale-110 transition-transform">
-                    {stat.icon}
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-slate-50 mb-1">
-                      {stat.value}
-                    </div>
-                    <div className="text-sm text-slate-400">
-                      {stat.label}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
 
           {/* Services Grid */}
