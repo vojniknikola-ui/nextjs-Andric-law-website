@@ -1,4 +1,4 @@
-import { getBlogPosts } from '@/lib/blog';
+import { getAllPosts } from '@/lib/blog';
 import SearchFilters from './SearchFilters';
 
 type Category = 'zakoni' | 'sudska-praksa' | 'vijesti-clanci' | 'all';
@@ -16,7 +16,7 @@ const MOCK_DATA = {
 };
 
 async function searchContent(query: string, filter: Category) {
-  const posts = getBlogPosts();
+  const posts = await getAllPosts();
   
   let results: any[] = [];
   

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getBlogPosts } from '@/lib/blog';
+import { getAllPosts } from '@/lib/blog';
 
 export const runtime = 'edge';
 
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
 
   try {
     if (filter === 'all' || filter === 'vijesti-clanci') {
-      const posts = getBlogPosts();
+      const posts = await getAllPosts();
       const filtered = posts.filter(p =>
         p.title.toLowerCase().includes(q) ||
         p.content?.toLowerCase().includes(q) ||
