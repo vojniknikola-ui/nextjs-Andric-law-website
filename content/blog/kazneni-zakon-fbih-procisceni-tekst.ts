@@ -29,10 +29,13 @@ Zakon obuhvaća izmjene iz:
 
 Ovo je neslužbeni pročišćeni tekst koji služi isključivo za informativne svrhe. Za službenu uporabu potrebno je konzultirati originalne tekstove objavljene u "Službenim novinama Federacije BiH".
   `,
-  date: new Date('2025-01-08'),
-  author: 'Advokatska kancelarija Andrić',
+  date: '2025-01-08',
+  readMinutes: 2,
   tags: ['Kazneno pravo', 'Zakoni', 'Federacija BiH', 'Pročišćeni tekst'],
-  category: 'Zakoni',
-  readTime: 2,
+  author: {
+    name: 'Andrić Law',
+    role: 'Advokatski ured'
+  },
   featured: true,
+  image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
 };
