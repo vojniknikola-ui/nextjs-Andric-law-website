@@ -49,6 +49,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
+export const dynamicParams = true;
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPostBySlug(params.slug);
