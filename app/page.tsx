@@ -1,9 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-
-export const dynamic = 'force-static';
-export const revalidate = 3600; // ISR - 1 hour
 import Link from "next/link";
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
