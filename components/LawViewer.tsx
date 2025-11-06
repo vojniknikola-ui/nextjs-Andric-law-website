@@ -76,6 +76,7 @@ function parseLawContent(content: string): LawSection[] {
   let currentContent: string[] = [];
   let inHistory = false;
   let historyContent: string[] = [];
+  let pendingGlava: string | null = null;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -95,7 +96,8 @@ function parseLawContent(content: string): LawSection[] {
         title: line,
         content: '',
       };
-      currentContent = [line];
+      currentContent = pendingGlava ? [pendingGlava, line] : [line];
+      pendingGlava = null;
       historyContent = [];
       inHistory = false;
       continue;
@@ -103,6 +105,11 @@ function parseLawContent(content: string): LawSection[] {
 
     if (line.includes('Historijat izmjena')) {
       inHistory = true;
+      continue;
+    }
+
+    if (line.match(/^\\?\*\\?\*GLAVA/i) || line.match(/^GLAVA/i)) {
+      pendingGlava = line;
       continue;
     }
 
