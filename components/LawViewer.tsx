@@ -28,6 +28,19 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
+      <div className="mb-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+            {/* Logo placeholder */}
+            <span className="text-2xl">⚖️</span>
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-900">Andrić Law</h1>
+            <p className="text-gray-600">Advokatska kancelarija</p>
+          </div>
+        </div>
+      </div>
+      
       {sections.map(section => (
         <article key={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           <div className="text-black leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }} />
