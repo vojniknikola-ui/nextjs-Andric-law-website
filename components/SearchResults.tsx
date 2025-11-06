@@ -37,20 +37,21 @@ function calculateRelevance(post: any, query: string) {
   return score;
 }
 
-function extractRelevantSnippet(text: string, query: string, maxLength: number = 200) {
+function extractRelevantSnippet(text: string, query: string, maxLength: number = 250) {
   const q = query.toLowerCase();
   const words = q.split(/\s+/).filter(w => w.length > 2);
   const lowerText = text.toLowerCase();
   
-  // Find first occurrence of any search word
-  let bestIndex = -1;
-  let bestWord = '';
+  // Try to find exact phrase first
+  let bestIndex = lowerText.indexOf(q);
   
-  for (const word of words) {
-    const index = lowerText.indexOf(word);
-    if (index !== -1 && (bestIndex === -1 || index < bestIndex)) {
-      bestIndex = index;
-      bestWord = word;
+  // If not found, find first occurrence of any search word
+  if (bestIndex === -1) {
+    for (const word of words) {
+      const index = lowerText.indexOf(word);
+      if (index !== -1 && (bestIndex === -1 || index < bestIndex)) {
+        bestIndex = index;
+      }
     }
   }
   
@@ -58,11 +59,14 @@ function extractRelevantSnippet(text: string, query: string, maxLength: number =
     return text.substring(0, maxLength) + '...';
   }
   
-  // Extract context around the match
-  const start = Math.max(0, bestIndex - 80);
-  const end = Math.min(text.length, bestIndex + maxLength - 80);
+  // Find sentence boundaries
+  const sentenceStart = text.lastIndexOf('.', bestIndex) + 1;
+  const sentenceEnd = text.indexOf('.', bestIndex + 50);
   
-  let snippet = text.substring(start, end);
+  const start = sentenceStart > 0 && (bestIndex - sentenceStart) < 100 ? sentenceStart : Math.max(0, bestIndex - 60);
+  const end = sentenceEnd > 0 && (sentenceEnd - bestIndex) < 150 ? sentenceEnd + 1 : Math.min(text.length, bestIndex + maxLength - 60);
+  
+  let snippet = text.substring(start, end).trim();
   if (start > 0) snippet = '...' + snippet;
   if (end < text.length) snippet = snippet + '...';
   
@@ -97,6 +101,18 @@ async function searchContent(query: string, filter: Category) {
   return results;
 }
 
+function highlightText(text: string, query: string) {
+  const words = query.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+  let highlighted = text;
+  
+  words.forEach(word => {
+    const regex = new RegExp(`(${word})`, 'gi');
+    highlighted = highlighted.replace(regex, '<mark class="bg-yellow-200 font-semibold">$1</mark>');
+  });
+  
+  return highlighted;
+}
+
 export default async function SearchResults({ query, filter }: { query?: string; filter?: string }) {
   if (!query) {
     return (
@@ -116,7 +132,15 @@ export default async function SearchResults({ query, filter }: { query?: string;
 
   return (
     <>
-      <SearchFilters currentFilter={activeFilter} query={query} />
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-sm text-gray-600">Pretražujete:</span>
+          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-semibold">
+            "{query}"
+          </span>
+        </div>
+        <SearchFilters currentFilter={activeFilter} query={query} />
+      </div>
       
       <div className="mt-8">
         {results.length === 0 ? (
@@ -157,9 +181,15 @@ export default async function SearchResults({ query, filter }: { query?: string;
                   <h2 className="text-xl font-bold mb-3 text-gray-900 hover:text-blue-600 transition">
                     {result.title}
                   </h2>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                    {result.relevantSnippet || result.excerpt}
-                  </p>
+                  <div className="bg-gray-50 border-l-2 border-blue-400 p-3 mb-3 rounded">
+                    <p className="text-xs text-gray-500 mb-1 font-semibold">Pronađeno u tekstu:</p>
+                    <p 
+                      className="text-gray-800 text-sm leading-relaxed"
+                      dangerouslySetInnerHTML={{ 
+                        __html: highlightText(result.relevantSnippet || result.excerpt || '', query) 
+                      }}
+                    />
+                  </div>
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <span>•</span>
                     <span>{new Date(result.date).toLocaleDateString('bs-BA')}</span>
