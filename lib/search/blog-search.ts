@@ -206,10 +206,75 @@ const createHighlightedSnippet = (text: string, tokens: string[]): HighlightSnip
     return null;
   }
 
-  const mask = buildHighlightMask(text, tokens);
-  const firstHighlight = mask.findIndex(Boolean);
+  const { normalized, map } = buildNormalizationIndex(text);
+  const normalizedLower = normalized.toLowerCase();
+  const relevantTokens = tokens.filter(Boolean);
 
-  if (firstHighlight === -1) {
+  const findPhraseRange = (): { start: number; end: number } | null => {
+    if (relevantTokens.length === 0) {
+      return null;
+    }
+
+    if (relevantTokens.length === 1) {
+      const pos = normalizedLower.indexOf(relevantTokens[0]);
+      return pos === -1 ? null : { start: pos, end: pos + relevantTokens[0].length };
+    }
+
+    const MAX_GAP = 40;
+    const positions = relevantTokens.map((token) => {
+      const indexes: number[] = [];
+      let idx = normalizedLower.indexOf(token);
+      while (idx !== -1) {
+        indexes.push(idx);
+        idx = normalizedLower.indexOf(token, idx + 1);
+      }
+      return indexes;
+    });
+
+    if (positions.some((list) => list.length === 0)) {
+      return null;
+    }
+
+    for (const startPos of positions[0]) {
+      let currentEnd = startPos + relevantTokens[0].length;
+      let valid = true;
+
+      for (let i = 1; i < positions.length; i += 1) {
+        const nextPos = positions[i].find((pos) => pos >= currentEnd && pos - currentEnd <= MAX_GAP);
+        if (nextPos === undefined) {
+          valid = false;
+          break;
+        }
+        currentEnd = nextPos + relevantTokens[i].length;
+      }
+
+      if (valid) {
+        return { start: startPos, end: currentEnd };
+      }
+    }
+
+    const longestToken = [...relevantTokens].sort((a, b) => b.length - a.length)[0];
+    if (!longestToken) {
+      return null;
+    }
+    const pos = normalizedLower.indexOf(longestToken);
+    return pos === -1 ? null : { start: pos, end: pos + longestToken.length };
+  };
+
+  const phraseRange = findPhraseRange();
+  const mask = buildHighlightMask(text, tokens);
+
+  let firstHighlight = mask.findIndex(Boolean);
+  let lastHighlight = mask.length - 1 - [...mask].reverse().findIndex(Boolean);
+
+  if (phraseRange) {
+    const mappedStart = map[phraseRange.start] ?? 0;
+    const mappedEnd = map[Math.min(map.length - 1, phraseRange.end - 1)] ?? mappedStart;
+    firstHighlight = mappedStart;
+    lastHighlight = Math.max(mappedEnd, mappedStart);
+  }
+
+  if (firstHighlight === -1 || lastHighlight < firstHighlight) {
     const trimmed = text.trim();
     if (!trimmed) {
       return null;
@@ -223,7 +288,6 @@ const createHighlightedSnippet = (text: string, tokens: string[]): HighlightSnip
     };
   }
 
-  const lastHighlight = mask.length - 1 - [...mask].reverse().findIndex(Boolean);
   const highlightedSpan = lastHighlight - firstHighlight;
   const availablePadding = Math.max(0, SNIPPET_LENGTH - highlightedSpan);
   let start = Math.max(0, firstHighlight - Math.floor(availablePadding / 2));
