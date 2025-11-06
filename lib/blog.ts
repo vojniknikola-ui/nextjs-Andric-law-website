@@ -12,6 +12,128 @@ const BLOG_IMAGES = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "zakon-o-izmjenama-stvarnih-prava-rs",
+    title: "Zakon o izmjenama i dopunama Zakona o stvarnim pravima RS",
+    excerpt: "Zakon koji uređuje pretvaranje prava korištenja, upravljanja i raspolaganja u pravo svojine u Republici Srpskoj.",
+    content: `# ZAKON O IZMJENAMA I DOPUNAMA ZAKONA O STVARNIM PRAVIMA
+
+**Službeni glasnik Republike Srpske, br. 124/08 i 58/09**
+
+---
+
+## Član 1. - Izmjena terminologije
+
+U članu 21. u stavu 2. Zakona o stvarnim pravima ("Službeni glasnik Republike Srpske", br. 124/08 i 58/09), (u daljem tekstu: Zakon), riječi: **"žemiljišnu knjigu"**, zamjenjuju se riječima: **"javnu evidenciju"**, kao i u cijelom tekstu Zakona u odgovarajućem padežu.
+
+---
+
+## Član 2. - Pretvaranje prava korištenja, upravljanja ili raspolaganja
+
+Član 324. mijenja se i glasi:
+
+### Član 324.
+
+**(1)** Ako posebnim zakonom nije drugačije propisano, **pravo upravljanja, korištenja ili raspolaganja** kao osnovno pravo na stvarima u društvenoj, odnosno državnoj svojini, koje do stupanja na snagu ovog zakona nisu postala svojina drugog lica, **pretvara se u pravo svojine** njegovog dosadašnjeg nosioca ili njegovog pravnog sljednika, ako te stvari mogu biti predmet svojine.
+
+**(2)** Nosilac prava upravljanja, korištenja ili raspolaganja na nepokretnostima u društvenoj, odnosno državnoj svojini iz stava 1. ovog člana je **pravno lice čiji je kapital 100% u svojini Republike Srpske**.
+
+**(3)** Pravo upravljanja, korištenja ili raspolaganja na nepokretnostima u društvenoj, odnosno državnoj svojini, koje do stupanja na snagu ovog zakona nisu postale svojina drugog lica, **pretvara se u pravo svojine jedinice lokalne samouprave** na čijoj se teritoriji nalazi ta nepokretnost, ako je nosilac tog prava prestao da postoji i nema pravnog sljednika.
+
+---
+
+## Član 3. - Pretvaranje prava na gradskom građevinskom zemljištu
+
+Naslov člana i član 325. mijenjaju se i glase:
+
+### Pretvaranje prava na gradskom građevinskom zemljištu u pravo svojine
+
+### Član 325.
+
+**Privremeno pravo korištenja do preuzimanja**, **pravo korištenja radi građenja** i **trajno pravo korištenja** na gradskom građevinskom zemljištu u društvenoj, odnosno državnoj svojini, koje do stupanja na snagu ovog zakona nije postalo svojina drugog lica, **pretvara se u pravo svojine** njegovog dosadašnjeg nosioca, odnosno njegovog pravnog sljednika.
+
+---
+
+## Ključne odredbe
+
+### 1. Automatsko pretvaranje prava
+
+Prava korištenja, upravljanja i raspolaganja **automatski se pretvaraju u pravo svojine** bez potrebe za posebnim postupkom.
+
+### 2. Nosioci prava
+
+- **Pravna lica sa 100% kapitalom RS** - postaju vlasnici nepokretnosti
+- **Jedinice lokalne samouprave** - postaju vlasnici ako nosilac prava više ne postoji
+- **Fizička i pravna lica** - nosioci prava na građevinskom zemljištu postaju vlasnici
+
+### 3. Vrste prava koja se pretvaraju
+
+- Pravo upravljanja
+- Pravo korištenja
+- Pravo raspolaganja
+- Privremeno pravo korištenja
+- Pravo korištenja radi građenja
+- Trajno pravo korištenja
+
+### 4. Uslov za pretvaranje
+
+Nepokretnost **nije postala svojina drugog lica** do stupanja na snagu zakona.
+
+---
+
+## Praktične implikacije
+
+### Za pravna lica
+
+Pravna lica koja su imala pravo upravljanja na nepokretnostima u državnoj svojini, a čiji je kapital 100% u vlasništvu RS, **automatski postaju vlasnici** tih nepokretnosti.
+
+### Za jedinice lokalne samouprave
+
+Opštine i gradovi postaju vlasnici nepokretnosti na kojima su imala prava korištenja, upravljanja ili raspolaganja, **ako je prethodni nosilac prestao da postoji**.
+
+### Za fizička lica
+
+Nosioci prava na građevinskom zemljištu (privremeno, trajno ili radi građenja) **postaju vlasnici** tog zemljišta.
+
+---
+
+## Postupak upisa u javnu evidenciju
+
+Prema članu 1. ovog zakona, umjesto termina "žemiljišna knjiga" koristi se termin **"javna evidencija"**.
+
+Upis prava svojine vrši se na osnovu:
+
+1. Dokaza o dosadašnjem pravu (rješenje, ugovor)
+2. Dokaza o pravnom sljedništvu (ako je primjenjivo)
+3. Zahtjeva za upis u javnu evidenciju
+
+---
+
+## Izuzeci
+
+Pretvaranje prava **ne primjenjuje se** ako:
+
+- Posebnim zakonom je drugačije propisano
+- Nepokretnost je već postala svojina drugog lica
+- Stvar ne može biti predmet svojine
+
+---
+
+## Zaključak
+
+Ovaj zakon značajno pojednostavljuje vlasnike odnose na nepokretnostima u Republici Srpskoj, pretvarajući stara društvena prava u moderno pravo svojine.
+
+Za konkretne slučajeve i pravne savjete, preporučujemo konsultacije sa advokatom.
+    `,
+    date: "2025-01-23",
+    readMinutes: 8,
+    tags: ["Zakoni", "Stvarna prava", "RS", "Svojina"],
+    author: {
+      name: "Andrić Law",
+      role: "Advokatski ured"
+    },
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
+  },
+  {
     slug: "zakon-o-upotrebi-i-zastiti-naziva-bih",
     title: "Zakon o upotrebi i zaštiti naziva Bosne i Hercegovine",
     excerpt: "Zakon koji uređuje upotrebu i zaštitu naziva, grba, zastave i himne Bosne i Hercegovine.",
