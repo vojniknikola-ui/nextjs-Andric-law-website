@@ -27,27 +27,29 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 font-serif">
+    <div className="max-w-5xl mx-auto px-4 py-8" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
       {sections.map(section => (
         <article key={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <div className="flex items-start justify-between gap-6">
-            <div className="flex-1">
-              <div className="text-black leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }} />
-            </div>
-            {section.history && (
+          <div className="text-black leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }} />
+          
+          {section.history && (
+            <div className="mt-6">
               <button
                 onClick={() => toggleHistory(section.id)}
-                className="flex-shrink-0 px-4 py-2 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors shadow-sm"
+                className={`w-full px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                  expandedHistory.has(section.id)
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
               >
-                📜 Historijat
+                📋 Izmjene Zakona
               </button>
-            )}
-          </div>
-          
-          {section.history && expandedHistory.has(section.id) && (
-            <div className="mt-6 p-5 bg-amber-50 rounded-lg border-l-4 border-amber-500">
-              <h4 className="text-sm font-semibold text-black mb-3">Historijat izmjena</h4>
-              <div className="text-black text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
+              
+              {expandedHistory.has(section.id) && (
+                <div className="mt-4 p-5 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="text-gray-800 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
+                </div>
+              )}
             </div>
           )}
         </article>
@@ -58,11 +60,11 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
 
 function formatLawContent(content: string): string {
   return content
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-lg">$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/^(.+)$/gm, '<p class="mb-4">$1</p>')
-    .replace(/<p class="mb-4"><\/p>/g, '')
-    .replace(/<p class="mb-4"><strong/g, '<p class="mb-6 mt-4"><strong');
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-base">$1</strong>')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/^(.+)$/gm, '<p class="mb-3">$1</p>')
+    .replace(/<p class="mb-3"><\/p>/g, '')
+    .replace(/<p class="mb-3"><strong/g, '<p class="mb-5 mt-3"><strong');
 }
 
 function parseLawContent(content: string): LawSection[] {
