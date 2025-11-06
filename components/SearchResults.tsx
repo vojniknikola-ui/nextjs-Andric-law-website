@@ -37,7 +37,7 @@ function calculateRelevance(post: any, query: string) {
   return score;
 }
 
-function extractRelevantSnippet(text: string, query: string, maxLength: number = 250) {
+function extractRelevantSnippet(text: string, query: string, maxLength: number = 300) {
   const q = query.toLowerCase();
   const words = q.split(/\s+/).filter(w => w.length > 2);
   const lowerText = text.toLowerCase();
@@ -45,12 +45,13 @@ function extractRelevantSnippet(text: string, query: string, maxLength: number =
   // Try to find exact phrase first
   let bestIndex = lowerText.indexOf(q);
   
-  // If not found, find first occurrence of any search word
+  // If not found, find best matching word
   if (bestIndex === -1) {
     for (const word of words) {
       const index = lowerText.indexOf(word);
-      if (index !== -1 && (bestIndex === -1 || index < bestIndex)) {
+      if (index !== -1) {
         bestIndex = index;
+        break;
       }
     }
   }
@@ -59,16 +60,44 @@ function extractRelevantSnippet(text: string, query: string, maxLength: number =
     return text.substring(0, maxLength) + '...';
   }
   
-  // Find sentence boundaries
-  const sentenceStart = text.lastIndexOf('.', bestIndex) + 1;
-  const sentenceEnd = text.indexOf('.', bestIndex + 50);
+  // Look for paragraph/section markers (##, Član, numbered sections)
+  const beforeMatch = text.substring(0, bestIndex);
+  const afterMatch = text.substring(bestIndex);
   
-  const start = sentenceStart > 0 && (bestIndex - sentenceStart) < 100 ? sentenceStart : Math.max(0, bestIndex - 60);
-  const end = sentenceEnd > 0 && (sentenceEnd - bestIndex) < 150 ? sentenceEnd + 1 : Math.min(text.length, bestIndex + maxLength - 60);
+  // Find start of current section
+  const sectionMarkers = [/\n## /g, /\n### /g, /Član \d+/gi, /\n\*\*\(\d+\)\*\*/g];
+  let sectionStart = 0;
   
-  let snippet = text.substring(start, end).trim();
-  if (start > 0) snippet = '...' + snippet;
-  if (end < text.length) snippet = snippet + '...';
+  for (const marker of sectionMarkers) {
+    const matches = [...beforeMatch.matchAll(marker)];
+    if (matches.length > 0) {
+      const lastMatch = matches[matches.length - 1];
+      sectionStart = Math.max(sectionStart, lastMatch.index || 0);
+    }
+  }
+  
+  // Find end of current section (next section or paragraph break)
+  let sectionEnd = text.length;
+  for (const marker of sectionMarkers) {
+    const match = afterMatch.match(marker);
+    if (match && match.index !== undefined) {
+      sectionEnd = Math.min(sectionEnd, bestIndex + match.index);
+    }
+  }
+  
+  // If section is too long, limit it
+  if (sectionEnd - sectionStart > maxLength) {
+    sectionStart = Math.max(sectionStart, bestIndex - 100);
+    sectionEnd = Math.min(sectionEnd, bestIndex + 200);
+  }
+  
+  let snippet = text.substring(sectionStart, sectionEnd).trim();
+  
+  // Clean up markdown
+  snippet = snippet.replace(/^#+\s*/gm, '').replace(/\*\*/g, '');
+  
+  if (sectionStart > 0) snippet = '...' + snippet;
+  if (sectionEnd < text.length) snippet = snippet + '...';
   
   return snippet;
 }
