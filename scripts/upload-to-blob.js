@@ -36,6 +36,8 @@ async function uploadToBlob(filename, name) {
   const blob = await put(`blog/${name}.jpg`, fileBuffer, {
     access: 'public',
     token: process.env.BLOB_READ_WRITE_TOKEN,
+    addRandomSuffix: true,
+    cacheControlMaxAge: 31536000,
   });
   return blob.url;
 }

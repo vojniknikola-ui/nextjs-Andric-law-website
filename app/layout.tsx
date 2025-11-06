@@ -95,8 +95,8 @@ export default function RootLayout({
     <html lang="bs" className={inter.variable}>
       <head>
         {/* Preconnect to external domains */}
-        <link rel="preconnect" href="https://images.unsplash.com" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://public.blob.vercel-storage.com" />
+        <link rel="dns-prefetch" href="https://public.blob.vercel-storage.com" />
         
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
