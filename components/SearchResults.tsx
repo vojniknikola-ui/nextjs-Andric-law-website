@@ -7,9 +7,11 @@ async function searchContent(query: string, filter: Category) {
   const posts = await getAllPosts();
   
   const filtered = posts.filter(p => {
-    const matchesQuery = p.title.toLowerCase().includes(query.toLowerCase()) ||
-      p.content?.toLowerCase().includes(query.toLowerCase()) ||
-      p.excerpt?.toLowerCase().includes(query.toLowerCase());
+    const searchText = `${p.title} ${p.content} ${p.excerpt}`.toLowerCase();
+    const words = query.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+    const matchesQuery = words.length === 0 ? 
+      searchText.includes(query.toLowerCase()) :
+      words.some(word => searchText.includes(word));
     
     if (filter === 'all') return matchesQuery;
     

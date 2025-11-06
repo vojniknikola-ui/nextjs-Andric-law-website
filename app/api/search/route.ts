@@ -20,9 +20,11 @@ export async function GET(request: Request) {
     const posts = await getAllPosts();
     
     results = posts.filter(p => {
-      const matchesQuery = p.title.toLowerCase().includes(q) ||
-        p.content?.toLowerCase().includes(q) ||
-        p.excerpt?.toLowerCase().includes(q);
+      const searchText = `${p.title} ${p.content} ${p.excerpt}`.toLowerCase();
+      const words = q.split(/\s+/).filter(w => w.length > 2);
+      const matchesQuery = words.length === 0 ? 
+        searchText.includes(q) :
+        words.some(word => searchText.includes(word));
       
       if (filter === 'all') return matchesQuery;
       
