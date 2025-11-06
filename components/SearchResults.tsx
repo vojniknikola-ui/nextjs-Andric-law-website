@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { Sparkles, Search as SearchIcon } from 'lucide-react';
 import SearchFilters from './SearchFilters';
 import { getAllPosts } from '@/lib/blog';
 import {
@@ -133,13 +134,26 @@ export default async function SearchResults({
 }) {
   if (!query) {
     return (
-      <div className="rounded-xl border border-blue-100 bg-blue-50 p-6 text-sm text-blue-900 shadow-sm">
-        <h3 className="mb-2 font-semibold">Kako pretraživati?</h3>
-        <ul className="space-y-1">
-          <li>• Unesite ključne riječi (npr. &ldquo;otkaz ugovora&rdquo;, &ldquo;osnivanje doo&rdquo;)</li>
-          <li>• Dodajte filtere kako biste suzili rezultate</li>
-          <li>• Pretraga pregledava naslove, sažetke i sadržaj članaka</li>
-        </ul>
+      <div className="rounded-3xl border border-slate-200 bg-white p-8 text-sm text-slate-700 shadow-md">
+        <div className="flex items-start gap-3">
+          <div className="rounded-full bg-blue-100 p-2 text-blue-700">
+            <SearchIcon className="h-5 w-5" />
+          </div>
+          <div className="space-y-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">Andrić Law</p>
+              <h3 className="text-xl font-semibold text-slate-900">Dobrodošli u našu bazu znanja</h3>
+              <p className="mt-2 text-slate-600">
+                Pretražujte stručne članke, zakonske analize i vodiče koje priprema tim Andrić Law kancelarije.
+              </p>
+            </div>
+            <ul className="space-y-2 text-slate-600">
+              <li>• Unesite tačne izraze, npr. &ldquo;član 6 stvarna prava&rdquo; ili &ldquo;otkaz ugovora&rdquo;</li>
+              <li>• Kombinujte filtere kako biste brzo došli do željene oblasti prava</li>
+              <li>• Snippeti prikazuju dio originalnog teksta gdje je pojam pronađen</li>
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }
@@ -149,15 +163,17 @@ export default async function SearchResults({
 
   return (
     <>
-      <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mb-8 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm text-gray-600">Pretražujete:</span>
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
-            {`"${query}"`}
+          <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            <Sparkles className="h-3.5 w-3.5" /> Andrić Law Research
+          </span>
+          <span className="text-sm text-slate-600">
+            Pretražujete: <span className="font-semibold text-slate-900">{query}</span>
           </span>
           {results.length > 0 && (
-            <span className="text-sm text-gray-500">
-              {`Pronađeno ${results.length} rezultata`}
+            <span className="text-sm text-slate-500">
+              Rezultata: <span className="font-medium text-slate-700">{results.length}</span>
             </span>
           )}
         </div>
@@ -166,37 +182,37 @@ export default async function SearchResults({
 
       <div className="mt-6">
         {results.length === 0 ? (
-          <div className="rounded-xl border border-gray-200 bg-gray-50 p-8 text-center shadow-sm">
-            <h3 className="mb-2 text-lg font-semibold text-gray-900">
+          <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+            <h3 className="mb-3 text-lg font-semibold text-slate-900">
               Nema rezultata za &ldquo;{query}&rdquo;
             </h3>
-            <p className="mb-4 text-gray-600">
-              Pokušajte sa drugačijim ključnim riječima ili promijenite filter.
+            <p className="mb-4 text-slate-600">
+              Naša baza trenutno nema zapis koji odgovara ovom upitu. Pokušajte promijeniti ključne riječi ili filtere.
             </p>
-            <div className="text-sm text-gray-500">
-              <p className="mb-2 font-medium">Prijedlozi:</p>
+            <div className="text-sm text-slate-500">
+              <p className="mb-2 font-medium">Kako do preciznijih pogodaka:</p>
               <ul className="space-y-1">
-                <li>• Koristite opštije pojmove</li>
-                <li>• Provjerite pravopis ili padeže</li>
-                <li>• Isprobajte filter &ldquo;Sve&rdquo;</li>
+                <li>• Kombinujte pojmove (npr. &ldquo;član 6 stvarna prava&rdquo;)</li>
+                <li>• Koristite padeže iz samog zakona</li>
+                <li>• Odaberite filter &ldquo;Sve&rdquo; za širu pretragu</li>
               </ul>
             </div>
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-6">
             {results.map((result) => (
               <a
                 key={result.id}
                 href={getCategoryLink(result)}
-                className="block rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                className="block rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getCategoryColor(result.category)}`}>
                       {getCategoryLabel(result.category)}
                     </span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(result.date).toLocaleDateString('bs-BA')} · {result.readMinutes} min čitanja
+                    <span className="text-xs text-slate-500">
+                      {new Date(result.date).toLocaleDateString('bs-BA')} · {result.readMinutes} min
                     </span>
                   </div>
                   {typeof result.similarity === 'number' && (
@@ -207,28 +223,29 @@ export default async function SearchResults({
                   )}
                 </div>
 
-                <h2 className="mb-3 text-xl font-semibold text-gray-900 transition group-hover:text-blue-600">
+                <h2 className="mb-3 text-xl font-semibold text-slate-900 transition group-hover:text-blue-600">
                   {renderSegments(result.titleSegments, result.title)}
                 </h2>
 
-                <div className="mb-3 rounded-lg border border-blue-100 bg-blue-50/60 p-4">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-700">
-                    Relevantni dio teksta
+                <div className="mb-4 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm leading-relaxed text-blue-900">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-800">
+                    Relevantni odlomak
                   </p>
-                  <p className="text-sm leading-relaxed text-blue-900">
-                    {renderSnippet(result.snippet, result.excerpt || result.content?.slice(0, 200))}
+                  <p>
+                    {renderSnippet(result.snippet, result.excerpt || result.content?.slice(0, 220))}
                   </p>
                 </div>
 
-                {result.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 text-xs text-gray-500">
-                    {result.tags.slice(0, 4).map((tag) => (
-                      <span key={tag} className="rounded-full bg-gray-100 px-2.5 py-1">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                <div className="flex flex-wrap gap-2 text-xs text-slate-500">
+                  <span className="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
+                    Andrić Law insight
+                  </span>
+                  {result.tags.slice(0, 4).map((tag) => (
+                    <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
               </a>
             ))}
           </div>
