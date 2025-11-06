@@ -30,7 +30,7 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
     <div className="max-w-5xl mx-auto px-4 py-8" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
       {sections.map(section => (
         <article key={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <div className="text-black leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }} />
+          <div className="text-black leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }} />
           
           {section.history && (
             <div className="mt-6">
@@ -47,7 +47,7 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
               
               {expandedHistory.has(section.id) && (
                 <div className="mt-4 p-5 bg-blue-50 rounded-lg border border-blue-200">
-                  <div className="text-gray-800 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
+                  <div className="text-gray-800 text-sm leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
                 </div>
               )}
             </div>
@@ -60,6 +60,7 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
 
 function formatLawContent(content: string): string {
   return content
+    .replace(/\\/g, '')
     .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-base">$1</strong>')
     .replace(/\*(.+?)\*/g, '$1')
     .replace(/^(.+)$/gm, '<p class="mb-3">$1</p>')
