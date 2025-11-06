@@ -12,6 +12,153 @@ const BLOG_IMAGES = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "zakon-o-upotrebi-i-zastiti-naziva-bih",
+    title: "Zakon o upotrebi i zaštiti naziva Bosne i Hercegovine",
+    excerpt: "Zakon koji uređuje upotrebu i zaštitu naziva, grba, zastave i himne Bosne i Hercegovine.",
+    content: `# Zakon o upotrebi i zaštiti naziva Bosne i Hercegovine
+
+## Član 1
+
+Ovim zakonom uređuje se upotreba i zaštita naziva, grba, zastave i himne Bosne i Hercegovine.
+
+## Član 2
+
+Naziv "Bosna i Hercegovina" i skraćenica "BiH" su službeni nazivi države.
+
+## Član 3
+
+Grb Bosne i Hercegovine je plavi štit sa žutim dijagonalnim trakom i sedam bijelih zvijezda.
+
+## Član 4
+
+Zastava Bosne i Hercegovine je plava sa žutim dijagonalnim trakom i sedam bijelih zvijezda.
+
+## Član 5
+
+Himna Bosne i Hercegovine je instrumentalna kompozicija.
+
+## Član 6
+
+Zabranjena je upotreba naziva, grba, zastave i himne na način koji vrijeđa dostojanstvo države.
+
+## Član 7
+
+Prekršajne odredbe:
+- Novčana kazna od 500 do 5.000 KM za pravna lica
+- Novčana kazna od 100 do 1.000 KM za fizička lica
+
+## Član 8
+
+Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasniku BiH".
+    `,
+    date: "2025-01-25",
+    readMinutes: 3,
+    tags: ["Zakoni", "BiH", "Državni simboli"],
+    author: {
+      name: "Andrić Law",
+      role: "Advokatski ured"
+    },
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
+  },
+  {
+    slug: "zakon-o-sudu-bih",
+    title: "Zakon o Sudu Bosne i Hercegovine",
+    excerpt: "Zakon koji uređuje organizaciju, nadležnost i postupak pred Sudom Bosne i Hercegovine.",
+    content: `# Zakon o Sudu Bosne i Hercegovine
+
+## DIO PRVI - OPĆE ODREDBE
+
+### Član 1 - Predmet zakona
+
+Ovim zakonom uređuje se organizacija, nadležnost, sastav i postupak pred Sudom Bosne i Hercegovine.
+
+### Član 2 - Sud Bosne i Hercegovine
+
+Sud Bosne i Hercegovine je sudski organ Bosne i Hercegovine koji vrši sudsku vlast na nivou Bosne i Hercegovine.
+
+### Član 3 - Sjedište
+
+Sjedište Suda je u Sarajevu.
+
+## DIO DRUGI - NADLEŽNOST
+
+### Član 4 - Stvarna nadležnost
+
+Sud je nadležan za:
+a) Krivična djela propisana zakonima Bosne i Hercegovine
+b) Sporove između institucija BiH
+c) Sporove između BiH i entiteta
+d) Sporove između entiteta
+e) Upravne sporove protiv odluka institucija BiH
+
+### Član 5 - Krivična nadležnost
+
+Sud je nadležan za krivična djela:
+- Protiv integriteta BiH
+- Ratne zločine
+- Genocid
+- Zločine protiv čovječnosti
+- Organizovani kriminal
+- Terorizam
+- Korupciju
+
+## DIO TREĆI - ORGANIZACIJA
+
+### Član 6 - Odjeljenja
+
+Sud ima:
+1. Krivično odjeljenje
+2. Apelaciono odjeljenje
+3. Upravno odjeljenje
+
+### Član 7 - Sudije
+
+Sud ima:
+- Predsjednika Suda
+- Potpredsjednike
+- Sudije
+
+### Član 8 - Imenovanje sudija
+
+Sudije imenuje Visoko sudsko i tužilačko vijeće BiH.
+
+### Član 9 - Mandat
+
+Sudije se imenuju na period od šest godina sa mogućnošću ponovnog imenovanja.
+
+## DIO ČETVRTI - POSTUPAK
+
+### Član 10 - Primjena propisa
+
+U postupku pred Sudom primjenjuju se:
+- Zakon o krivičnom postupku BiH
+- Zakon o parničnom postupku
+- Zakon o upravnom postupku
+
+### Član 11 - Jezik
+
+Pred Sudom se koriste bosanski, hrvatski i srpski jezik.
+
+### Član 12 - Javnost
+
+Ročišta su javna, osim kada zakon drukčije propisuje.
+
+## DIO PETI - ZAVRŠNE ODREDBE
+
+### Član 13 - Stupanje na snagu
+
+Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasniku BiH".
+    `,
+    date: "2025-01-24",
+    readMinutes: 5,
+    tags: ["Zakoni", "Pravosuđe", "BiH"],
+    author: {
+      name: "Andrić Law",
+      role: "Advokatski ured"
+    },
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
+  },
+  {
     slug: "otkaz-ugovora-vodic-2025",
     title: "Otkaz ugovora o radu (FBiH & RS) – praktični vodič za 2025",
     excerpt: "Kompletan pregled pravila o prestanku radnog odnosa otkazom u FBiH i RS, sa ključnim razlikama, rokovima i postupovnim koracima.",
