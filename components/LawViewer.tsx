@@ -32,8 +32,8 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
       {sections.map(section => (
         <article key={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-start justify-between gap-6">
-            <div className="flex-1">
-              <ReactMarkdown className="prose prose-lg max-w-none text-black prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black">
+            <div className="flex-1 prose prose-lg max-w-none text-black prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black">
+              <ReactMarkdown>
                 {section.content}
               </ReactMarkdown>
             </div>
@@ -50,9 +50,11 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
           {section.history && expandedHistory.has(section.id) && (
             <div className="mt-6 p-5 bg-amber-50 rounded-lg border-l-4 border-amber-500">
               <h4 className="text-sm font-semibold text-black mb-3">Historijat izmjena</h4>
-              <ReactMarkdown className="prose prose-sm max-w-none text-black prose-headings:text-black prose-p:text-black prose-strong:text-black">
-                {section.history}
-              </ReactMarkdown>
+              <div className="prose prose-sm max-w-none text-black prose-headings:text-black prose-p:text-black prose-strong:text-black">
+                <ReactMarkdown>
+                  {section.history}
+                </ReactMarkdown>
+              </div>
             </div>
           )}
         </article>
