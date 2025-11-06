@@ -35,7 +35,7 @@ export default function AndricLawLanding() {
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
               <Clock className="size-3" /> Odgovor u 24h · Pisano mišljenje u 72h
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight" style={{ fontDisplay: 'swap' }}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
               Pravni partner za <span className="text-zinc-300">biznis u BiH</span>
             </h1>
             <p className="max-w-2xl text-slate-300 text-lg">
