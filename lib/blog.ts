@@ -80,72 +80,185 @@ Sud Bosne i Hercegovine je sudski organ Bosne i Hercegovine koji vrši sudsku vl
 
 Sjedište Suda je u Sarajevu.
 
+### Član 4 - Samostalnost i nezavisnost
+
+Sud je samostalan i nezavisan u vršenju sudske vlasti. Sudije su nezavisne u svom radu i podložne samo Ustavu i zakonu.
+
 ## DIO DRUGI - NADLEŽNOST
 
-### Član 4 - Stvarna nadležnost
+### Član 5 - Stvarna nadležnost
 
 Sud je nadležan za:
+
 a) Krivična djela propisana zakonima Bosne i Hercegovine
+
 b) Sporove između institucija BiH
+
 c) Sporove između BiH i entiteta
+
 d) Sporove između entiteta
+
 e) Upravne sporove protiv odluka institucija BiH
 
-### Član 5 - Krivična nadležnost
+f) Sukob nadležnosti između sudova različitih nivoa
+
+### Član 6 - Krivična nadležnost
 
 Sud je nadležan za krivična djela:
-- Protiv integriteta BiH
+
+- Protiv integriteta Bosne i Hercegovine
 - Ratne zločine
 - Genocid
 - Zločine protiv čovječnosti
 - Organizovani kriminal
 - Terorizam
-- Korupciju
+- Korupciju na nivou institucija BiH
+- Pranje novca
+- Finansiranje terorizma
+
+### Član 7 - Mjesna nadležnost
+
+Sud je mjesno nadležan za cijelu teritoriju Bosne i Hercegovine.
+
+### Član 8 - Apelaciona nadležnost
+
+Sud odlučuje o žalbama protiv prvostepenih odluka u predmetima iz svoje nadležnosti.
 
 ## DIO TREĆI - ORGANIZACIJA
 
-### Član 6 - Odjeljenja
+### Član 9 - Odjeljenja
 
 Sud ima:
+
 1. Krivično odjeljenje
-2. Apelaciono odjeljenje
+2. Apelaciono odjeljenje Krivičnog odjeljenja
 3. Upravno odjeljenje
+4. Odjeljenje za podršku
 
-### Član 7 - Sudije
+### Član 10 - Krivično odjeljenje
+
+Krivično odjeljenje ima:
+
+a) Odjeljenje I za ratne zločine
+
+b) Odjeljenje II za organizovani kriminal, ekonomski kriminal i korupciju
+
+c) Odjeljenje III za opće krivične predmete
+
+### Član 11 - Sudije
 
 Sud ima:
-- Predsjednika Suda
-- Potpredsjednike
-- Sudije
 
-### Član 8 - Imenovanje sudija
+- Predsjednika Suda
+- Dva potpredsjednika
+- Sudije Krivičnog odjeljenja
+- Sudije Apelacionog odjeljenja
+- Sudije Upravnog odjeljenja
+
+### Član 12 - Broj sudija
+
+Broj sudija Suda određuje Visoko sudsko i tužilačko vijeće BiH na prijedlog predsjednika Suda.
+
+### Član 13 - Predsjednik Suda
+
+Predsjednika Suda bira Opća sjednica Suda tajnim glasanjem na period od četiri godine.
+
+Predsjednik Suda:
+
+a) Predstavlja i zastupa Sud
+
+b) Organizuje rad Suda
+
+c) Predlaže budžet Suda
+
+d) Imenuje sudske savjetnike i stručne saradnike
+
+e) Vrši druge poslove utvrđene zakonom
+
+### Član 14 - Imenovanje sudija
 
 Sudije imenuje Visoko sudsko i tužilačko vijeće BiH.
 
-### Član 9 - Mandat
+Uslov za imenovanje sudije je:
+
+a) Državljanstvo BiH
+
+b) Završen pravni fakultet
+
+c) Položen pravosudni ispit
+
+d) Najmanje 10 godina radnog iskustva u pravnoj struci
+
+e) Visok stepen stručnosti i morala
+
+### Član 15 - Mandat sudija
 
 Sudije se imenuju na period od šest godina sa mogućnošću ponovnog imenovanja.
 
+Sudija može biti razriješen dužnosti samo u slučajevima i na način propisan zakonom.
+
+### Član 16 - Imunitet sudija
+
+Sudija uživa imunitet za mišljenja izražena i glasove date u vršenju sudijske funkcije.
+
+Sudija se ne može pozvati na krivičnu odgovornost, pritvoriti ili kazniti za mišljenje dato ili glasanje izvršeno u vršenju sudijske funkcije.
+
+### Član 17 - Nespojivost funkcija
+
+Sudijska funkcija je nespojiva sa:
+
+a) Funkcijom u organima zakonodavne i izvršne vlasti
+
+b) Advokatskom djelatnošću
+
+c) Obavljanjem druge profesionalne djelatnosti
+
+d) Članstvom u političkim strankama
+
+### Član 18 - Plaća sudija
+
+Sudije imaju pravo na plaću i druga primanja utvrđena zakonom.
+
+Plaća sudije ne može biti smanjena za vrijeme trajanja mandata.
+
+### Član 19 - Opća sjednica
+
+Opću sjednicu čine svi sudije Suda.
+
+Opća sjednica:
+
+a) Bira predsjednika i potpredsjednike Suda
+
+b) Donosi Poslovnik o radu Suda
+
+c) Donosi Etički kodeks sudija
+
+d) Razmatra godišnji izvještaj o radu Suda
+
+e) Odlučuje o drugim pitanjima od značaja za rad Suda
+
+### Član 20 - Sudsko osoblje
+
+Sud ima sudske savjetnike, stručne saradnike i administrativno osoblje.
+
+Sudske savjetnike i stručne saradnike imenuje predsjednik Suda.
+
+Administrativno osoblje prima se u radni odnos u skladu sa Zakonom o radu.
+
 ## DIO ČETVRTI - POSTUPAK
 
-### Član 10 - Primjena propisa
+### Član 21 - Primjena propisa
 
 U postupku pred Sudom primjenjuju se:
+
 - Zakon o krivičnom postupku BiH
 - Zakon o parničnom postupku
 - Zakon o upravnom postupku
-
-### Član 11 - Jezik
-
-Pred Sudom se koriste bosanski, hrvatski i srpski jezik.
-
-### Član 12 - Javnost
-
-Ročišta su javna, osim kada zakon drukčije propisuje.
+- Poslovnik o radu Suda
 
 ## DIO PETI - ZAVRŠNE ODREDBE
 
-### Član 13 - Stupanje na snagu
+### Član 22 - Stupanje na snagu
 
 Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasniku BiH".
     `,
