@@ -1,167 +1,144 @@
-import { getAllPosts } from '@/lib/blog';
+import { Fragment } from 'react';
 import SearchFilters from './SearchFilters';
+import { getAllPosts } from '@/lib/blog';
+import {
+  searchBlogPosts,
+  type BlogSearchResult,
+  type HighlightSegment,
+  type HighlightSnippet,
+} from '@/lib/search/blog-search';
 
 type Category = 'zakoni' | 'sudska-praksa' | 'vijesti-clanci' | 'all';
 
-function calculateRelevance(post: any, query: string) {
-  const q = query.toLowerCase();
-  const words = q.split(/\s+/).filter(w => w.length > 2);
-  let score = 0;
-  
-  const title = post.title.toLowerCase();
-  const content = (post.content || '').toLowerCase();
-  const excerpt = (post.excerpt || '').toLowerCase();
-  
-  // Exact full phrase match = highest score
-  if (title.includes(q)) score += 200;
-  if (content.includes(q)) score += 150;
-  if (excerpt.includes(q)) score += 100;
-  
-  // Check for 3+ consecutive words in same order
-  if (words.length >= 3) {
-    for (let i = 0; i <= words.length - 3; i++) {
-      const phrase = words.slice(i, i + 3).join(' ');
-      if (title.includes(phrase)) score += 120;
-      if (content.includes(phrase)) score += 80;
-      if (excerpt.includes(phrase)) score += 60;
-    }
+type SearchResultItem = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string;
+  content?: string;
+  date: string;
+  readMinutes: number;
+  tags: string[];
+  category: Category;
+  similarity?: number;
+  matchField?: 'title' | 'excerpt' | 'content' | null;
+  titleSegments?: HighlightSegment[];
+  snippet?: HighlightSnippet | null;
+};
+
+const MATCH_FIELD_LABEL: Record<'title' | 'excerpt' | 'content', string> = {
+  title: 'Naslov',
+  excerpt: 'Sažetak',
+  content: 'Sadržaj',
+};
+
+const inferCategory = (tags: string[]): Category => {
+  const normalized = tags.map((tag) => tag.toLowerCase());
+  if (normalized.some((tag) => tag.includes('zakon'))) {
+    return 'zakoni';
   }
-  
-  // Check for 2 consecutive words
-  if (words.length >= 2) {
-    for (let i = 0; i <= words.length - 2; i++) {
-      const phrase = words.slice(i, i + 2).join(' ');
-      if (title.includes(phrase)) score += 60;
-      if (content.includes(phrase)) score += 40;
-      if (excerpt.includes(phrase)) score += 30;
-    }
+  if (normalized.some((tag) => tag.includes('sudska') || tag.includes('pravosuđe'))) {
+    return 'sudska-praksa';
   }
-  
-  // Individual word matches
-  words.forEach(word => {
-    if (title.includes(word)) score += 25;
-    if (excerpt.includes(word)) score += 10;
-    const matches = (content.match(new RegExp(word, 'g')) || []).length;
-    score += Math.min(matches * 2, 15);
+  return 'vijesti-clanci';
+};
+
+const normalizeBlogResults = (results: BlogSearchResult[]): SearchResultItem[] =>
+  results.map((result) => {
+    const category = inferCategory(result.post.tags ?? []);
+    return {
+      id: result.post.slug,
+      slug: result.post.slug,
+      title: result.post.title,
+      excerpt: result.post.excerpt,
+      content: result.post.content,
+      date: result.post.date,
+      readMinutes: result.post.readMinutes,
+      tags: result.post.tags,
+      category,
+      similarity: result.similarity,
+      matchField: result.matchedField,
+      titleSegments: result.titleSegments,
+      snippet: result.snippet ?? null,
+    };
   });
-  
-  return score;
-}
 
-function extractRelevantSnippet(text: string, query: string, maxLength: number = 300) {
-  const q = query.toLowerCase();
-  const words = q.split(/\s+/).filter(w => w.length > 2);
-  const lowerText = text.toLowerCase();
-  
-  // Try to find exact phrase first
-  let bestIndex = lowerText.indexOf(q);
-  
-  // If not found, find best matching word
-  if (bestIndex === -1) {
-    for (const word of words) {
-      const index = lowerText.indexOf(word);
-      if (index !== -1) {
-        bestIndex = index;
-        break;
-      }
-    }
+const renderSegments = (segments: HighlightSegment[] | undefined, fallback: string) => {
+  if (!segments || segments.length === 0) {
+    return fallback;
   }
-  
-  if (bestIndex === -1) {
-    return text.substring(0, maxLength) + '...';
-  }
-  
-  // Look for paragraph/section markers (##, Član, numbered sections)
-  const beforeMatch = text.substring(0, bestIndex);
-  const afterMatch = text.substring(bestIndex);
-  
-  // Find start of current section
-  const sectionMarkers = [/\n## /g, /\n### /g, /Član \d+/gi, /\n\*\*\(\d+\)\*\*/g];
-  let sectionStart = 0;
-  
-  for (const marker of sectionMarkers) {
-    const matches = [...beforeMatch.matchAll(marker)];
-    if (matches.length > 0) {
-      const lastMatch = matches[matches.length - 1];
-      sectionStart = Math.max(sectionStart, lastMatch.index || 0);
-    }
-  }
-  
-  // Find end of current section (next section or paragraph break)
-  let sectionEnd = text.length;
-  for (const marker of sectionMarkers) {
-    const match = afterMatch.match(marker);
-    if (match && match.index !== undefined) {
-      sectionEnd = Math.min(sectionEnd, bestIndex + match.index);
-    }
-  }
-  
-  // If section is too long, limit it
-  if (sectionEnd - sectionStart > maxLength) {
-    sectionStart = Math.max(sectionStart, bestIndex - 100);
-    sectionEnd = Math.min(sectionEnd, bestIndex + 200);
-  }
-  
-  let snippet = text.substring(sectionStart, sectionEnd).trim();
-  
-  // Clean up markdown
-  snippet = snippet.replace(/^#+\s*/gm, '').replace(/\*\*/g, '');
-  
-  if (sectionStart > 0) snippet = '...' + snippet;
-  if (sectionEnd < text.length) snippet = snippet + '...';
-  
-  return snippet;
-}
+  return segments.map((segment, index) =>
+    segment.highlight ? (
+      <mark key={`${segment.text}-${index}`} className="rounded-sm bg-yellow-200 px-0.5 text-inherit">
+        {segment.text}
+      </mark>
+    ) : (
+      <Fragment key={`${segment.text}-${index}`}>{segment.text}</Fragment>
+    ),
+  );
+};
 
-async function searchContent(query: string, filter: Category) {
+const renderSnippet = (snippet: HighlightSnippet | null, fallback?: string) => {
+  if (!snippet) {
+    if (!fallback) {
+      return null;
+    }
+    return fallback;
+  }
+
+  return (
+    <>
+      {snippet.prefix ? '…' : ''}
+      {snippet.segments.map((segment, index) =>
+        segment.highlight ? (
+          <mark key={`${segment.text}-${index}`} className="rounded-sm bg-yellow-200 px-0.5 text-inherit">
+            {segment.text}
+          </mark>
+        ) : (
+          <Fragment key={`${segment.text}-${index}`}>{segment.text}</Fragment>
+        ),
+      )}
+      {snippet.suffix ? '…' : ''}
+    </>
+  );
+};
+
+const filterByCategory = (items: SearchResultItem[], filter: Category): SearchResultItem[] => {
+  if (filter === 'all') {
+    return items;
+  }
+  return items.filter((item) => item.category === filter);
+};
+
+async function searchContent(query: string, filter: Category): Promise<SearchResultItem[]> {
+  const trimmedQuery = query.trim();
+  if (!trimmedQuery) {
+    return [];
+  }
+
   const posts = await getAllPosts();
-  
-  const results = posts
-    .map(p => {
-      const score = calculateRelevance(p, query);
-      const matchesFilter = 
-        filter === 'all' ||
-        (filter === 'zakoni' && p.tags.some(t => t.toLowerCase().includes('zakon'))) ||
-        (filter === 'sudska-praksa' && p.tags.some(t => t.toLowerCase().includes('pravosuđe'))) ||
-        (filter === 'vijesti-clanci' && !p.tags.some(t => t.toLowerCase().includes('zakon') || t.toLowerCase().includes('pravosuđe')));
-      
-      return {
-        ...p,
-        id: p.slug,
-        score,
-        matchesFilter,
-        relevantSnippet: extractRelevantSnippet(p.content || p.excerpt || '', query),
-        category: p.tags.some(t => t.toLowerCase().includes('zakon')) ? 'zakoni' : 'vijesti-clanci'
-      };
-    })
-    .filter(p => p.score > 0 && p.matchesFilter)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 15);
-  
-  return results;
+  const blogResults = searchBlogPosts(posts, trimmedQuery);
+  const normalized = normalizeBlogResults(blogResults);
+  const filtered = filterByCategory(normalized, filter);
+
+  return filtered.slice(0, 20);
 }
 
-function highlightText(text: string, query: string) {
-  const words = query.toLowerCase().split(/\s+/).filter(w => w.length > 2);
-  let highlighted = text;
-  
-  words.forEach(word => {
-    const regex = new RegExp(`(${word})`, 'gi');
-    highlighted = highlighted.replace(regex, '<mark class="bg-yellow-200 font-semibold">$1</mark>');
-  });
-  
-  return highlighted;
-}
-
-export default async function SearchResults({ query, filter }: { query?: string; filter?: string }) {
+export default async function SearchResults({
+  query,
+  filter,
+}: {
+  query?: string;
+  filter?: string;
+}) {
   if (!query) {
     return (
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="font-semibold text-blue-900 mb-2">Kako pretraživati?</h3>
-        <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Unesite ključne riječi (npr. "otkaz ugovora", "osnivanje doo")</li>
-          <li>• Koristite filtere za preciznije rezultate</li>
-          <li>• Pretraga traži kroz naslove, sadržaj i tagove</li>
+      <div className="rounded-xl border border-blue-100 bg-blue-50 p-6 text-sm text-blue-900 shadow-sm">
+        <h3 className="mb-2 font-semibold">Kako pretraživati?</h3>
+        <ul className="space-y-1">
+          <li>• Unesite ključne riječi (npr. &ldquo;otkaz ugovora&rdquo;, &ldquo;osnivanje doo&rdquo;)</li>
+          <li>• Dodajte filtere kako biste suzili rezultate</li>
+          <li>• Pretraga pregledava naslove, sažetke i sadržaj članaka</li>
         </ul>
       </div>
     );
@@ -172,101 +149,121 @@ export default async function SearchResults({ query, filter }: { query?: string;
 
   return (
     <>
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-4">
+      <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-wrap items-center gap-3">
           <span className="text-sm text-gray-600">Pretražujete:</span>
-          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-semibold">
-            "{query}"
+          <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
+            {`"${query}"`}
           </span>
+          {results.length > 0 && (
+            <span className="text-sm text-gray-500">
+              {`Pronađeno ${results.length} rezultata`}
+            </span>
+          )}
         </div>
         <SearchFilters currentFilter={activeFilter} query={query} />
       </div>
-      
-      <div className="mt-8">
+
+      <div className="mt-6">
         {results.length === 0 ? (
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Nema rezultata za "{query}"
+          <div className="rounded-xl border border-gray-200 bg-gray-50 p-8 text-center shadow-sm">
+            <h3 className="mb-2 text-lg font-semibold text-gray-900">
+              Nema rezultata za &ldquo;{query}&rdquo;
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="mb-4 text-gray-600">
               Pokušajte sa drugačijim ključnim riječima ili promijenite filter.
             </p>
             <div className="text-sm text-gray-500">
-              <p className="font-medium mb-2">Prijedlozi:</p>
+              <p className="mb-2 font-medium">Prijedlozi:</p>
               <ul className="space-y-1">
-                <li>• Koristite opštenije termine</li>
-                <li>• Provjerite pravopis</li>
-                <li>• Pokušajte sa "Sve" filterom</li>
+                <li>• Koristite opštije pojmove</li>
+                <li>• Provjerite pravopis ili padeže</li>
+                <li>• Isprobajte filter &ldquo;Sve&rdquo;</li>
               </ul>
             </div>
           </div>
         ) : (
-          <>
-            <p className="text-sm text-gray-600 mb-4">Pronađeno {results.length} rezultata</p>
-            <div className="space-y-4">
-              {results.map((result) => (
-                <a
-                  key={result.id}
-                  href={getCategoryLink(result)}
-                  className="block bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-blue-500"
-                >
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className={`text-xs px-2 py-1 rounded font-medium ${getCategoryColor(result.category)}`}>
+          <div className="space-y-5">
+            {results.map((result) => (
+              <a
+                key={result.id}
+                href={getCategoryLink(result)}
+                className="block rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getCategoryColor(result.category)}`}>
                       {getCategoryLabel(result.category)}
                     </span>
                     <span className="text-xs text-gray-500">
-                      {result.readMinutes} min čitanja
+                      {new Date(result.date).toLocaleDateString('bs-BA')} · {result.readMinutes} min čitanja
                     </span>
                   </div>
-                  <h2 className="text-xl font-bold mb-3 text-gray-900 hover:text-blue-600 transition">
-                    {result.title}
-                  </h2>
-                  <div className="bg-gray-50 border-l-2 border-blue-400 p-3 mb-3 rounded">
-                    <p className="text-xs text-gray-500 mb-1 font-semibold">Pronađeno u tekstu:</p>
-                    <p 
-                      className="text-gray-800 text-sm leading-relaxed"
-                      dangerouslySetInnerHTML={{ 
-                        __html: highlightText(result.relevantSnippet || result.excerpt || '', query) 
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <span>•</span>
-                    <span>{new Date(result.date).toLocaleDateString('bs-BA')}</span>
-                    {result.tags && result.tags.slice(0, 3).map((tag: string) => (
-                      <span key={tag} className="px-2 py-0.5 bg-gray-100 rounded">
-                        {tag}
+                  {typeof result.similarity === 'number' && (
+                    <span className="text-xs font-medium text-blue-700">
+                      Sličnost {result.similarity.toFixed(0)}%
+                      {result.matchField ? ` · ${MATCH_FIELD_LABEL[result.matchField]}` : ''}
+                    </span>
+                  )}
+                </div>
+
+                <h2 className="mb-3 text-xl font-semibold text-gray-900 transition group-hover:text-blue-600">
+                  {renderSegments(result.titleSegments, result.title)}
+                </h2>
+
+                <div className="mb-3 rounded-lg border border-blue-100 bg-blue-50/60 p-4">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-700">
+                    Relevantni dio teksta
+                  </p>
+                  <p className="text-sm leading-relaxed text-blue-900">
+                    {renderSnippet(result.snippet, result.excerpt || result.content?.slice(0, 200))}
+                  </p>
+                </div>
+
+                {result.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 text-xs text-gray-500">
+                    {result.tags.slice(0, 4).map((tag) => (
+                      <span key={tag} className="rounded-full bg-gray-100 px-2.5 py-1">
+                        #{tag}
                       </span>
                     ))}
                   </div>
-                </a>
-              ))}
-            </div>
-          </>
+                )}
+              </a>
+            ))}
+          </div>
         )}
       </div>
     </>
   );
 }
 
-function getCategoryLink(result: any) {
+function getCategoryLink(result: { slug: string }) {
   return `/blog/${result.slug}`;
 }
 
-function getCategoryColor(category: string) {
+function getCategoryColor(category: Category) {
   switch (category) {
-    case 'zakoni': return 'bg-blue-100 text-blue-800';
-    case 'sudska-praksa': return 'bg-purple-100 text-purple-800';
-    case 'vijesti-clanci': return 'bg-green-100 text-green-800';
-    default: return 'bg-gray-100 text-gray-800';
+    case 'zakoni':
+      return 'bg-blue-100 text-blue-800';
+    case 'sudska-praksa':
+      return 'bg-purple-100 text-purple-800';
+    case 'vijesti-clanci':
+      return 'bg-green-100 text-green-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
   }
 }
 
-function getCategoryLabel(category: string) {
+function getCategoryLabel(category: Category) {
   switch (category) {
-    case 'zakoni': return 'Zakoni i podzakonski akti';
-    case 'sudska-praksa': return 'Sudska praksa';
-    case 'vijesti-clanci': return 'Vijesti i članci';
-    default: return 'Ostalo';
+    case 'zakoni':
+      return 'Zakoni i podzakonski akti';
+    case 'sudska-praksa':
+      return 'Sudska praksa';
+    case 'vijesti-clanci':
+      return 'Vijesti i članci';
+    default:
+      return 'Ostalo';
   }
 }
