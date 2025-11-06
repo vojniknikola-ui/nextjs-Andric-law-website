@@ -4,11 +4,15 @@ import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Calendar, BookOpen, Tag, Share2, ArrowLeft, AlertCircle, CheckCircle2, Scale, FileText } from 'lucide-react';
+import { generateBlogMetadata, generateBlogJsonLd } from '@/lib/blogMetadata';
 
-export const metadata: Metadata = {
-  title: 'Otkaz ugovora o radu (FBiH & RS) – praktični vodič za 2025',
-  description: 'Kompletan pregled pravila o prestanku radnog odnosa otkazom u FBiH i RS, sa ključnim razlikama, rokovima i postupovnim koracima.',
-};
+export const metadata: Metadata = generateBlogMetadata(
+  'Otkaz ugovora o radu (FBiH & RS) – praktični vodič za 2025',
+  'Kompletan pregled pravila o prestanku radnog odnosa otkazom u FBiH i RS, sa ključnim razlikama, rokovima i postupovnim koracima.',
+  'otkaz-ugovora-vodic-2025',
+  '2025-01-29',
+  'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=630&fit=crop&q=85'
+);
 
 export default function BlogPost() {
   return (
@@ -394,6 +398,18 @@ export default function BlogPost() {
       </section>
 
       <Footer />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateBlogJsonLd(
+            'Otkaz ugovora o radu (FBiH & RS) – praktični vodič za 2025',
+            'Kompletan pregled pravila o prestanku radnog odnosa otkazom u FBiH i RS, sa ključnim razlikama, rokovima i postupovnim koracima.',
+            '2025-01-29',
+            'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=630&fit=crop&q=85'
+          )),
+        }}
+      />
     </main>
   );
 }

@@ -4,11 +4,15 @@ import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Calendar, BookOpen, Tag, Share2, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { generateBlogMetadata, generateBlogJsonLd } from '@/lib/blogMetadata';
 
-export const metadata: Metadata = {
-  title: 'Osnivanje d.o.o. – praktični koraci i troškovi',
-  description: 'Od ideje do registracije: dokumenti, organi društva i najčešće dileme osnivača.',
-};
+export const metadata: Metadata = generateBlogMetadata(
+  'Osnivanje d.o.o. – praktični koraci i troškovi',
+  'Od ideje do registracije: dokumenti, organi društva i najčešće dileme osnivača.',
+  'osnivanje-doo-bih',
+  '2025-01-03',
+  'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=630&fit=crop&q=85'
+);
 
 export default function BlogPost() {
   return (
@@ -304,6 +308,18 @@ export default function BlogPost() {
       </section>
 
       <Footer />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateBlogJsonLd(
+            'Osnivanje d.o.o. – praktični koraci i troškovi',
+            'Od ideje do registracije: dokumenti, organi društva i najčešće dileme osnivača.',
+            '2025-01-03',
+            'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=630&fit=crop&q=85'
+          )),
+        }}
+      />
     </main>
   );
 }

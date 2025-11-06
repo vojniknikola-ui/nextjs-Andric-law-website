@@ -4,11 +4,15 @@ import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Calendar, BookOpen, Tag, Share2, ArrowLeft, Check } from 'lucide-react';
+import { generateBlogMetadata, generateBlogJsonLd } from '@/lib/blogMetadata';
 
-export const metadata: Metadata = {
-  title: 'NDA u IT projektima – šta mora da sadrži',
-  description: 'Ključne klauzule povjerljivosti, rokovi i odnos prema autorskim pravima i GDPR-u.',
-};
+export const metadata: Metadata = generateBlogMetadata(
+  'NDA u IT projektima – šta mora da sadrži',
+  'Ključne klauzule povjerljivosti, rokovi i odnos prema autorskim pravima i GDPR-u.',
+  'nda-it-projekti',
+  '2025-01-18',
+  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=630&fit=crop&q=85'
+);
 
 export default function BlogPost() {
   return (
@@ -243,6 +247,18 @@ export default function BlogPost() {
       </section>
 
       <Footer />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateBlogJsonLd(
+            'NDA u IT projektima – šta mora da sadrži',
+            'Ključne klauzule povjerljivosti, rokovi i odnos prema autorskim pravima i GDPR-u.',
+            '2025-01-18',
+            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=630&fit=crop&q=85'
+          )),
+        }}
+      />
     </main>
   );
 }

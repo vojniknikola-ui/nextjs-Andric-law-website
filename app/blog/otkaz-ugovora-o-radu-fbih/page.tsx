@@ -4,11 +4,15 @@ import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Calendar, BookOpen, Tag, Share2, ArrowLeft } from 'lucide-react';
+import { generateBlogMetadata, generateBlogJsonLd } from '@/lib/blogMetadata';
 
-export const metadata: Metadata = {
-  title: 'Otkaz ugovora o radu – vodič za poslodavce u FBiH',
-  description: 'Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova.',
-};
+export const metadata: Metadata = generateBlogMetadata(
+  'Otkaz ugovora o radu – vodič za poslodavce u FBiH',
+  'Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova. Stručna pravna pomoć za poslodavce u FBiH.',
+  'otkaz-ugovora-o-radu-fbih',
+  '2025-01-28',
+  'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=630&fit=crop&q=85'
+);
 
 export default function BlogPost() {
   return (
@@ -224,6 +228,18 @@ export default function BlogPost() {
       </section>
 
       <Footer />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateBlogJsonLd(
+            'Otkaz ugovora o radu – vodič za poslodavce u FBiH',
+            'Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova.',
+            '2025-01-28',
+            'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=630&fit=crop&q=85'
+          )),
+        }}
+      />
     </main>
   );
 }
