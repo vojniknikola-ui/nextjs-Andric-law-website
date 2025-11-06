@@ -23,7 +23,7 @@ type SearchResultItem = {
   similarity?: number;
   matchField?: 'title' | 'excerpt' | 'content' | null;
   titleSegments?: HighlightSegment[];
-  snippet?: HighlightSnippet | null;
+  snippet: HighlightSnippet | null;
 };
 
 const MATCH_FIELD_LABEL: Record<'title' | 'excerpt' | 'content', string> = {
@@ -59,7 +59,7 @@ const normalizeBlogResults = (results: BlogSearchResult[]): SearchResultItem[] =
       similarity: result.similarity,
       matchField: result.matchedField,
       titleSegments: result.titleSegments,
-      snippet: result.snippet ?? null,
+      snippet: (result.snippet ?? null),
     };
   });
 
