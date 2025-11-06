@@ -11,7 +11,7 @@ export const metadata: Metadata = generateBlogMetadata(
   'Ključne klauzule povjerljivosti, rokovi i odnos prema autorskim pravima i GDPR-u.',
   'nda-it-projekti',
   '2025-01-18',
-  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=630&fit=crop&q=85'
+  'https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Books%20in%20Glass%20Bookcase.jpg
 );
 
 export default function BlogPost() {
@@ -21,7 +21,7 @@ export default function BlogPost() {
 
       <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden border-b border-white/10">
         <Image
-          src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=675&fit=crop"
+          src="https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Books%20in%20Glass%20Bookcase.jpg"
           alt="NDA u IT projektima"
           fill
           className="object-cover"
@@ -255,7 +255,7 @@ export default function BlogPost() {
             'NDA u IT projektima – šta mora da sadrži',
             'Ključne klauzule povjerljivosti, rokovi i odnos prema autorskim pravima i GDPR-u.',
             '2025-01-18',
-            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=630&fit=crop&q=85'
+            'https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Books%20in%20Glass%20Bookcase.jpg
           )),
         }}
       />

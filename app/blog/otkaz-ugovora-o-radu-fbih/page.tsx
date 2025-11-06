@@ -11,7 +11,7 @@ export const metadata: Metadata = generateBlogMetadata(
   'Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova. Stručna pravna pomoć za poslodavce u FBiH.',
   'otkaz-ugovora-o-radu-fbih',
   '2025-01-28',
-  'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=630&fit=crop&q=85'
+  'https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Book%20Lot%20on%20Shelf.jpg
 );
 
 export default function BlogPost() {
@@ -22,7 +22,7 @@ export default function BlogPost() {
       {/* Hero Image */}
       <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden border-b border-white/10">
         <Image
-          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&h=1080&fit=crop&q=85"
+          src="https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Book%20Lot%20on%20Shelf.jpg"
           alt="Otkaz ugovora o radu"
           fill
           className="object-cover"
@@ -236,7 +236,7 @@ export default function BlogPost() {
             'Otkaz ugovora o radu – vodič za poslodavce u FBiH',
             'Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova.',
             '2025-01-28',
-            'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=630&fit=crop&q=85'
+            'https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Book%20Lot%20on%20Shelf.jpg
           )),
         }}
       />
