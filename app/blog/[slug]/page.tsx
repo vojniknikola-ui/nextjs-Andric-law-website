@@ -8,6 +8,8 @@ import { ArrowLeft, Calendar, BookOpen, Tag, Share2 } from 'lucide-react';
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { BlogCard } from '@/components/BlogCard';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -134,6 +136,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Content */}
           <div className="prose prose-invert prose-slate max-w-none mt-10">
             <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
               components={{
                 h1: ({ children }) => (
                   <h1 className="text-3xl font-bold mt-10 mb-4">{children}</h1>
@@ -168,6 +171,39 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     {children}
                   </code>
                 ),
+                hr: () => (
+                  <hr className="my-10 border-white/10" />
+                ),
+                details: ({ node, ...props }) => {
+                  const {
+                    className = '',
+                    children,
+                    ...rest
+                  } = props as DetailedHTMLProps<HTMLAttributes<HTMLDetailsElement>, HTMLDetailsElement>;
+                  return (
+                    <details
+                      {...rest}
+                      className={`group rounded-2xl border border-blue-200/60 bg-blue-50/70 p-4 text-blue-900 shadow-sm transition-all [&[open]]:border-blue-400/80 [&[open]]:bg-blue-50/90 ${className}`}
+                    >
+                      {children}
+                    </details>
+                  );
+                },
+                summary: ({ node, ...props }) => {
+                  const {
+                    className = '',
+                    children,
+                    ...rest
+                  } = props as DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>;
+                  return (
+                    <summary
+                      {...rest}
+                      className={`flex cursor-pointer select-none items-center justify-between gap-3 text-sm font-semibold text-blue-800 [&::-webkit-details-marker]:hidden ${className}`}
+                    >
+                      {children}
+                    </summary>
+                  );
+                },
               }}
             >
               {post.content}

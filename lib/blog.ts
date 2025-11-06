@@ -1,4 +1,5 @@
 import { BlogPost } from '@/types/blog';
+import { kazneniZakonFbihPost } from '@/content/blog/kazneni-zakon-fbih';
 
 // Placeholder slike - zamijeni sa pravim Vercel Blob URL-ovima nakon upload-a
 const BLOG_IMAGES = {
@@ -11,6 +12,7 @@ const BLOG_IMAGES = {
 };
 
 export const blogPosts: BlogPost[] = [
+  kazneniZakonFbihPost,
   {
     slug: "zakon-o-izmjenama-stvarnih-prava-rs",
     title: "Zakon o izmjenama i dopunama Zakona o stvarnim pravima RS",
@@ -816,7 +818,7 @@ Investirajte u dobar ugovor na početku. Jeftinije je od spora kasnije.
 
 export async function getAllPosts(): Promise<BlogPost[]> {
   await new Promise(resolve => setTimeout(resolve, 100));
-  return blogPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return [...blogPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {
