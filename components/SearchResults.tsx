@@ -12,26 +12,37 @@ function calculateRelevance(post: any, query: string) {
   const content = (post.content || '').toLowerCase();
   const excerpt = (post.excerpt || '').toLowerCase();
   
-  // Exact phrase match in title = highest score
-  if (title.includes(q)) score += 100;
+  // Exact full phrase match = highest score
+  if (title.includes(q)) score += 200;
+  if (content.includes(q)) score += 150;
+  if (excerpt.includes(q)) score += 100;
   
-  // Word matches in title
+  // Check for 3+ consecutive words in same order
+  if (words.length >= 3) {
+    for (let i = 0; i <= words.length - 3; i++) {
+      const phrase = words.slice(i, i + 3).join(' ');
+      if (title.includes(phrase)) score += 120;
+      if (content.includes(phrase)) score += 80;
+      if (excerpt.includes(phrase)) score += 60;
+    }
+  }
+  
+  // Check for 2 consecutive words
+  if (words.length >= 2) {
+    for (let i = 0; i <= words.length - 2; i++) {
+      const phrase = words.slice(i, i + 2).join(' ');
+      if (title.includes(phrase)) score += 60;
+      if (content.includes(phrase)) score += 40;
+      if (excerpt.includes(phrase)) score += 30;
+    }
+  }
+  
+  // Individual word matches
   words.forEach(word => {
-    if (title.includes(word)) score += 50;
-  });
-  
-  // Exact phrase in excerpt
-  if (excerpt.includes(q)) score += 30;
-  
-  // Word matches in excerpt
-  words.forEach(word => {
-    if (excerpt.includes(word)) score += 15;
-  });
-  
-  // Word matches in content
-  words.forEach(word => {
+    if (title.includes(word)) score += 25;
+    if (excerpt.includes(word)) score += 10;
     const matches = (content.match(new RegExp(word, 'g')) || []).length;
-    score += Math.min(matches * 2, 20); // Max 20 points per word from content
+    score += Math.min(matches * 2, 15);
   });
   
   return score;
