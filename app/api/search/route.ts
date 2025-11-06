@@ -3,16 +3,7 @@ import { getAllPosts } from '@/lib/blog';
 
 export const runtime = 'edge';
 
-const MOCK_LAWS = [
-  { id: 1, title: 'Zakon o obligacionim odnosima FBiH', excerpt: 'Osnovni zakon koji reguliše obligacione odnose između fizičkih i pravnih lica. Uređuje ugovore, odgovornost za štetu, naknadu štete i druge obligacione odnose.', slug: 'zor-fbih', category: 'zakoni' },
-  { id: 2, title: 'Zakon o radu FBiH', excerpt: 'Reguliše radne odnose između poslodavaca i radnika, prava i obaveze iz radnog odnosa, zaštitu radnika, radno vrijeme, odmor i odsustva.', slug: 'zakon-o-radu', category: 'zakoni' },
-  { id: 3, title: 'Zakon o osiguranju od odgovornosti za motorna vozila', excerpt: 'Uređuje obavezno osiguranje od odgovornosti za štetu pričinjenu trećim licima upotrebom motornih vozila. Definiše prava oštećenih, obaveze osiguravača i postupak naknade štete.', slug: 'zakon-osiguranje-vozila', category: 'zakoni' },
-  { id: 4, title: 'Zakon o poljoprivrednom zemljištu FBiH', excerpt: 'Reguliše pravni režim poljoprivrednog zemljišta, način korištenja, zaštitu, zakup i prodaju poljoprivrednog zemljišta u Federaciji BiH.', slug: 'zakon-poljoprivredno-zemljiste', category: 'zakoni' },
-];
 
-const MOCK_CASES = [
-  { id: 5, title: 'Presuda Vrhovnog suda FBiH - Otkaz ugovora o radu', excerpt: 'Analiza presude o nezakonitom otkazu ugovora o radu. Sud je utvrdio da poslodavac nije poštovao proceduru i donio odluku o poništenju otkaza.', slug: 'presuda-otkaz', category: 'sudska-praksa' },
-];
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -26,29 +17,32 @@ export async function GET(request: Request) {
   let results: any[] = [];
 
   try {
-    if (filter === 'all' || filter === 'vijesti-clanci') {
-      const posts = await getAllPosts();
-      const filtered = posts.filter(p =>
-        p.title.toLowerCase().includes(q) ||
+    const posts = await getAllPosts();
+    
+    results = posts.filter(p => {
+      const matchesQuery = p.title.toLowerCase().includes(q) ||
         p.content?.toLowerCase().includes(q) ||
-        p.excerpt?.toLowerCase().includes(q)
-      );
-      results = [...results, ...filtered.map(p => ({ ...p, category: 'vijesti-clanci' }))];
-    }
-
-    if (filter === 'all' || filter === 'zakoni') {
-      const zakoni = MOCK_LAWS.filter(z =>
-        z.title.toLowerCase().includes(q) || z.excerpt.toLowerCase().includes(q)
-      );
-      results = [...results, ...zakoni];
-    }
-
-    if (filter === 'all' || filter === 'sudska-praksa') {
-      const sudska = MOCK_CASES.filter(s =>
-        s.title.toLowerCase().includes(q) || s.excerpt.toLowerCase().includes(q)
-      );
-      results = [...results, ...sudska];
-    }
+        p.excerpt?.toLowerCase().includes(q);
+      
+      if (filter === 'all') return matchesQuery;
+      
+      if (filter === 'zakoni') {
+        return matchesQuery && p.tags.some(t => t.toLowerCase().includes('zakon'));
+      }
+      
+      if (filter === 'sudska-praksa') {
+        return matchesQuery && p.tags.some(t => t.toLowerCase().includes('pravosuđe'));
+      }
+      
+      if (filter === 'vijesti-clanci') {
+        return matchesQuery && !p.tags.some(t => t.toLowerCase().includes('zakon') || t.toLowerCase().includes('pravosuđe'));
+      }
+      
+      return matchesQuery;
+    }).map(p => ({
+      ...p,
+      category: p.tags.some(t => t.toLowerCase().includes('zakon')) ? 'zakoni' : 'vijesti-clanci'
+    }))
 
     return NextResponse.json(
       { results: results.slice(0, 10) },
