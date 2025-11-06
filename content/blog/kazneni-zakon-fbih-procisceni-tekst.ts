@@ -3,7 +3,7 @@ import { BlogPost } from '@/types/blog';
 export const kaznenZakonFBiH: BlogPost = {
   slug: 'kazneni-zakon-fbih-procisceni-tekst',
   title: 'Kazneni zakon Federacije BiH - Pročišćeni tekst sa historijatom izmjena',
-  summary: 'Neslužbeni pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sa detaljnim historijatom svih izmjena od 2003. do 2025. godine.',
+  excerpt: 'Neslužbeni pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sa detaljnim historijatom svih izmjena od 2003. do 2025. godine.',
   content: `
 # Kazneni zakon Federacije BiH - Pročišćeni tekst
 
