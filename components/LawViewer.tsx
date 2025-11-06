@@ -32,8 +32,8 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
       {sections.map(section => (
         <div key={section.id} className="mb-8 border-b pb-6">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <ReactMarkdown className="prose prose-sm max-w-none">
+            <div className="flex-1 prose prose-sm max-w-none">
+              <ReactMarkdown>
                 {section.content}
               </ReactMarkdown>
             </div>
@@ -48,8 +48,8 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
           </div>
           
           {section.history && expandedHistory.has(section.id) && (
-            <div className="mt-4 p-4 bg-gray-50 rounded border-l-4 border-blue-500">
-              <ReactMarkdown className="prose prose-sm max-w-none text-gray-700">
+            <div className="mt-4 p-4 bg-gray-50 rounded border-l-4 border-blue-500 prose prose-sm max-w-none text-gray-700">
+              <ReactMarkdown>
                 {section.history}
               </ReactMarkdown>
             </div>
