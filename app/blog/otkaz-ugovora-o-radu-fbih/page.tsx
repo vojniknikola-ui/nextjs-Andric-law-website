@@ -18,12 +18,16 @@ export default function BlogPost() {
       {/* Hero Image */}
       <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden border-b border-white/10">
         <Image
-          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=675&fit=crop"
+          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&h=1080&fit=crop&q=85"
           alt="Otkaz ugovora o radu"
           fill
           className="object-cover"
           priority
+          fetchPriority="high"
+          quality={85}
+          fetchPriority="high"
           sizes="100vw"
+          quality={85}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
       </div>

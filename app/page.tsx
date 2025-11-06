@@ -1,6 +1,9 @@
 "use client";
 
 import { useRef } from "react";
+
+export const dynamic = 'force-static';
+export const revalidate = 3600; // ISR - 1 hour
 import Link from "next/link";
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -23,16 +26,16 @@ export default function AndricLawLanding() {
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
       <Header onContactClick={scrollToKontakt} />
 
-      <section id="hero" className="relative overflow-hidden">
+      <section id="hero" className="relative overflow-hidden min-h-[600px] flex items-center">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[120vw] h-[120vw] rounded-full bg-zinc-500/5 blur-3xl" />
         </div>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
           <div className="flex flex-col items-center text-center gap-8">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
               <Clock className="size-3" /> Odgovor u 24h · Pisano mišljenje u 72h
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight" style={{ fontDisplay: 'swap' }}>
               Pravni partner za <span className="text-zinc-300">biznis u BiH</span>
             </h1>
             <p className="max-w-2xl text-slate-300 text-lg">

@@ -76,6 +76,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             fill
             className="object-cover"
             priority
+          fetchPriority="high"
+          quality={85}
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
