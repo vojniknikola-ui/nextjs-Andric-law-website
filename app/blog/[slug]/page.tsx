@@ -10,9 +10,9 @@ import { BlogCard } from '@/components/BlogCard';
 import ReactMarkdown from 'react-markdown';
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // SSG - Generate static pages for all blog posts
@@ -25,7 +25,8 @@ export async function generateStaticParams() {
 
 // Dynamic metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -51,7 +52,8 @@ export const revalidate = 0; // Always fetch fresh data
 export const dynamicParams = true; // Allow dynamic params
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
