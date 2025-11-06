@@ -25,9 +25,7 @@ export default function BlogPost() {
           priority
           fetchPriority="high"
           quality={85}
-          fetchPriority="high"
           sizes="100vw"
-          quality={85}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
       </div>
