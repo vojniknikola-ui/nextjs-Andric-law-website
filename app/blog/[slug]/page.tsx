@@ -47,7 +47,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 0; // Always fetch fresh data
+export const dynamicParams = true; // Allow dynamic params
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPostBySlug(params.slug);
