@@ -11,7 +11,7 @@ export const metadata: Metadata = generateBlogMetadata(
   'Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova. Stručna pravna pomoć za poslodavce u FBiH.',
   'otkaz-ugovora-o-radu-fbih',
   '2025-01-28',
-  'https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Book%20Lot%20on%20Shelf.jpg
+  'https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Book%20Lot%20on%20Shelf.jpg'
 );
 
 export default function BlogPost() {
@@ -236,7 +236,7 @@ export default function BlogPost() {
             'Otkaz ugovora o radu – vodič za poslodavce u FBiH',
             'Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova.',
             '2025-01-28',
-            'https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Book%20Lot%20on%20Shelf.jpg
+            'https://sjhnvlvtybo172ko.public.blob.vercel-storage.com/Book%20Lot%20on%20Shelf.jpg'
           )),
         }}
       />
