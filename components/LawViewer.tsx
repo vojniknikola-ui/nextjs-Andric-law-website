@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 
 interface LawSection {
   id: string;
@@ -28,14 +27,12 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-4 py-8 font-serif">
       {sections.map(section => (
-        <article key={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <article key={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           <div className="flex items-start justify-between gap-6">
-            <div className="flex-1 prose prose-lg max-w-none text-black prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black">
-              <ReactMarkdown>
-                {section.content}
-              </ReactMarkdown>
+            <div className="flex-1">
+              <div className="text-black leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }} />
             </div>
             {section.history && (
               <button
@@ -50,17 +47,22 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
           {section.history && expandedHistory.has(section.id) && (
             <div className="mt-6 p-5 bg-amber-50 rounded-lg border-l-4 border-amber-500">
               <h4 className="text-sm font-semibold text-black mb-3">Historijat izmjena</h4>
-              <div className="prose prose-sm max-w-none text-black prose-headings:text-black prose-p:text-black prose-strong:text-black">
-                <ReactMarkdown>
-                  {section.history}
-                </ReactMarkdown>
-              </div>
+              <div className="text-black text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
             </div>
           )}
         </article>
       ))}
     </div>
   );
+}
+
+function formatLawContent(content: string): string {
+  return content
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-lg">$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^(.+)$/gm, '<p class="mb-4">$1</p>')
+    .replace(/<p class="mb-4"><\/p>/g, '')
+    .replace(/<p class="mb-4"><strong/g, '<p class="mb-6 mt-4"><strong');
 }
 
 function parseLawContent(content: string): LawSection[] {
