@@ -8,6 +8,7 @@ import { GlossarySection } from '@/components/GlossarySection';
 import { ServicesSection } from '@/components/ServicesSection';
 import { AboutSection } from '@/components/AboutSection';
 import { ContactSection } from '@/components/ContactSection';
+import SearchBoxLazy from '@/components/SearchBoxLazy';
 import {
   Phone, ChevronRight, Clock, MessageSquare,
 } from "lucide-react";
@@ -38,6 +39,9 @@ export default function AndricLawLanding() {
             <p className="max-w-2xl text-slate-300 text-lg">
               Specijalizirani za radno pravo, IT ugovore i privredno pravo. Stručno, precizno i brzo — bez agresivnog marketinga, sa fokusom na rezultat.
             </p>
+            <div className="w-full max-w-2xl mb-4">
+              <SearchBoxLazy />
+            </div>
             <div className="flex flex-wrap gap-3 justify-center">
               <button onClick={scrollToKontakt} className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-3 transition">
                 Zakaži konsultacije <ChevronRight className="size-4 transition group-hover:translate-x-0.5" />
