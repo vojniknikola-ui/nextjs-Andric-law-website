@@ -72,7 +72,7 @@ function parseLawContent(content: string): LawSection[] {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    if (line.match(/^\*\*Članak \d+/)) {
+    if (line.match(/^\\?\*\\?\*Članak \d+/)) {
       if (currentSection) {
         currentSection.content = currentContent.join('\n').trim();
         if (historyContent.length > 0) {
@@ -81,7 +81,7 @@ function parseLawContent(content: string): LawSection[] {
         sections.push(currentSection as LawSection);
       }
 
-      const articleMatch = line.match(/Članak (\d+[a-z]*)/);
+      const articleMatch = line.match(/Članak (\d+[a-z]*)/i);
       currentSection = {
         id: articleMatch ? `article-${articleMatch[1]}` : `section-${i}`,
         title: line,
@@ -93,7 +93,7 @@ function parseLawContent(content: string): LawSection[] {
       continue;
     }
 
-    if (line.includes('#### Historijat izmjena')) {
+    if (line.includes('Historijat izmjena')) {
       inHistory = true;
       continue;
     }
