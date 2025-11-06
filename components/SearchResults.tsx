@@ -93,8 +93,6 @@ export default async function SearchResults({ query, filter }: { query?: string;
 }
 
 function getCategoryLink(result: any) {
-  if (result.category === 'zakoni') return `/zakoni/${result.slug}`;
-  if (result.category === 'sudska-praksa') return `/sudska-praksa/${result.slug}`;
   return `/blog/${result.slug}`;
 }
 
