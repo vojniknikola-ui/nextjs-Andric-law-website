@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { Sparkles, Search as SearchIcon } from 'lucide-react';
 import SearchFilters from './SearchFilters';
 import { getAllPosts } from '@/lib/blog';
@@ -8,6 +8,7 @@ import {
   type HighlightSegment,
   type HighlightSnippet,
 } from '@/lib/search/blog-search';
+import { tokenize as tokenizeQuery } from '@/lib/search/text-utils';
 
 type Category = 'zakoni' | 'sudska-praksa' | 'vijesti-clanci' | 'all';
 
@@ -27,10 +28,136 @@ type SearchResultItem = {
   snippet: HighlightSnippet | null;
 };
 
+type HighlightRange = {
+  start: number;
+  end: number;
+};
+
 const MATCH_FIELD_LABEL: Record<'title' | 'excerpt' | 'content', string> = {
   title: 'Naslov',
   excerpt: 'Sažetak',
   content: 'Sadržaj',
+};
+
+const DIACRITIC_REGEX = /[\u0300-\u036f]/g;
+
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const buildNormalizedMapping = (text: string) => {
+  const normalizedChars: string[] = [];
+  const indexMap: number[] = [];
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    const normalizedChar = char.normalize('NFD').replace(DIACRITIC_REGEX, '');
+    if (!normalizedChar) {
+      continue;
+    }
+
+    for (const normalizedSingle of normalizedChar) {
+      normalizedChars.push(normalizedSingle.toLowerCase());
+      indexMap.push(i);
+    }
+  }
+
+  return {
+    normalized: normalizedChars.join(''),
+    indexMap,
+  };
+};
+
+const mergeRanges = (ranges: HighlightRange[]): HighlightRange[] => {
+  if (ranges.length === 0) {
+    return [];
+  }
+
+  const sorted = [...ranges].sort((a, b) => a.start - b.start);
+  const merged: HighlightRange[] = [];
+
+  for (const range of sorted) {
+    const last = merged[merged.length - 1];
+    if (last && range.start <= last.end) {
+      last.end = Math.max(last.end, range.end);
+    } else {
+      merged.push({ ...range });
+    }
+  }
+
+  return merged;
+};
+
+const highlightFallbackText = (text: string, query: string): ReactNode => {
+  const tokens = Array.from(new Set(tokenizeQuery(query))).filter(
+    (token) => token.length > 2 || /\d/.test(token),
+  );
+
+  if (!text || tokens.length === 0) {
+    return text;
+  }
+
+  const { normalized, indexMap } = buildNormalizedMapping(text);
+  if (!normalized.length || indexMap.length === 0) {
+    return text;
+  }
+
+  const ranges: HighlightRange[] = [];
+
+  tokens.forEach((token) => {
+    const regex = new RegExp(escapeRegExp(token), 'g');
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(normalized))) {
+      const startIndex = match.index;
+      const endIndex = startIndex + token.length - 1;
+      const startOriginal = indexMap[Math.min(startIndex, indexMap.length - 1)];
+      const endOriginalIndex = indexMap[Math.min(endIndex, indexMap.length - 1)];
+
+      if (startOriginal === undefined || endOriginalIndex === undefined) {
+        continue;
+      }
+
+      ranges.push({
+        start: startOriginal,
+        end: Math.min(endOriginalIndex + 1, text.length),
+      });
+    }
+  });
+
+  if (ranges.length === 0) {
+    return text;
+  }
+
+  const merged = mergeRanges(ranges);
+  const pieces: ReactNode[] = [];
+  let cursor = 0;
+
+  merged.forEach((range, index) => {
+    if (range.start > cursor) {
+      pieces.push(
+        <Fragment key={`plain-${index}`}>
+          {text.slice(cursor, range.start)}
+        </Fragment>,
+      );
+    }
+
+    pieces.push(
+      <mark key={`mark-${index}`} className="rounded-sm bg-yellow-200 px-0.5 text-inherit">
+        {text.slice(range.start, range.end)}
+      </mark>,
+    );
+
+    cursor = range.end;
+  });
+
+  if (cursor < text.length) {
+    pieces.push(
+      <Fragment key="tail">
+        {text.slice(cursor)}
+      </Fragment>,
+    );
+  }
+
+  return <>{pieces}</>;
 };
 
 const inferCategory = (tags: string[]): Category => {
@@ -55,12 +182,12 @@ const normalizeBlogResults = (results: BlogSearchResult[]): SearchResultItem[] =
       content: result.post.content,
       date: result.post.date,
       readMinutes: result.post.readMinutes,
-      tags: result.post.tags,
+      tags: result.post.tags ?? [],
       category,
       similarity: result.similarity,
       matchField: result.matchedField,
       titleSegments: result.titleSegments,
-      snippet: (result.snippet ?? null),
+      snippet: result.snippet ?? null,
     };
   });
 
@@ -79,12 +206,12 @@ const renderSegments = (segments: HighlightSegment[] | undefined, fallback: stri
   );
 };
 
-const renderSnippet = (snippet: HighlightSnippet | null, fallback?: string) => {
+const renderSnippet = (snippet: HighlightSnippet | null, fallback: string | undefined, query: string) => {
   if (!snippet) {
     if (!fallback) {
       return null;
     }
-    return fallback;
+    return highlightFallbackText(fallback, query);
   }
 
   return (
@@ -200,54 +327,61 @@ export default async function SearchResults({
           </div>
         ) : (
           <div className="space-y-6">
-            {results.map((result) => (
-              <a
-                key={result.id}
-                href={getCategoryLink(result)}
-                className="block rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getCategoryColor(result.category)}`}>
-                      {getCategoryLabel(result.category)}
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {new Date(result.date).toLocaleDateString('bs-BA')} · {result.readMinutes} min
-                    </span>
+            {results.map((result) => {
+              const fallbackSource = result.excerpt || result.content || '';
+              const fallback = fallbackSource.length > 260
+                ? `${fallbackSource.slice(0, 260).trimEnd()}…`
+                : fallbackSource;
+
+              return (
+                <a
+                  key={result.id}
+                  href={getCategoryLink(result)}
+                  className="block rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getCategoryColor(result.category)}`}>
+                        {getCategoryLabel(result.category)}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {new Date(result.date).toLocaleDateString('bs-BA')} · {result.readMinutes} min
+                      </span>
+                    </div>
+                    {typeof result.similarity === 'number' && (
+                      <span className="text-xs font-medium text-blue-700">
+                        Sličnost {result.similarity.toFixed(0)}%
+                        {result.matchField ? ` · ${MATCH_FIELD_LABEL[result.matchField]}` : ''}
+                      </span>
+                    )}
                   </div>
-                  {typeof result.similarity === 'number' && (
-                    <span className="text-xs font-medium text-blue-700">
-                      Sličnost {result.similarity.toFixed(0)}%
-                      {result.matchField ? ` · ${MATCH_FIELD_LABEL[result.matchField]}` : ''}
+
+                  <h2 className="mb-3 text-xl font-semibold text-slate-900 transition group-hover:text-blue-600">
+                    {renderSegments(result.titleSegments, result.title)}
+                  </h2>
+
+                  <div className="mb-4 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm leading-relaxed text-blue-900">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-800">
+                      Relevantni odlomak
+                    </p>
+                    <p>
+                      {renderSnippet(result.snippet, fallback, query)}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 text-xs text-slate-500">
+                    <span className="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
+                      Andrić Law insight
                     </span>
-                  )}
-                </div>
-
-                <h2 className="mb-3 text-xl font-semibold text-slate-900 transition group-hover:text-blue-600">
-                  {renderSegments(result.titleSegments, result.title)}
-                </h2>
-
-                <div className="mb-4 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm leading-relaxed text-blue-900">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-800">
-                    Relevantni odlomak
-                  </p>
-                  <p>
-                    {renderSnippet(result.snippet, result.excerpt || result.content?.slice(0, 220))}
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 text-xs text-slate-500">
-                  <span className="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
-                    Andrić Law insight
-                  </span>
-                  {result.tags.slice(0, 4).map((tag) => (
-                    <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1">
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </a>
-            ))}
+                    {result.tags.slice(0, 4).map((tag) => (
+                      <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </a>
+              );
+            })}
           </div>
         )}
       </div>
