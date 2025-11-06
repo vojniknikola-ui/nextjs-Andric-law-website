@@ -28,33 +28,38 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto px-4 py-8">
       {sections.map(section => (
-        <div key={section.id} className="mb-8 border-b pb-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 prose prose-sm max-w-none">
-              <ReactMarkdown>
-                {section.content}
-              </ReactMarkdown>
+        <article key={section.id} className="mb-12 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div className="p-6">
+            <div className="flex items-start justify-between gap-6">
+              <div className="flex-1 prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-800 prose-p:leading-relaxed prose-strong:text-gray-900">
+                <ReactMarkdown>
+                  {section.content}
+                </ReactMarkdown>
+              </div>
+              {section.history && (
+                <button
+                  onClick={() => toggleHistory(section.id)}
+                  className="flex-shrink-0 px-4 py-2 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors shadow-sm"
+                >
+                  📜 Historijat
+                </button>
+              )}
             </div>
-            {section.history && (
-              <button
-                onClick={() => toggleHistory(section.id)}
-                className="flex-shrink-0 px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 rounded"
-              >
-                📜 Historijat
-              </button>
+            
+            {section.history && expandedHistory.has(section.id) && (
+              <div className="mt-6 p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+                <h4 className="text-sm font-semibold text-amber-900 mb-3">Historijat izmjena</h4>
+                <div className="prose prose-sm max-w-none prose-headings:text-amber-900 prose-p:text-amber-800 prose-blockquote:border-amber-300">
+                  <ReactMarkdown>
+                    {section.history}
+                  </ReactMarkdown>
+                </div>
+              </div>
             )}
           </div>
-          
-          {section.history && expandedHistory.has(section.id) && (
-            <div className="mt-4 p-4 bg-gray-50 rounded border-l-4 border-blue-500 prose prose-sm max-w-none text-gray-700">
-              <ReactMarkdown>
-                {section.history}
-              </ReactMarkdown>
-            </div>
-          )}
-        </div>
+        </article>
       ))}
     </div>
   );
