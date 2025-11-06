@@ -1,5 +1,6 @@
 import { BlogPost } from '@/types/blog';
 import { kazneniZakonFbihPost } from '@/content/blog/kazneni-zakon-fbih';
+import { kaznenZakonFBiH } from '@/content/blog/kazneni-zakon-fbih-procisceni-tekst';
 
 // Placeholder slike - zamijeni sa pravim Vercel Blob URL-ovima nakon upload-a
 const BLOG_IMAGES = {
@@ -12,6 +13,7 @@ const BLOG_IMAGES = {
 };
 
 export const blogPosts: BlogPost[] = [
+  kaznenZakonFBiH,
   kazneniZakonFbihPost,
   {
     slug: "zakon-o-izmjenama-stvarnih-prava-rs",
