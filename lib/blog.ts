@@ -436,8 +436,7 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     slug: "nda-it-projekti",
     title: "NDA u IT projektima – šta mora da sadrži",
     excerpt: "Ključne klauzule povjerljivosti, rokovi i odnos prema autorskim pravima i GDPR-u.",
-    content: `
-# NDA u IT projektima
+    content: `# NDA u IT projektima
 
 Non-Disclosure Agreement (NDA) ili ugovor o povjerljivosti je ključan dokument u IT industriji gdje se razmjenjuju osjetljive informacije.
 
@@ -475,7 +474,7 @@ NDA mora biti usklađen sa GDPR-om kada se radi o ličnim podacima:
 ## Preporuke
 
 Uvijek prilagodite NDA specifičnom projektu i konsultujte pravnika prije potpisivanja.
-    `,
+`,
     date: "2025-01-18",
     readMinutes: 6,
     tags: ["Ugovori", "IT", "GDPR"],
