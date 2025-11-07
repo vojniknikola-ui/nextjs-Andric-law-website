@@ -96,8 +96,12 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
 function formatLawContent(content: string): string {
   return content
     .replace(/\\/g, '')
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-base">$1</strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-lg">$1</strong>')
     .replace(/\*(.+?)\*/g, '$1')
+    .replace(/^(Član [IVX\d]+.*?)$/gm, '<p class="mb-3 font-bold text-xl text-blue-900">$1</p>')
+    .replace(/^(Članak \d+.*?)$/gm, '<p class="mb-3 font-bold text-xl text-blue-900">$1</p>')
+    .replace(/^(PREAMBULA|DIO [IVX]+.*?|GLAVA [IVX]+.*?)$/gm, '<p class="mb-4 mt-6 font-bold text-2xl text-blue-900">$1</p>')
+    .replace(/^(PSBiH.*?|Sarajevo|\d{1,2}\. [a-z]+ \d{4}\. godine)$/gm, '<p class="mb-2 text-right font-semibold text-gray-700 italic">$1</p>')
     .replace(/^(.+)$/gm, '<p class="mb-3">$1</p>')
     .replace(/<p class="mb-3"><\/p>/g, '')
     .replace(/<p class="mb-3"><strong/g, '<p class="mb-5 mt-3"><strong');
