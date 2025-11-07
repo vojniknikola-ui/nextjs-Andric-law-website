@@ -3,15 +3,10 @@ import path from 'path';
 import LawViewer from '@/components/LawViewer';
 
 export const metadata = {
-  title: 'Kazneni zakon Federacije BiH - LawViewer izdanje',
-  description: 'Kompletan kazneni zakon sa interaktivnim historijatom izmjena i označenim amandmanima.',
+  title: 'Kazneni zakon Federacije BiH | Andrić Law',
+  description: 'Kazneni zakon Federacije BiH - pročišćeni tekst sa historijatom izmjena',
   alternates: {
     canonical: 'https://andric.law/zakoni/kazneni-zakon',
-  },
-  openGraph: {
-    title: 'Kazneni zakon Federacije BiH - LawViewer izdanje',
-    description: 'Kompletan kazneni zakon sa interaktivnim historijatom izmjena i označenim amandmanima.',
-    url: 'https://andric.law/zakoni/kazneni-zakon',
   },
 };
 
@@ -43,83 +38,44 @@ export default async function KazneniZakonPage() {
   const lawContent = await fs.readFile(filePath, 'utf-8');
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <section className="bg-gradient-to-br from-black via-slate-900 to-slate-800 py-16">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-          <div className="space-y-6">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-white/80">
-              Andrić Law · LawViewer
-            </span>
-            <div>
-              <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">
-                Kazneni zakon Federacije BiH
-              </h1>
-              <p className="mt-4 text-lg text-white/85">
-                Nezvanični pročišćeni tekst sa interaktivnim historijatom izmjena od 2003. do 2025. godine.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="#izmjena-2025"
-                className="rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-400 px-5 py-3 text-sm font-semibold shadow-lg shadow-blue-900/40 hover:opacity-90"
-              >
-                Otvori izmjene 2025.
-              </a>
-              <a
-                href="#article-vi"
-                className="rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white/90 hover:bg-white/10"
-              >
-                Skoči na odjeljak VI
-              </a>
-            </div>
-          </div>
-          <div className="grid gap-3 text-sm text-slate-200">
-            <div className="rounded-2xl border border-white/15 bg-white/5 px-5 py-3">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-sky-300">Status</p>
-              <p className="mt-2 font-semibold">Važeći tekst + izmjene do SN 58/25</p>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/5 px-5 py-3">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-sky-300">Objave</p>
-              <p className="mt-2 font-semibold">
-                SN FBiH: 36/03, 37/03, 21/04, 69/04, 18/05, 42/10, 42/11, 59/14, 76/14, 46/16, 75/17, 31/23, 58/25
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="max-w-5xl mx-auto px-6 mt-10 grid gap-4">
-        {AMENDMENTS.map((amendment) => (
-          <details
-            key={amendment.id}
-            id={amendment.id}
-            className="group rounded-3xl border border-blue-200/40 bg-blue-50/90 p-6 text-blue-900 shadow-sm"
-          >
-            <summary className="flex cursor-pointer items-center justify-between gap-4 text-sm font-semibold uppercase tracking-[0.2em] text-blue-900">
-              <span>{amendment.label} — {amendment.summary}</span>
-              <span className="rounded-full bg-blue-200 px-3 py-1 text-xs font-semibold text-blue-900 group-open:bg-blue-900 group-open:text-blue-50">
-                Prikaži
-              </span>
-            </summary>
-            <div className="mt-4 space-y-2 text-sm leading-relaxed">
-              {amendment.details.map((line) => (
-                <p key={line}>• {line}</p>
-              ))}
-            </div>
-          </details>
-        ))}
-      </section>
-
-      <section className="max-w-5xl mx-auto px-6 mt-8">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-          <h2 className="text-lg font-semibold text-white mb-3">Napomena</h2>
-          <p className="text-sm text-white/80 leading-relaxed">
-            Tekst služi za informativne svrhe i rad sa klijentima. Za službenu upotrebu uvijek konsultujte originalne objave u "Službenim novinama Federacije BiH".
+    <main className="min-h-screen bg-white">
+      <div className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-16">
+        <div className="max-w-5xl mx-auto px-6">
+          <h1 className="text-5xl font-bold mb-6 leading-tight">
+            Kazneni zakon Federacije Bosne i Hercegovine
+          </h1>
+          <p className="text-xl text-blue-100 mb-4">
+            Neslužbeni pročišćeni tekst sa historijatom izmjena
           </p>
+          <div className="inline-block bg-blue-800/50 backdrop-blur-sm px-4 py-2 rounded-lg">
+            <p className="text-sm text-blue-200">
+              Službene novine FBiH: br. 36/03, 37/03, 21/04, 69/04, 18/05, 42/10, 42/11, 59/14, 76/14, 46/16, 75/17, 31/23, 58/25
+            </p>
+          </div>
         </div>
-      </section>
-
+      </div>
+      
       <LawViewer lawContent={lawContent} />
+      
+      <div className="max-w-5xl mx-auto px-6 py-12">
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-lg">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-6 w-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <h3 className="text-lg font-semibold text-yellow-900 mb-2">Napomena</h3>
+              <p className="text-yellow-800 leading-relaxed">
+                Ovo je neslužbeni pročišćeni tekst koji služi isključivo za informativne svrhe. 
+                Za službenu uporabu potrebno je konzultirati originalne tekstove objavljene u 
+                <strong> "Službenim novinama Federacije BiH"</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

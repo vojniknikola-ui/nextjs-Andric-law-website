@@ -16,6 +16,25 @@ export const blogPosts: BlogPost[] = [
   ustavBiHPost,
   kaznenZakonFBiH,
   {
+    slug: "otkaz-ugovora-o-radu-fbih",
+    title: "Otkaz ugovora o radu – vodič za poslodavce u FBiH",
+    excerpt: "Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova.",
+    content: `Otkaz ugovora o radu...`,
+    date: "2025-01-28",
+    readMinutes: 7,
+    tags: ["Radno pravo", "HR", "FBiH"],
+    author: {
+      name: "Andrić Law",
+      role: "Advokatski ured"
+    },
+    featured: true,
+    image: BLOG_IMAGES['otkaz-ugovora-o-radu-fbih']
+  },
+];
+
+/*
+Obrisani postovi - čuvam za referencu:
+  {
     slug: "zakon-o-izmjenama-stvarnih-prava-rs",
     title: "Zakon o izmjenama i dopunama Zakona o stvarnim pravima RS",
     excerpt: "Zakon koji uređuje pretvaranje prava korištenja, upravljanja i raspolaganja u pravo svojine u Republici Srpskoj.",
@@ -397,6 +416,7 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     },
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
   },
+*/
   {
     slug: "otkaz-ugovora-vodic-2025",
     title: "Otkaz ugovora o radu (FBiH & RS) – praktični vodič za 2025",
@@ -412,49 +432,10 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     featured: true,
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
   },
-  {
-    slug: "otkaz-ugovora-o-radu-fbih",
-    title: "Otkaz ugovora o radu – vodič za poslodavce u FBiH",
-    excerpt: "Kratak pregled zakonitih razloga, procedura i tipičnih grešaka koje dovode do sporova.",
-    content: `
-# Otkaz ugovora o radu u FBiH
+];
 
-Otkaz ugovora o radu je jedna od najosjetljivijih tema u radnom pravu. Poslodavci moraju biti izuzetno pažljivi jer greške mogu dovesti do skupih sudskih sporova.
-
-## Zakoniti razlozi za otkaz
-
-Prema Zakonu o radu FBiH, poslodavac može otkazati ugovor o radu iz:
-- Poslovnih razloga (tehnološki, ekonomski ili organizacioni)
-- Razloga koji se odnose na radnika (nesposobnost, povreda radne obaveze)
-
-## Procedura otkaza
-
-1. **Pisana opomena** - Obavezna za povrede radne discipline
-2. **Saslušanje radnika** - Mora se omogućiti odbrana
-3. **Pisano rješenje** - Sa jasnim obrazloženjem i pravnim poukom
-4. **Otkazni rok** - Minimalno 30 dana, osim kod teških povreda
-
-## Najčešće greške
-
-- Nedostatak dokumentacije o povredi
-- Propuštanje roka za izricanje mjere
-- Nepoštivanje procedure saslušanja
-- Nejasno obrazloženje razloga
-
-## Zaključak
-
-Svaki otkaz mora biti pažljivo pripremljen i dokumentovan. Preporučujemo konsultacije sa pravnikom prije donošenja konačne odluke.
-    `,
-    date: "2025-01-28",
-    readMinutes: 7,
-    tags: ["Radno pravo", "HR", "FBiH"],
-    author: {
-      name: "Andrić Law",
-      role: "Advokatski ured"
-    },
-    featured: true,
-    image: BLOG_IMAGES['otkaz-ugovora-o-radu-fbih']
-  },
+/*
+Obrisani postovi:
   {
     slug: "nda-it-projekti",
     title: "NDA u IT projektima – šta mora da sadrži",
@@ -816,7 +797,7 @@ Investirajte u dobar ugovor na početku. Jeftinije je od spora kasnije.
     },
     image: BLOG_IMAGES['intelektualno-vlasnistvo-software']
   }
-];
+*/
 
 export async function getAllPosts(): Promise<BlogPost[]> {
   await new Promise(resolve => setTimeout(resolve, 100));
