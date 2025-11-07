@@ -12,6 +12,8 @@ export interface BlogPost {
   };
   featured?: boolean;
   image?: string;
+  isLawDocument?: boolean;
+  lawViewerPath?: string;
 }
 
 export interface BlogCategory {

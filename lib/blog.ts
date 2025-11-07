@@ -13,6 +13,22 @@ const BLOG_IMAGES = {
 };
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: "ustav-bih",
+    title: "Ustav Bosne i Hercegovine",
+    excerpt: "Aneks 4. Općeg okvirnog sporazuma za mir u Bosni i Hercegovini - kompletan tekst sa amandmanima.",
+    content: "",
+    date: "2025-01-30",
+    readMinutes: 45,
+    tags: ["Zakoni", "Ustav", "BiH"],
+    author: {
+      name: "Andrić Law",
+      role: "Advokatska kancelarija"
+    },
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop',
+    isLawDocument: true,
+    lawViewerPath: "/zakoni/ustav-bih"
+  },
   kaznenZakonFBiH,
   kazneniZakonFbihPost,
   {

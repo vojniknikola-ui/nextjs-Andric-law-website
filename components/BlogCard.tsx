@@ -9,9 +9,11 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post, featured = false }: BlogCardProps) {
+  const href = post.isLawDocument && post.lawViewerPath ? post.lawViewerPath : `/blog/${post.slug}`;
+  
   return (
     <article className={`group rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition overflow-hidden ${featured ? 'lg:col-span-2' : ''}`}>
-      <Link href={`/blog/${post.slug}`} className="block">
+      <Link href={href} className="block">
         <div className={`relative w-full overflow-hidden ${featured ? 'aspect-[21/9]' : 'aspect-[16/9]'}`}>
           {post.image ? (
             <Image
