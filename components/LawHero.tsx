@@ -1,3 +1,19 @@
+import { RenderPdfButton } from './RenderPdfButton';
+
+type ActionItem =
+  | {
+      type: 'link';
+      label: string;
+      href: string;
+      download?: boolean;
+      variant?: 'primary' | 'secondary';
+    }
+  | {
+    type: 'render';
+    label: string;
+    variant?: 'primary' | 'secondary';
+  };
+
 interface LawHeroStat {
   label: string;
   value: string;
@@ -8,12 +24,7 @@ interface LawHeroProps {
   badge: string;
   title: string;
   description: string;
-  actions: Array<{
-    label: string;
-    href: string;
-    download?: boolean;
-    variant?: 'primary' | 'secondary';
-  }>;
+  actions: ActionItem[];
   stats: LawHeroStat[];
 }
 
@@ -40,6 +51,13 @@ export function LawHero({ badge, title, description, actions, stats }: LawHeroPr
                   variant === 'primary'
                     ? 'inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/40 transition hover:-translate-y-0.5'
                     : 'inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-100';
+
+                if (action.type === 'render') {
+                  return (
+                    <RenderPdfButton key={action.label} label={action.label} className={className} />
+                  );
+                }
+
                 return (
                   <a
                     key={action.label}
