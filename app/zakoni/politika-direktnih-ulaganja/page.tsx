@@ -26,9 +26,9 @@ export default async function PolitikaDirektnihUlaganjaPage() {
         actions={[
           { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
         ]}
-        stats={[
-          { label: 'Članovi', value: `${articleCount}`, description: 'Dio I–VII' },
-          { label: 'Izmjene', value: '4 paketa', description: 'SG BiH 4/98 – 22/15' },
+        highlights={[
+          { label: 'Službeni glasnik BiH 4/98 – 22/15', description: 'Ugrađene sve izmjene (2003, 2010, 2015)' },
+          { label: 'Članovi', description: `${articleCount} članova kroz 7 dijelova` },
         ]}
       />
 

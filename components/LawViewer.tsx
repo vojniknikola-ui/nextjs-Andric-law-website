@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface LawSection {
   id: string;
@@ -16,8 +16,15 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
   const [showAmendment, setShowAmendment] = useState(false);
 
   const sections = parseLawContent(lawContent);
-  const articleCount = sections.filter(section => section.type === 'article').length;
-  const withHistoryCount = sections.filter(section => Boolean(section.history)).length;
+  const sectionGroups = useMemo(() => {
+    const map = new Map<string, string>();
+    sections.forEach(section => {
+      if (section.group && section.type === 'article' && !map.has(section.group)) {
+        map.set(section.group, section.id);
+      }
+    });
+    return Array.from(map.entries()).map(([label, anchor]) => ({ label, anchor }));
+  }, [sections]);
 
   const toggleHistory = (id: string) => {
     setExpandedHistory(prev => {
@@ -33,26 +40,6 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
-      <div className="mb-12 rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-blue-50 p-8 shadow-lg shadow-blue-100/70">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-600">Andrić Law · LawViewer</p>
-            <h1 className="mt-3 text-3xl font-bold text-slate-950">Digitalni pregled zakona</h1>
-            <p className="mt-2 text-slate-600 leading-relaxed">
-              Jedinstveni prikaz članova, izmjena i amandmana u jednom, preglednom interfejsu. Svaki član ima sidro, a historijat se otvara na klik.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-white/40 bg-white/70 p-5 text-sm text-slate-600 shadow-inner">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">Status dokumenta</p>
-            <p className="mt-2 text-lg font-semibold text-slate-900">{articleCount}+ članova</p>
-            <p className="text-slate-500">{withHistoryCount} historijskih napomena</p>
-            <p className="mt-3 text-xs text-slate-500">
-              Powered by Andrić Law · automatsko sidrenje i formatiranje teksta bez ručnog HTML uređivanja.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {amendmentContent && (
         <div className="mb-6">
           <button
@@ -74,6 +61,30 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
         </div>
       )}
       
+      {sectionGroups.length > 0 && (
+        <div className="mb-8 rounded-3xl border border-slate-200 bg-white/95 p-5 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+              Skoči na glavu
+            </p>
+            <p className="text-xs text-slate-400">
+              {sectionGroups.length} sekcija
+            </p>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {sectionGroups.map(group => (
+              <a
+                key={group.label}
+                href={`#${group.anchor}`}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-blue-200 hover:text-blue-700"
+              >
+                {group.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
       {sections.map(section => {
         const isArticle = section.type === 'article';
         return (

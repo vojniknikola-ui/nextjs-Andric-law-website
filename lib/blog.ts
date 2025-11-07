@@ -3,6 +3,7 @@ import { kaznenZakonFBiH } from '@/content/blog/kazneni-zakon-fbih-procisceni-te
 import { ustavBiHPost } from '@/content/blog/ustav-bosne-i-hercegovine';
 import { advokatskaTarifaRSPort } from '@/content/blog/advokatska-tarifa-rs';
 import { politikaDirektnihUlaganjaPost } from '@/content/blog/politika-direktnih-ulaganja';
+import { zakonONasljedjivanjuPost } from '@/content/blog/zakon-o-nasljedivanju';
 
 // Placeholder slike - zamijeni sa pravim Vercel Blob URL-ovima nakon upload-a
 const BLOG_IMAGES = {
@@ -17,6 +18,7 @@ const BLOG_IMAGES = {
 export const blogPosts: BlogPost[] = [
   advokatskaTarifaRSPort,
   politikaDirektnihUlaganjaPost,
+  zakonONasljedjivanjuPost,
   ustavBiHPost,
   kaznenZakonFBiH,
   {

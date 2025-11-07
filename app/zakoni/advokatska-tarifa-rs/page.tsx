@@ -27,9 +27,9 @@ export default async function AdvokatskaTarifaRSPage() {
         actions={[
           { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
         ]}
-        stats={[
-          { label: 'Tarifni brojevi', value: tariffCount ? `${tariffCount}` : '30+', description: 'Osnovni i posebni brojevi' },
-          { label: 'Format', value: 'LawViewer + PDF', description: 'TXT sadržaj + originalni dokument' },
+        highlights={[
+          { label: 'Službeni glasnik RS 68/05', description: 'Tarifa o nagradama i naknadi troškova' },
+          { label: 'Tarifni brojevi', description: tariffCount ? `${tariffCount} dostupnih stavki` : '30+ stavki' },
         ]}
       />
 

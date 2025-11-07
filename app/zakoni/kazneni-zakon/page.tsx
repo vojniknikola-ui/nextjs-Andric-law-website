@@ -51,9 +51,9 @@ export default async function KazneniZakonPage() {
         actions={[
           { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
         ]}
-        stats={[
-          { label: 'Članovi', value: `${articleCount}+`, description: 'Opći + posebni dio' },
-          { label: 'Historijat izmjena', value: `${historyCount}+ bilješki`, description: 'SN FBiH 36/03 – 58/25' },
+        highlights={[
+          { label: 'Službene novine FBiH 36/03 → 58/25', description: 'Sve izmjene uključene (opći i posebni dio)' },
+          { label: 'Historijat', description: `${historyCount}+ bilješki uz članke` },
         ]}
       />
 

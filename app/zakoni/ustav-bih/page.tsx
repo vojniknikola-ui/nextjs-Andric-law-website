@@ -39,9 +39,9 @@ export default async function UstavBiHPage() {
           { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
           { type: 'link', label: 'Amandman I (Brčko distrikt)', href: '#law-amandmani', variant: 'secondary' },
         ]}
-        stats={[
-          { label: 'Članovi', value: `${articleCount}+`, description: 'Glave I – XII sa sidrima' },
-          { label: 'Amandmani', value: 'Brčko distrikt', description: '"Službeni glasnik BiH", br. 25/09' },
+        highlights={[
+          { label: 'Službeni glasnik BiH 25/09', description: 'Amandman I – Brčko distrikt' },
+          { label: 'Struktura', description: `${articleCount}+ članova · Glave I – XII` },
         ]}
       />
 
