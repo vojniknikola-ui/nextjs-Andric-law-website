@@ -9,6 +9,7 @@ interface LawSection {
   history?: string;
   group?: string;
   type?: 'intro' | 'preamble' | 'article';
+  groupLevel?: 'head' | 'subhead';
 }
 
 export default function LawViewer({ lawContent, amendmentContent }: { lawContent: string; amendmentContent?: string }) {
@@ -19,7 +20,12 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
   const sectionGroups = useMemo(() => {
     const map = new Map<string, string>();
     sections.forEach(section => {
-      if (section.group && section.type === 'article' && !map.has(section.group)) {
+      if (
+        section.group &&
+        section.groupLevel === 'head' &&
+        section.type === 'article' &&
+        !map.has(section.group)
+      ) {
         map.set(section.group, section.id);
       }
     });
@@ -274,6 +280,7 @@ function parseLawContent(content: string): LawSection[] {
   let preambleContent: string[] = [];
   let inPreamble = false;
   let currentGroup: string | null = null;
+  let currentGroupLevel: 'head' | 'subhead' | undefined;
   let capturingIntro = true;
   const introContent: string[] = [];
   let introTitle: string | null = null;
@@ -325,6 +332,7 @@ function parseLawContent(content: string): LawSection[] {
 
     if (isStructureHeading(normalizedLine)) {
       currentGroup = normalizedLine.toUpperCase();
+      currentGroupLevel = normalizedLine.toLowerCase().startsWith('glava') ? 'head' : 'subhead';
       continue;
     }
 
@@ -357,6 +365,7 @@ function parseLawContent(content: string): LawSection[] {
         title: normalizedLine,
         content: '',
         group: currentGroup ?? undefined,
+        groupLevel: currentGroupLevel,
         type: 'article',
       };
 
