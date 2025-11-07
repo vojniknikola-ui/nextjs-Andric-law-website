@@ -120,7 +120,7 @@ function parseLawContent(content: string): LawSection[] {
   let pendingGlava: string | null = null;
   let preambleContent: string[] = [];
   let inPreamble = false;
-  const articleRegex = /^Član(?:ak)?\s+([A-Z0-9.\-]+)/i;
+  const articleRegex = /^\*\*Član(?:ak)?\s+([A-Z0-9.\-]+)/i;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
