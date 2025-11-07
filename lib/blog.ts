@@ -1,6 +1,7 @@
 import { BlogPost } from '@/types/blog';
 import { kazneniZakonFbihPost } from '@/content/blog/kazneni-zakon-fbih';
 import { kaznenZakonFBiH } from '@/content/blog/kazneni-zakon-fbih-procisceni-tekst';
+import { ustavBiHPost } from '@/content/blog/ustav-bosne-i-hercegovine';
 
 // Placeholder slike - zamijeni sa pravim Vercel Blob URL-ovima nakon upload-a
 const BLOG_IMAGES = {
@@ -13,22 +14,7 @@ const BLOG_IMAGES = {
 };
 
 export const blogPosts: BlogPost[] = [
-  {
-    slug: "ustav-bih",
-    title: "Ustav Bosne i Hercegovine",
-    excerpt: "Aneks 4. Općeg okvirnog sporazuma za mir u Bosni i Hercegovini - kompletan tekst sa amandmanima.",
-    content: "",
-    date: "2025-01-30",
-    readMinutes: 45,
-    tags: ["Zakoni", "Ustav", "BiH"],
-    author: {
-      name: "Andrić Law",
-      role: "Advokatska kancelarija"
-    },
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop',
-    isLawDocument: true,
-    lawViewerPath: "/zakoni/ustav-bih"
-  },
+  ustavBiHPost,
   kaznenZakonFBiH,
   kazneniZakonFbihPost,
   {

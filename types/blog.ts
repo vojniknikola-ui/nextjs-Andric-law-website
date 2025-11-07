@@ -14,6 +14,7 @@ export interface BlogPost {
   image?: string;
   isLawDocument?: boolean;
   lawViewerPath?: string;
+  canonicalUrl?: string;
 }
 
 export interface BlogCategory {

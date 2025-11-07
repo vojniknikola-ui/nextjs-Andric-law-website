@@ -116,11 +116,29 @@ function parseLawContent(content: string): LawSection[] {
   let inHistory = false;
   let historyContent: string[] = [];
   let pendingGlava: string | null = null;
+  let preambleContent: string[] = [];
+  let inPreamble = false;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
+    if (line.match(/^PREAMBULA/i)) {
+      inPreamble = true;
+      preambleContent.push(line);
+      continue;
+    }
+
     if (line.match(/^\\?\*\\?\*Članak \d+/) || line.match(/^Član [IVX\d]+/i)) {
+      if (inPreamble && preambleContent.length > 0) {
+        sections.push({
+          id: 'preamble',
+          title: 'PREAMBULA',
+          content: preambleContent.join('\n').trim()
+        });
+        preambleContent = [];
+        inPreamble = false;
+      }
+
       if (currentSection) {
         currentSection.content = currentContent.join('\n').trim();
         if (historyContent.length > 0) {
@@ -147,12 +165,14 @@ function parseLawContent(content: string): LawSection[] {
       continue;
     }
 
-    if (line.match(/^\\?\*\\?\*GLAVA/i) || line.match(/^GLAVA/i) || line.match(/^PREAMBULA/i) || line.match(/^DIO [IVX]+/i)) {
+    if (line.match(/^\\?\*\\?\*GLAVA/i) || line.match(/^GLAVA/i) || line.match(/^DIO [IVX]+/i)) {
       pendingGlava = line;
       continue;
     }
 
-    if (inHistory) {
+    if (inPreamble) {
+      preambleContent.push(line);
+    } else if (inHistory) {
       historyContent.push(line);
     } else if (currentSection) {
       currentContent.push(line);

@@ -37,5 +37,8 @@ Ovo je neslužbeni pročišćeni tekst koji služi isključivo za informativne s
     role: 'Advokatski ured'
   },
   featured: true,
-  image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
+  image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop',
+  isLawDocument: true,
+  lawViewerPath: '/zakoni/kazneni-zakon',
+  canonicalUrl: 'https://andric.law/zakoni/kazneni-zakon'
 };

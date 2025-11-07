@@ -17,5 +17,8 @@ export const kazneniZakonFbihPost: BlogPost = {
     "role": "Advokatski ured"
   },
   "featured": true,
-  "image": "https://images.unsplash.com/photo-1555375771-14b2a63968ac?w=1200&h=675&fit=crop"
+  "image": "https://images.unsplash.com/photo-1555375771-14b2a63968ac?w=1200&h=675&fit=crop",
+  "isLawDocument": true,
+  "lawViewerPath": "/zakoni/kazneni-zakon",
+  "canonicalUrl": "https://andric.law/zakoni/kazneni-zakon"
 };
