@@ -48,15 +48,15 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
             onClick={() => setShowAmendment(!showAmendment)}
             className={`w-full px-5 py-4 text-base font-semibold rounded-lg transition-all ${
               showAmendment
-                ? 'bg-amber-600 text-white shadow-lg'
-                : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+                ? 'bg-blue-600 text-white shadow-lg'
+                : 'bg-blue-100 text-blue-900 hover:bg-blue-200'
             }`}
           >
-            📜 {showAmendment ? 'Sakrij Amandmane' : 'Prikaži Amandmane'}
+            ⚖️ {showAmendment ? 'Sakrij Amandmane' : 'Prikaži Amandmane'}
           </button>
           
           {showAmendment && (
-            <div className="mt-4 bg-amber-50 rounded-lg shadow-sm border border-amber-200 p-8">
+            <div className="mt-4 bg-blue-50 rounded-lg shadow-sm border border-blue-200 p-8">
               <div className="text-black leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: formatLawContent(amendmentContent) }} />
             </div>
           )}
