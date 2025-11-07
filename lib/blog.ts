@@ -1,5 +1,4 @@
 import { BlogPost } from '@/types/blog';
-import { kazneniZakonFbihPost } from '@/content/blog/kazneni-zakon-fbih';
 import { kaznenZakonFBiH } from '@/content/blog/kazneni-zakon-fbih-procisceni-tekst';
 import { ustavBiHPost } from '@/content/blog/ustav-bosne-i-hercegovine';
 
@@ -16,7 +15,6 @@ const BLOG_IMAGES = {
 export const blogPosts: BlogPost[] = [
   ustavBiHPost,
   kaznenZakonFBiH,
-  kazneniZakonFbihPost,
   {
     slug: "zakon-o-izmjenama-stvarnih-prava-rs",
     title: "Zakon o izmjenama i dopunama Zakona o stvarnim pravima RS",
