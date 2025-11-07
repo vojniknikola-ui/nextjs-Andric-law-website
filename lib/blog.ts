@@ -483,10 +483,7 @@ Uvijek prilagodite NDA specifičnom projektu i konsultujte pravnika prije potpis
     },
     featured: true,
     image: BLOG_IMAGES['nda-it-projekti']
-  }
-];
-
-/*
+  },
   {
     slug: "osnivanje-doo-bih",
     title: "Osnivanje d.o.o. – praktični koraci i troškovi",
@@ -794,7 +791,7 @@ Investirajte u dobar ugovor na početku. Jeftinije je od spora kasnije.
     },
     image: BLOG_IMAGES['intelektualno-vlasnistvo-software']
   }
-*/
+];
 
 export async function getAllPosts(): Promise<BlogPost[]> {
   await new Promise(resolve => setTimeout(resolve, 100));
