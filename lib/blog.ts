@@ -431,7 +431,6 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     featured: true,
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
   },
-*/
   {
     slug: "nda-it-projekti",
     title: "NDA u IT projektima – šta mora da sadrži",
@@ -484,7 +483,10 @@ Uvijek prilagodite NDA specifičnom projektu i konsultujte pravnika prije potpis
     },
     featured: true,
     image: BLOG_IMAGES['nda-it-projekti']
-  },
+  }
+];
+
+/*
   {
     slug: "osnivanje-doo-bih",
     title: "Osnivanje d.o.o. – praktični koraci i troškovi",
