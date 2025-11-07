@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface LawSection {
   id: string;
@@ -13,11 +13,34 @@ interface LawSection {
 
 export default function LawViewer({ lawContent, amendmentContent }: { lawContent: string; amendmentContent?: string }) {
   const [expandedHistory, setExpandedHistory] = useState<Set<string>>(new Set());
-  const [showAmendment, setShowAmendment] = useState(false);
-
+  const [amendmentModalOpen, setAmendmentModalOpen] = useState(false);
+  const [activeGroup, setActiveGroup] = useState<string>('all');
   const sections = parseLawContent(lawContent);
   const articleCount = sections.filter(section => section.type === 'article').length;
   const withHistoryCount = sections.filter(section => Boolean(section.history)).length;
+  const groupInfo = useMemo(() => {
+    const map = new Map<string, { label: string; anchor: string; count: number }>();
+    sections.forEach(section => {
+      if (section.group && section.type === 'article') {
+        if (!map.has(section.group)) {
+          map.set(section.group, { label: section.group, anchor: section.id, count: 0 });
+        }
+        const entry = map.get(section.group)!;
+        entry.count += 1;
+      }
+    });
+    return Array.from(map.values());
+  }, [sections]);
+
+  const filteredSections = sections.filter(section => {
+    if (activeGroup === 'all') {
+      return true;
+    }
+    if (section.type !== 'article') {
+      return true;
+    }
+    return section.group === activeGroup;
+  });
 
   const toggleHistory = (id: string) => {
     setExpandedHistory(prev => {
@@ -32,120 +55,193 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
-      <div className="mb-12 rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-blue-50 p-8 shadow-lg shadow-blue-100/70">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-600">Andrić Law · LawViewer</p>
-            <h1 className="mt-3 text-3xl font-bold text-slate-950">Digitalni pregled zakona</h1>
-            <p className="mt-2 text-slate-600 leading-relaxed">
-              Jedinstveni prikaz članova, izmjena i amandmana u jednom, preglednom interfejsu. Svaki član ima sidro, a historijat se otvara na klik.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-white/40 bg-white/70 p-5 text-sm text-slate-600 shadow-inner">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">Status dokumenta</p>
-            <p className="mt-2 text-lg font-semibold text-slate-900">{articleCount}+ članova</p>
-            <p className="text-slate-500">{withHistoryCount} historijskih napomena</p>
-            <p className="mt-3 text-xs text-slate-500">
-              Powered by Andrić Law · automatsko sidrenje i formatiranje teksta bez ručnog HTML uređivanja.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {amendmentContent && (
-        <div className="mb-6">
-          <button
-            onClick={() => setShowAmendment(!showAmendment)}
-            className={`w-full px-5 py-4 text-base font-semibold rounded-lg transition-all ${
-              showAmendment
-                ? 'bg-blue-600 text-white shadow-lg'
-                : 'bg-blue-100 text-blue-900 hover:bg-blue-200'
-            }`}
-          >
-            ⚖️ {showAmendment ? 'Sakrij Amandmane' : 'Prikaži Amandmane'}
-          </button>
-          
-          {showAmendment && (
-            <div className="mt-4 bg-blue-50 rounded-lg shadow-sm border border-blue-200 p-8">
-              <div className="text-black leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: formatLawContent(amendmentContent) }} />
+    <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 lg:grid lg:grid-cols-[280px,1fr] lg:space-y-0 lg:gap-10" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
+      <aside className="space-y-5">
+        <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-blue-50 p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-600">Andrić Law · LawViewer</p>
+          <p className="mt-3 text-lg font-semibold text-slate-900">Digitalni prikaz</p>
+          <p className="text-sm text-slate-600">
+            Sidra po članu, historijat izmjena i instant pregled glava – bez ručnog HTML uređivanja.
+          </p>
+          <dl className="mt-4 grid grid-cols-2 gap-3 text-sm text-slate-500">
+            <div className="rounded-2xl border border-white/60 bg-white/70 p-3">
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Članovi</dt>
+              <dd className="text-lg font-semibold text-slate-900">{articleCount}+</dd>
             </div>
-          )}
+            <div className="rounded-2xl border border-white/60 bg-white/70 p-3">
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Historijat</dt>
+              <dd className="text-lg font-semibold text-slate-900">{withHistoryCount}</dd>
+            </div>
+          </dl>
         </div>
-      )}
-      
-      {sections.map(section => {
-        const isArticle = section.type === 'article';
-        return (
-          <article
-            key={section.id}
-            id={section.id}
-            className={`mb-10 rounded-3xl border p-8 shadow-[0_15px_45px_rgba(15,23,42,0.08)] backdrop-blur-sm ${
-              isArticle ? 'border-slate-200 bg-white/95' : 'border-blue-100 bg-blue-50/60'
-            }`}
+
+        {groupInfo.length > 0 && (
+          <div className="rounded-3xl border border-slate-200 bg-white/90 p-4 shadow-sm">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Glave</p>
+              {activeGroup !== 'all' && (
+                <button
+                  onClick={() => setActiveGroup('all')}
+                  className="text-xs font-semibold text-blue-700 hover:underline"
+                >
+                  Resetuj
+                </button>
+              )}
+            </div>
+            <div className="space-y-2">
+              {groupInfo.map((group) => {
+                const isActive = activeGroup === group.label;
+                return (
+                  <button
+                    key={group.label}
+                    onClick={() => setActiveGroup(isActive ? 'all' : group.label)}
+                    className={`w-full rounded-2xl border px-3 py-2 text-left text-sm transition ${
+                      isActive
+                        ? 'border-blue-500 bg-blue-50 text-blue-900'
+                        : 'border-slate-200 bg-white text-slate-700 hover:border-blue-200'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold">{group.label}</span>
+                      <span className="text-xs text-slate-500">{group.count}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {amendmentContent && (
+          <div
+            id="law-amandmani"
+            className="rounded-3xl border border-amber-200 bg-amber-50/80 p-4 text-amber-900 shadow-sm"
           >
-            <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/40 pb-5">
-              <div>
-                {section.group && (
-                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
-                    {section.group}
-                  </p>
-                )}
-                <h2 className="text-2xl font-bold text-slate-950">
-                  {section.title}
-                </h2>
-              </div>
-              {isArticle ? (
-                <div className="flex flex-wrap items-center gap-2">
-                  {section.history && (
-                    <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
-                      Ima historijat
-                    </span>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">Amandmani</p>
+            <p className="mt-2 text-sm">
+              Posebne izmjene (npr. Brčko distrikt) dostupne su kao interaktivni prikaz uz zakon.
+            </p>
+            <button
+              onClick={() => setAmendmentModalOpen(true)}
+              className="mt-3 w-full rounded-2xl bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-lg shadow-amber-600/40 transition hover:-translate-y-0.5"
+            >
+              Otvori amandman
+            </button>
+          </div>
+        )}
+      </aside>
+
+      <section className="space-y-8">
+        <div className="rounded-3xl border border-slate-200 bg-white/90 p-4 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-slate-600">
+              Prikaz: <span className="font-semibold text-slate-900">{activeGroup === 'all' ? 'Sve glave' : activeGroup}</span>
+            </p>
+            <span className="text-xs text-slate-500">
+              {filteredSections.filter(section => section.type === 'article').length} kartica
+            </span>
+          </div>
+        </div>
+
+        {filteredSections.map(section => {
+          const isArticle = section.type === 'article';
+          const cardTone =
+            section.type === 'intro'
+              ? 'border-blue-200 bg-blue-50/80'
+              : section.type === 'preamble'
+                ? 'border-slate-200 bg-slate-50/90'
+                : 'border-slate-200 bg-white/95';
+          return (
+            <article
+              key={section.id}
+              id={section.id}
+              className={`rounded-3xl border p-6 shadow-[0_10px_35px_rgba(15,23,42,0.06)] ${cardTone}`}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  {section.group && (
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400">
+                      {section.group}
+                    </p>
                   )}
+                  <h2 className="mt-1 text-2xl font-bold text-slate-950">
+                    {section.title}
+                  </h2>
+                </div>
+                {isArticle ? (
                   <a
                     href={`#${section.id}`}
-                    className="rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 hover:bg-slate-50"
+                    className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 hover:bg-slate-100"
                   >
                     Sidro
                   </a>
-                </div>
-              ) : (
-                <span className="rounded-full border border-blue-300 bg-white/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-blue-900">
-                  {section.type === 'preamble' ? 'Preambula' : 'Uvod'}
-                </span>
-              )}
-            </div>
-
-            <div className="prose prose-slate mt-6 max-w-none text-base leading-relaxed text-slate-900">
-              <div
-                className="space-y-3"
-                dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }}
-              />
-            </div>
-            
-            {section.history && (
-              <div className="mt-6">
-                <button
-                  onClick={() => toggleHistory(section.id)}
-                  className={`w-full px-4 py-3 text-sm font-medium rounded-lg transition-all ${
-                    expandedHistory.has(section.id)
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-blue-100 text-blue-900 hover:bg-blue-200'
-                  }`}
-                >
-                  📋 Historijat izmjena
-                </button>
-                
-                {expandedHistory.has(section.id) && (
-                  <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50/80 p-5">
-                    <div className="text-blue-950 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
-                  </div>
+                ) : (
+                  <span className="rounded-full border border-slate-300 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
+                    {section.type === 'preamble' ? 'Preambula' : 'Uvod'}
+                  </span>
                 )}
               </div>
-            )}
-          </article>
-        );
-      })}
+
+              <div className="prose prose-slate mt-4 max-w-none text-base leading-relaxed text-slate-900">
+                <div
+                  className="space-y-3"
+                  dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }}
+                />
+              </div>
+
+              {section.history && (
+                <div className="mt-5">
+                  <button
+                    onClick={() => toggleHistory(section.id)}
+                    className={`w-full rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
+                      expandedHistory.has(section.id)
+                        ? 'border-blue-600 bg-blue-600 text-white shadow-md'
+                        : 'border-blue-200 bg-blue-50 text-blue-900 hover:bg-blue-100'
+                    }`}
+                  >
+                    {expandedHistory.has(section.id) ? 'Sakrij historijat izmjena' : 'Prikaži historijat izmjena'}
+                  </button>
+
+                  {expandedHistory.has(section.id) && (
+                    <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50/70 p-5">
+                      <div
+                        className="text-blue-950 text-sm leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </section>
+
+      {amendmentContent && amendmentModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-8"
+        >
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl border border-amber-200 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between gap-4 border-b border-amber-100 pb-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-600">Amandman</p>
+                <h3 className="text-2xl font-bold text-slate-950">Službeni tekst</h3>
+              </div>
+              <button
+                onClick={() => setAmendmentModalOpen(false)}
+                className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+              >
+                Zatvori
+              </button>
+            </div>
+            <div className="prose prose-slate mt-4 max-w-none text-base leading-relaxed text-slate-900">
+              <div dangerouslySetInnerHTML={{ __html: formatLawContent(amendmentContent) }} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
