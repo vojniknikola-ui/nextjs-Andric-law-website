@@ -3,34 +3,35 @@ import { BlogPost } from '@/types/blog';
 export const kaznenZakonFBiH: BlogPost = {
   slug: 'kazneni-zakon-fbih-procisceni-tekst',
   title: 'Kazneni zakon Federacije BiH - Pročišćeni tekst sa historijatom izmjena',
-  excerpt: 'Neslužbeni pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sa detaljnim historijatom svih izmjena od 2003. do 2025. godine.',
+  excerpt: 'Reobjavljena LawViewer verzija Kaznenog zakona FBiH: 380+ članova, historijat izmjena i MD fajl spreman za uređivanje.',
   content: `
-# Kazneni zakon Federacije BiH - Pročišćeni tekst
+# Kazneni zakon Federacije BiH – LawViewer reobjava
 
-Pristupite kompletnom pročišćenom tekstu Kaznenog zakona Federacije Bosne i Hercegovine sa interaktivnim historijatom izmjena.
+Pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sada je ponovo objavljen kao LawViewer dokument sa istaknutim glavam, historijatom i linkom ka izvornom MD fajlu.
 
-## Što sadrži?
+## Šta dobijate?
+- **380+ članova** podijeljenih na OPĆI i POSEBNI dio sa automatskim sidrima  
+- **Historijat izmjena** – svaki član koji je mijenjan ima dugme “Historijat izmjena”  
+- **MD fajl za urednike** – /public/laws/kazneni-zakon-fbih.md je spreman za brze izmjene bez ručnog HTML-a  
+- **Search badge** – u pretrazi se jasno vidi da je riječ o LawViewer dokumentu i rezultat linka vodi direktno na /zakoni/kazneni-zakon
 
-- **380+ članova** zakona
-- **Historijat izmjena** za svaki članak koji je mijenjan
-- **Interaktivni prikaz** - kliknite na "Historijat" pored članka da vidite stare verzije
-- **Sve izmjene** od 2003. do 2025. godine
+## Pokrivena izdanja "Službenih novina"
+- 36/03 (osnovni tekst) uključujući 37/03 i 21/04 ispravke  
+- 69/04, 18/05, 42/10, 42/11, 59/14, 76/14, 46/16, 75/17, 31/23  
+- 58/25 (Direktiva (EU) 2024/1385 – član 1a i mjere protiv rodno zasnovanog nasilja)
 
-## Službene novine
+## Uputstvo za dodavanje novih izmjena
+1. Ažurirajte MD/TXT fajl u \`public/laws/\` (član + historijat -> jedan blok)  
+2. Ako želite karticu na blogu, izmijenite ovu datoteku u \`content/blog/\` i importujte kroz \`lib/blog.ts\`  
+3. LawViewer automatski grupiše GLAVE/DIO/POGLAVLJE linije i generiše sidra \`#clan-...\`  
+4. Pretraga i sitemap se pune automatski – nije potrebna dodatna konfiguracija
 
-Zakon obuhvaća izmjene iz:
-- SN FBiH br. 36/03 (osnovni tekst)
-- SN FBiH br. 58/25 (najnovije izmjene)
-- I sve izmjene između
+[**Otvori pročišćeni tekst kaznenog zakona →**](/zakoni/kazneni-zakon)
 
-[**Pogledaj pročišćeni tekst zakona →**](/zakoni/kazneni-zakon)
-
-## Napomena
-
-Ovo je neslužbeni pročišćeni tekst koji služi isključivo za informativne svrhe. Za službenu uporabu potrebno je konzultirati originalne tekstove objavljene u "Službenim novinama Federacije BiH".
+> Napomena: U pitanju je neslužbena verzija za potrebe brzog snalaženja. Za pravno obavezujuće tumačenje koristite original objavljen u "Službenim novinama Federacije BiH".
   `,
-  date: '2025-01-08',
-  readMinutes: 2,
+  date: '2025-02-16',
+  readMinutes: 4,
   tags: ['Kazneno pravo', 'Zakoni', 'Federacija BiH', 'Pročišćeni tekst'],
   author: {
     name: 'Andrić Law',

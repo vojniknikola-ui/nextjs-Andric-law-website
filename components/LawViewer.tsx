@@ -7,6 +7,8 @@ interface LawSection {
   title: string;
   content: string;
   history?: string;
+  group?: string;
+  type?: 'intro' | 'preamble' | 'article';
 }
 
 export default function LawViewer({ lawContent, amendmentContent }: { lawContent: string; amendmentContent?: string }) {
@@ -14,6 +16,8 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
   const [showAmendment, setShowAmendment] = useState(false);
 
   const sections = parseLawContent(lawContent);
+  const articleCount = sections.filter(section => section.type === 'article').length;
+  const withHistoryCount = sections.filter(section => Boolean(section.history)).length;
 
   const toggleHistory = (id: string) => {
     setExpandedHistory(prev => {
@@ -29,15 +33,22 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
-      <div className="mb-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-            {/* Logo placeholder */}
-            <span className="text-2xl">⚖️</span>
-          </div>
+      <div className="mb-12 rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-blue-50 p-8 shadow-lg shadow-blue-100/70">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Andrić Law</h1>
-            <p className="text-gray-600">Advokatska kancelarija</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-600">Andrić Law · LawViewer</p>
+            <h1 className="mt-3 text-3xl font-bold text-slate-950">Digitalni pregled zakona</h1>
+            <p className="mt-2 text-slate-600 leading-relaxed">
+              Jedinstveni prikaz članova, izmjena i amandmana u jednom, preglednom interfejsu. Svaki član ima sidro, a historijat se otvara na klik.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/40 bg-white/70 p-5 text-sm text-slate-600 shadow-inner">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">Status dokumenta</p>
+            <p className="mt-2 text-lg font-semibold text-slate-900">{articleCount}+ članova</p>
+            <p className="text-slate-500">{withHistoryCount} historijskih napomena</p>
+            <p className="mt-3 text-xs text-slate-500">
+              Powered by Andrić Law · automatsko sidrenje i formatiranje teksta bez ručnog HTML uređivanja.
+            </p>
           </div>
         </div>
       </div>
@@ -63,138 +74,336 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
         </div>
       )}
       
-      {sections.map(section => (
-        <article key={section.id} id={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <div className="text-black leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}>
-            {section.content.split('\n').map((line, idx) => (
-              <p key={idx} className="mb-2">{line}</p>
-            ))}
-          </div>
-          
-          {section.history && (
-            <div className="mt-6">
-              <button
-                onClick={() => toggleHistory(section.id)}
-                className={`w-full px-4 py-3 text-sm font-medium rounded-lg transition-all ${
-                  expandedHistory.has(section.id)
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                📋 Izmjene Zakona
-              </button>
-              
-              {expandedHistory.has(section.id) && (
-                <div className="mt-4 p-5 bg-blue-50 rounded-lg border border-blue-200">
-                  <div className="text-gray-800 text-sm leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
+      {sections.map(section => {
+        const isArticle = section.type === 'article';
+        return (
+          <article
+            key={section.id}
+            id={section.id}
+            className={`mb-10 rounded-3xl border p-8 shadow-[0_15px_45px_rgba(15,23,42,0.08)] backdrop-blur-sm ${
+              isArticle ? 'border-slate-200 bg-white/95' : 'border-blue-100 bg-blue-50/60'
+            }`}
+          >
+            <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/40 pb-5">
+              <div>
+                {section.group && (
+                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
+                    {section.group}
+                  </p>
+                )}
+                <h2 className="text-2xl font-bold text-slate-950">
+                  {section.title}
+                </h2>
+              </div>
+              {isArticle ? (
+                <div className="flex flex-wrap items-center gap-2">
+                  {section.history && (
+                    <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
+                      Ima historijat
+                    </span>
+                  )}
+                  <a
+                    href={`#${section.id}`}
+                    className="rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 hover:bg-slate-50"
+                  >
+                    Sidro
+                  </a>
                 </div>
+              ) : (
+                <span className="rounded-full border border-blue-300 bg-white/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-blue-900">
+                  {section.type === 'preamble' ? 'Preambula' : 'Uvod'}
+                </span>
               )}
             </div>
-          )}
-        </article>
-      ))}
+
+            <div className="prose prose-slate mt-6 max-w-none text-base leading-relaxed text-slate-900">
+              <div
+                className="space-y-3"
+                dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }}
+              />
+            </div>
+            
+            {section.history && (
+              <div className="mt-6">
+                <button
+                  onClick={() => toggleHistory(section.id)}
+                  className={`w-full px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                    expandedHistory.has(section.id)
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'bg-blue-100 text-blue-900 hover:bg-blue-200'
+                  }`}
+                >
+                  📋 Historijat izmjena
+                </button>
+                
+                {expandedHistory.has(section.id) && (
+                  <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50/80 p-5">
+                    <div className="text-blue-950 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
+                  </div>
+                )}
+              </div>
+            )}
+          </article>
+        );
+      })}
     </div>
   );
 }
 
 function formatLawContent(content: string): string {
-  return content
-    .replace(/\\\*/g, '*')
-    .replace(/\\#/g, '#')
-    .replace(/\\/g, '')
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-lg">$1</strong>')
-    .replace(/\*(.+?)\*/g, '$1')
-    .replace(/^(Član [IVX\d]+.*?)$/gm, '<p class="mb-3 font-bold text-xl text-blue-900">$1</p>')
-    .replace(/^(Članak \d+.*?)$/gm, '<p class="mb-3 font-bold text-xl text-blue-900">$1</p>')
-    .replace(/^(PREAMBULA|DIO [IVX]+.*?|GLAVA [IVX]+.*?)$/gm, '<p class="mb-4 mt-6 font-bold text-2xl text-blue-900">$1</p>')
-    .replace(/^(PSBiH.*?|Sarajevo|\d{1,2}\. [a-z]+ \d{4}\. godine)$/gm, '<p class="mb-2 text-right font-semibold text-gray-700 italic">$1</p>')
-    .replace(/^(.+)$/gm, '<p class="mb-3">$1</p>')
-    .replace(/<p class="mb-3"><\/p>/g, '')
-    .replace(/<p class="mb-3"><strong/g, '<p class="mb-5 mt-3"><strong');
+  const normalized = content
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .replace(/^\uFEFF/, '');
+
+  const htmlParts: string[] = [];
+  let listType: 'ul' | 'ol' | null = null;
+  let inQuote = false;
+
+  const closeList = () => {
+    if (listType) {
+      htmlParts.push(listType === 'ul' ? '</ul>' : '</ol>');
+      listType = null;
+    }
+  };
+
+  const closeQuote = () => {
+    if (inQuote) {
+      htmlParts.push('</div></blockquote>');
+      inQuote = false;
+    }
+  };
+
+  const openList = (type: 'ul' | 'ol') => {
+    if (listType !== type) {
+      closeList();
+      htmlParts.push(
+        type === 'ul'
+          ? '<ul class="list-disc space-y-2 pl-6 text-slate-900">'
+          : '<ol class="list-decimal space-y-2 pl-6 text-slate-900">',
+      );
+      listType = type;
+    }
+  };
+
+  normalized.split('\n').forEach((rawLine) => {
+    const line = rawLine.replace(/\\([#*_>\-])/g, '$1');
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      closeList();
+      closeQuote();
+      return;
+    }
+
+    const isQuoteLine = trimmed.startsWith('>');
+    const withoutQuote = isQuoteLine ? trimmed.replace(/^>\s?/, '') : trimmed;
+    const headingCandidate = withoutQuote
+      .replace(/^#+\s*/, '')
+      .replace(/^\*+|\*+$/g, '')
+      .trim();
+
+    const formattedLine = withoutQuote
+      .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-slate-900">$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+    if (isQuoteLine) {
+      closeList();
+      if (!inQuote) {
+        htmlParts.push('<blockquote class="rounded-2xl border border-blue-200 bg-blue-50/70 p-4 text-blue-900"><div class="space-y-2">');
+        inQuote = true;
+      }
+      htmlParts.push(`<p>${formattedLine}</p>`);
+      return;
+    }
+    closeQuote();
+
+    if (/^#{2,6}\s+/.test(withoutQuote)) {
+      closeList();
+      htmlParts.push(`<p class="text-lg font-semibold text-slate-900 mt-6">${headingCandidate}</p>`);
+      return;
+    }
+
+    if (/^(-{3,}|_{3,}|\*{3,})$/.test(withoutQuote.replace(/\s+/g, ''))) {
+      closeList();
+      htmlParts.push('<hr class="my-6 border-slate-200" />');
+      return;
+    }
+
+    const orderedMatch = withoutQuote.match(/^(\d+)[\.\)]\s+/);
+    if (orderedMatch) {
+      openList('ol');
+      const itemText = formattedLine.replace(/^(\d+)[\.\)]\s+/, '');
+      htmlParts.push(`<li>${itemText}</li>`);
+      return;
+    }
+
+    if (/^(?:-|\u2022)\s+/.test(withoutQuote)) {
+      openList('ul');
+      const itemText = formattedLine.replace(/^(?:-|\u2022)\s+/, '');
+      htmlParts.push(`<li>${itemText}</li>`);
+      return;
+    }
+
+    closeList();
+    htmlParts.push(`<p class="text-slate-900">${formattedLine}</p>`);
+  });
+
+  closeList();
+  closeQuote();
+
+  return htmlParts.join('');
 }
 
 function parseLawContent(content: string): LawSection[] {
+  const normalized = content
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .replace(/^\uFEFF/, '');
+
+  const lines = normalized.split('\n');
   const sections: LawSection[] = [];
-  const lines = content.split('\n');
-  
+
   let currentSection: Partial<LawSection> | null = null;
   let currentContent: string[] = [];
-  let inHistory = false;
   let historyContent: string[] = [];
-  let pendingGlava: string | null = null;
+  let inHistory = false;
   let preambleContent: string[] = [];
   let inPreamble = false;
-  const articleRegex = /^\*\*Član(?:ak)?\s+([A-Z0-9.\-]+)/i;
+  let currentGroup: string | null = null;
+  let capturingIntro = true;
+  const introContent: string[] = [];
+  let introTitle: string | null = null;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const plainLine = line.replace(/<[^>]+>/g, '').trim();
-    const normalizedLine = plainLine.replace(/\\([#*_])/g, '$1');
+  const pushCurrentSection = () => {
+    if (currentSection) {
+      currentSection.content = currentContent.join('\n').trim();
+      if (historyContent.length > 0) {
+        currentSection.history = historyContent.join('\n').trim();
+      }
+      sections.push(currentSection as LawSection);
+    }
+  };
 
-    if (normalizedLine.match(/^PREAMBULA/i)) {
-      inPreamble = true;
-      preambleContent.push(line);
+  const sanitizeLine = (value: string) =>
+    value
+      .replace(/^>\s*/, '')
+      .replace(/^#+\s*/, '')
+      .replace(/^\*+|\*+$/g, '')
+      .trim();
+
+  const isStructureHeading = (value: string) =>
+    /(GLAVA|POGLAVLJE|ODJELJAK|ODJEL|DIO|NASLOV)/i.test(value);
+
+  for (const rawLine of lines) {
+    const withoutCarriage = rawLine.replace(/\r/g, '');
+    const unescaped = withoutCarriage.replace(/\\([#*_>\-])/g, '$1');
+    const trimmed = unescaped.trim();
+    const normalizedLine = sanitizeLine(trimmed);
+
+    if (!trimmed) {
+      if (inPreamble) {
+        preambleContent.push('');
+      } else if (inHistory) {
+        historyContent.push('');
+      } else if (currentSection) {
+        currentContent.push('');
+      } else if (capturingIntro && introContent.length > 0) {
+        introContent.push('');
+      }
       continue;
     }
 
-    const articleMatch = normalizedLine.match(articleRegex);
-    if (articleMatch) {
+    if (/^PREAMBULA/i.test(normalizedLine)) {
+      capturingIntro = false;
+      inPreamble = true;
+      continue;
+    }
+
+    if (isStructureHeading(normalizedLine)) {
+      currentGroup = normalizedLine.toUpperCase();
+      continue;
+    }
+
+    if (normalizedLine.toLowerCase().includes('historijat izmjena')) {
+      inHistory = true;
+      historyContent.push(`### ${normalizedLine}`);
+      continue;
+    }
+
+    if (/^Član(?:ak)?\s+/i.test(normalizedLine)) {
+      capturingIntro = false;
       if (inPreamble && preambleContent.length > 0) {
         sections.push({
-          id: 'preamble',
+          id: 'preambula',
           title: 'PREAMBULA',
           content: preambleContent.join('\n').trim(),
+          type: 'preamble',
         });
         preambleContent = [];
         inPreamble = false;
       }
 
-      if (currentSection) {
-        currentSection.content = currentContent.join('\n').trim();
-        if (historyContent.length > 0) {
-          currentSection.history = historyContent.join('\n').trim();
-        }
-        sections.push(currentSection as LawSection);
-      }
+      pushCurrentSection();
 
-      const articleId = articleMatch[1]?.replace(/\.$/, '') ?? `section-${i}`;
+      const articleMatch = normalizedLine.match(/^Član(?:ak)?\s+([A-Z0-9.\-]+)/i);
+      const articleId = articleMatch?.[1]?.replace(/\.$/, '') ?? `section-${sections.length + 1}`;
+
       currentSection = {
-        id: `article-${articleId.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-        title: line,
+        id: `clan-${articleId.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+        title: normalizedLine,
         content: '',
+        group: currentGroup ?? undefined,
+        type: 'article',
       };
-      currentContent = pendingGlava ? [pendingGlava, line] : [line];
-      pendingGlava = null;
+
+      currentContent = [];
       historyContent = [];
       inHistory = false;
       continue;
     }
 
-    if (normalizedLine.includes('Historijat izmjena')) {
-      inHistory = true;
-      continue;
-    }
-
-    if (normalizedLine.match(/^\\?\*\\?\*GLAVA/i) || normalizedLine.match(/^GLAVA/i) || normalizedLine.match(/^DIO [IVX]+/i)) {
-      pendingGlava = line;
-      continue;
-    }
-
     if (inPreamble) {
-      preambleContent.push(line);
-    } else if (inHistory) {
-      historyContent.push(line);
-    } else if (currentSection) {
-      currentContent.push(line);
+      preambleContent.push(unescaped);
+      continue;
+    }
+
+    if (inHistory) {
+      historyContent.push(unescaped);
+      continue;
+    }
+
+    if (currentSection) {
+      currentContent.push(unescaped);
+      continue;
+    }
+
+    if (capturingIntro) {
+      if (!introTitle && normalizedLine) {
+        introTitle = normalizedLine;
+      }
+      introContent.push(unescaped);
     }
   }
 
-  if (currentSection) {
-    currentSection.content = currentContent.join('\n').trim();
-    if (historyContent.length > 0) {
-      currentSection.history = historyContent.join('\n').trim();
-    }
-    sections.push(currentSection as LawSection);
+  if (inPreamble && preambleContent.length > 0) {
+    sections.push({
+      id: 'preambula',
+      title: 'PREAMBULA',
+      content: preambleContent.join('\n').trim(),
+      type: 'preamble',
+    });
+  }
+
+  pushCurrentSection();
+
+  if (introContent.some((line) => line.trim().length > 0)) {
+    sections.unshift({
+      id: 'uvod',
+      title: introTitle ?? 'Uvodne napomene',
+      content: introContent.join('\n').trim(),
+      type: 'intro',
+    });
   }
 
   return sections;
