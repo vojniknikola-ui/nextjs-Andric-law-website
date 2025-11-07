@@ -12,7 +12,18 @@ interface LawSection {
   groupLevel?: 'head' | 'subhead';
 }
 
-export default function LawViewer({ lawContent, amendmentContent }: { lawContent: string; amendmentContent?: string }) {
+type LawViewerMode = 'full' | 'minimal';
+
+export default function LawViewer({
+  lawContent,
+  amendmentContent,
+  mode = 'full',
+}: {
+  lawContent: string;
+  amendmentContent?: string;
+  mode?: LawViewerMode;
+}) {
+  const isMinimal = mode === 'minimal';
   const [expandedHistory, setExpandedHistory] = useState<Set<string>>(new Set());
   const [showAmendment, setShowAmendment] = useState(false);
 
@@ -43,6 +54,35 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
       return next;
     });
   };
+
+  if (isMinimal) {
+    return (
+      <div className="space-y-6 text-slate-900">
+        {amendmentContent && (
+          <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-4 text-sm text-blue-900">
+            <p className="font-semibold uppercase tracking-[0.2em] text-blue-700">Amandman</p>
+            <div className="mt-3 space-y-3" dangerouslySetInnerHTML={{ __html: formatLawContent(amendmentContent) }} />
+          </div>
+        )}
+
+        {sections.map(section => (
+          <div key={section.id} className="space-y-2">
+            <h3 className="text-lg font-semibold text-slate-950">{section.title}</h3>
+            <div
+              className="prose prose-slate max-w-none text-sm leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }}
+            />
+            {section.history && (
+              <details className="rounded-xl border border-blue-100 bg-blue-50/50 p-3 text-sm text-blue-900">
+                <summary className="cursor-pointer font-semibold">Historijat izmjena</summary>
+                <div className="mt-2 space-y-2" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
+              </details>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>

@@ -24,6 +24,7 @@ export default function LawUploaderPage() {
   const [pdfSource, setPdfSource] = useState('/laws/novi-zakon.pdf');
   const [changeNotes, setChangeNotes] = useState('Službeni glasnik – unesite referencu izmjena');
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
+  const [isFormatting, setIsFormatting] = useState(false);
 
   const handleFiles = useCallback((files: FileList | null) => {
     if (!files || files.length === 0) {
@@ -84,6 +85,32 @@ export default function LawUploaderPage() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const autoFormat = async () => {
+    if (!lawText.trim()) {
+      setStatusMsg('Nema sadržaja za formatiranje.');
+      return;
+    }
+    setIsFormatting(true);
+    try {
+      const response = await fetch('/api/admin/format-law', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: lawText }),
+      });
+      if (!response.ok) {
+        throw new Error('Formatiranje nije uspjelo');
+      }
+      const data = await response.json();
+      setLawText(data.formattedText);
+      setStatusMsg(`Automatski poredano po ${data.articleCount} članova.`);
+    } catch (error) {
+      console.error(error);
+      setStatusMsg('AI formatiranje nije uspjelo.');
+    } finally {
+      setIsFormatting(false);
+    }
   };
 
   const generationSnippet = useMemo(
@@ -161,6 +188,14 @@ export default function LawUploaderPage() {
               >
                 Preuzmi .txt
               </button>
+              <button
+                type="button"
+                onClick={autoFormat}
+                disabled={isFormatting}
+                className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-800 hover:bg-blue-100 disabled:opacity-60"
+              >
+                {isFormatting ? 'Formatiranje…' : 'Auto formatiraj (Član)'}
+              </button>
             </div>
           </div>
 
@@ -200,8 +235,8 @@ export default function LawUploaderPage() {
               Ovako će zakon izgledati u LawVieweru (koristi trenutni tekst iz editora).
             </p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white shadow-lg">
-            <LawViewer lawContent={lawText} />
+          <div className="rounded-3xl border border-slate-200 bg-white shadow-lg p-6">
+            <LawViewer lawContent={lawText} mode="minimal" />
           </div>
         </section>
       </div>
