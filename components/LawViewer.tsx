@@ -116,7 +116,7 @@ function parseLawContent(content: string): LawSection[] {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    if (line.match(/^\\?\*\\?\*Članak \d+/)) {
+    if (line.match(/^\\?\*\\?\*Članak \d+/) || line.match(/^Član [IVX\d]+/i)) {
       if (currentSection) {
         currentSection.content = currentContent.join('\n').trim();
         if (historyContent.length > 0) {
@@ -125,7 +125,7 @@ function parseLawContent(content: string): LawSection[] {
         sections.push(currentSection as LawSection);
       }
 
-      const articleMatch = line.match(/Članak (\d+[a-z]*)/i);
+      const articleMatch = line.match(/Članak (\d+[a-z]*)/i) || line.match(/Član ([IVX\d]+)/i);
       currentSection = {
         id: articleMatch ? `article-${articleMatch[1]}` : `section-${i}`,
         title: line,
@@ -143,7 +143,7 @@ function parseLawContent(content: string): LawSection[] {
       continue;
     }
 
-    if (line.match(/^\\?\*\\?\*GLAVA/i) || line.match(/^GLAVA/i)) {
+    if (line.match(/^\\?\*\\?\*GLAVA/i) || line.match(/^GLAVA/i) || line.match(/^PREAMBULA/i) || line.match(/^DIO [IVX]+/i)) {
       pendingGlava = line;
       continue;
     }
