@@ -49,7 +49,8 @@ export default async function KazneniZakonPage() {
         title="Kazneni zakon Federacije BiH – pročišćeni tekst"
         description="Jedinstvena LawViewer verzija sa kompletnim člancima, historijatom izmjena i sidrima za brzo kretanje kroz OPĆI i POSEBNI dio zakona."
         actions={[
-          { label: 'Preuzmi PDF', href: '/laws/kazneni-zakon-fbih.pdf', download: true, variant: 'primary' },
+          { type: 'link', label: 'Preuzmi PDF', href: '/laws/kazneni-zakon-fbih.pdf', download: true, variant: 'primary' },
+          { type: 'renderPdf', label: 'Generiši PDF (piksel-perfekt)', variant: 'secondary' },
         ]}
         stats={[
           { label: 'Članovi', value: `${articleCount}+`, description: 'Opći + posebni dio' },
