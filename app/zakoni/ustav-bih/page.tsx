@@ -23,8 +23,11 @@ const AMENDMENT_TEXT = `U Ustavu Bosne i Hercegovine iza člana VI.3. dodaje se 
 Amandman I stupa na snagu osmog dana od objavljivanja u "Službenom glasniku BiH", broj 25/09.`;
 
 export default async function UstavBiHPage() {
-  const filePath = path.join(process.cwd(), 'public', 'laws', 'ustav-bih.md');
-  const lawContent = await fs.readFile(filePath, 'utf-8');
+  const lawPath = path.join(process.cwd(), 'public', 'laws', 'ustav-bih.txt');
+  const amendmentPath = path.join(process.cwd(), 'public', 'laws', 'ustav-bih-amandman.txt');
+  
+  const lawContent = await fs.readFile(lawPath, 'utf-8');
+  const amendmentContent = await fs.readFile(amendmentPath, 'utf-8');
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -86,7 +89,7 @@ export default async function UstavBiHPage() {
         </details>
       </section>
 
-      <LawViewer lawContent={lawContent} />
+      <LawViewer lawContent={lawContent} amendmentContent={amendmentContent} />
 
       <section className="max-w-5xl mx-auto px-6 py-12">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
