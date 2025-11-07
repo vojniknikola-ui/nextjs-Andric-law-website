@@ -5,6 +5,7 @@ import { advokatskaTarifaRSPort } from '@/content/blog/advokatska-tarifa-rs';
 import { politikaDirektnihUlaganjaPost } from '@/content/blog/politika-direktnih-ulaganja';
 import { zakonONasljedjivanjuPost } from '@/content/blog/zakon-o-nasljedivanju';
 import { zakonReprezentativnostiPost } from '@/content/blog/zakon-o-reprezentativnosti-sindikata-i-udruzenja-poslodavaca-fbih';
+import { pdvPost } from '@/content/blog/zakon-o-pdv';
 
 // Placeholder slike - zamijeni sa pravim Vercel Blob URL-ovima nakon upload-a
 const BLOG_IMAGES = {
@@ -23,6 +24,7 @@ export const blogPosts: BlogPost[] = [
   zakonReprezentativnostiPost,
   ustavBiHPost,
   kaznenZakonFBiH,
+  pdvPost,
   {
     slug: "otkaz-ugovora-o-radu-fbih",
     title: "Otkaz ugovora o radu – vodič za poslodavce u FBiH",

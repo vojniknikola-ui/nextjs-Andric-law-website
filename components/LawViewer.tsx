@@ -26,6 +26,7 @@ export default function LawViewer({
   const isMinimal = mode === 'minimal';
   const [expandedHistory, setExpandedHistory] = useState<Set<string>>(new Set());
   const [showAmendment, setShowAmendment] = useState(false);
+  const [expandAllHistory, setExpandAllHistory] = useState(false);
 
   const sections = parseLawContent(lawContent);
   // GLAVA/POGLAVLJE logika uklonjena na zahtjev – fokus isključivo na članke
@@ -46,9 +47,30 @@ export default function LawViewer({
   if (isMinimal) {
     return (
       <div className="space-y-6 text-slate-900">
+        {/* Toolbar */}
+        <div className="sticky top-0 z-10 -mx-4 mb-2 border-b border-slate-200 bg-white/85 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+          <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
+            <div className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">LawViewer</div>
+            <div className="flex flex-wrap items-center gap-2">
+              {amendmentContent && (
+                <a href="#amandman" className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800 hover:bg-amber-100">
+                  Amandman I
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={() => setExpandAllHistory((v) => !v)}
+                className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100"
+              >
+                {expandAllHistory ? 'Sakrij historijat' : 'Prikaži historijat'}
+              </button>
+            </div>
+          </div>
+        </div>
+
         {amendmentContent && (
-          <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-4 text-sm text-blue-900">
-            <p className="font-semibold uppercase tracking-[0.2em] text-blue-700">Amandman</p>
+          <div id="amandman" className="rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-900">
+            <p className="font-semibold uppercase tracking-[0.2em] text-amber-800">Amandman</p>
             <div className="mt-3 space-y-3" dangerouslySetInnerHTML={{ __html: formatLawContent(amendmentContent) }} />
           </div>
         )}
@@ -61,7 +83,7 @@ export default function LawViewer({
               dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }}
             />
             {section.history && (
-              <details className="rounded-xl border border-blue-100 bg-blue-50/50 p-3 text-sm text-blue-900">
+              <details open={expandAllHistory} className="rounded-xl border border-blue-100 bg-blue-50/50 p-3 text-sm text-blue-900">
                 <summary className="cursor-pointer font-semibold">Historijat izmjena</summary>
                 <div className="mt-2 space-y-2" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
               </details>
