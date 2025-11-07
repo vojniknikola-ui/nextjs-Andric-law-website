@@ -26,6 +26,8 @@ type SearchResultItem = {
   matchField?: 'title' | 'excerpt' | 'content' | null;
   titleSegments?: HighlightSegment[];
   snippet: HighlightSnippet | null;
+  isLawDocument?: boolean;
+  lawViewerPath?: string;
 };
 
 type HighlightRange = {
@@ -188,6 +190,8 @@ const normalizeBlogResults = (results: BlogSearchResult[]): SearchResultItem[] =
       matchField: result.matchedField,
       titleSegments: result.titleSegments,
       snippet: result.snippet ?? null,
+      isLawDocument: result.post.isLawDocument,
+      lawViewerPath: result.post.lawViewerPath,
     };
   });
 
@@ -359,6 +363,11 @@ export default async function SearchResults({
                   <h2 className="mb-3 text-xl font-semibold text-slate-900 transition group-hover:text-blue-600">
                     {renderSegments(result.titleSegments, result.title)}
                   </h2>
+                  {result.isLawDocument && result.lawViewerPath && (
+                    <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+                      LawViewer dokument · otvara se na {result.lawViewerPath}
+                    </p>
+                  )}
 
                   <div className="mb-4 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm leading-relaxed text-blue-900">
                     <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-800">
@@ -389,7 +398,10 @@ export default async function SearchResults({
   );
 }
 
-function getCategoryLink(result: { slug: string }) {
+function getCategoryLink(result: { slug: string; lawViewerPath?: string; isLawDocument?: boolean }) {
+  if (result.isLawDocument && result.lawViewerPath) {
+    return result.lawViewerPath;
+  }
   return `/blog/${result.slug}`;
 }
 

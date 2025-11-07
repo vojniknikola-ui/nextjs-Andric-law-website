@@ -118,22 +118,25 @@ function parseLawContent(content: string): LawSection[] {
   let pendingGlava: string | null = null;
   let preambleContent: string[] = [];
   let inPreamble = false;
+  const articleRegex = /^Član(?:ak)?\s+([A-Z0-9.\-]+)/i;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
+    const plainLine = line.replace(/<[^>]+>/g, '').trim();
 
-    if (line.match(/^PREAMBULA/i)) {
+    if (plainLine.match(/^PREAMBULA/i)) {
       inPreamble = true;
       preambleContent.push(line);
       continue;
     }
 
-    if (line.match(/^\\?\*\\?\*Članak \d+/) || line.match(/^Član [IVX\d]+/i)) {
+    const articleMatch = plainLine.match(articleRegex);
+    if (articleMatch) {
       if (inPreamble && preambleContent.length > 0) {
         sections.push({
           id: 'preamble',
           title: 'PREAMBULA',
-          content: preambleContent.join('\n').trim()
+          content: preambleContent.join('\n').trim(),
         });
         preambleContent = [];
         inPreamble = false;
@@ -147,9 +150,9 @@ function parseLawContent(content: string): LawSection[] {
         sections.push(currentSection as LawSection);
       }
 
-      const articleMatch = line.match(/Članak (\d+[a-z]*)/i) || line.match(/Član ([IVX\d]+)/i);
+      const articleId = articleMatch[1]?.replace(/\.$/, '') ?? `section-${i}`;
       currentSection = {
-        id: articleMatch ? `article-${articleMatch[1]}` : `section-${i}`,
+        id: `article-${articleId.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
         title: line,
         content: '',
       };
@@ -160,12 +163,12 @@ function parseLawContent(content: string): LawSection[] {
       continue;
     }
 
-    if (line.includes('Historijat izmjena')) {
+    if (plainLine.includes('Historijat izmjena')) {
       inHistory = true;
       continue;
     }
 
-    if (line.match(/^\\?\*\\?\*GLAVA/i) || line.match(/^GLAVA/i) || line.match(/^DIO [IVX]+/i)) {
+    if (plainLine.match(/^\\?\*\\?\*GLAVA/i) || plainLine.match(/^GLAVA/i) || plainLine.match(/^DIO [IVX]+/i)) {
       pendingGlava = line;
       continue;
     }

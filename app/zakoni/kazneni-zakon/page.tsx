@@ -5,6 +5,14 @@ import LawViewer from '@/components/LawViewer';
 export const metadata = {
   title: 'Kazneni zakon Federacije BiH - Pročišćeni tekst',
   description: 'Neslužbeni pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sa historijatom izmjena',
+  alternates: {
+    canonical: 'https://andric.law/zakoni/kazneni-zakon',
+  },
+  openGraph: {
+    title: 'Kazneni zakon Federacije BiH - Pročišćeni tekst',
+    description: 'Neslužbeni pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sa historijatom izmjena',
+    url: 'https://andric.law/zakoni/kazneni-zakon',
+  },
 };
 
 export default async function KazneniZakonPage() {

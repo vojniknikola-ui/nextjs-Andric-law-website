@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { ArrowLeft, Calendar, BookOpen, Tag, Share2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, BookOpen, Tag, Share2 } from 'lucide-react';
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { BlogCard } from '@/components/BlogCard';
 import ReactMarkdown from 'react-markdown';
@@ -36,9 +36,18 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     };
   }
 
+  const canonicalUrl =
+    post.canonicalUrl ||
+    (post.isLawDocument && post.lawViewerPath
+      ? `https://andric.law${post.lawViewerPath}`
+      : `https://andric.law/blog/${post.slug}`);
+
   return {
     title: `${post.title} | Andrić Law Blog`,
     description: post.excerpt,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
@@ -46,6 +55,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       publishedTime: post.date,
       authors: [post.author.name],
       tags: post.tags,
+      url: canonicalUrl,
     },
   };
 }
@@ -132,6 +142,26 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {post.readMinutes} min čitanja
             </span>
           </div>
+
+          {post.isLawDocument && post.lawViewerPath && (
+            <div className="mt-8 mb-8 rounded-2xl border border-blue-400/40 bg-blue-950/40 p-6 text-sm text-blue-50 shadow-lg">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">LawViewer dokument</p>
+                  <p className="mt-2 text-base text-blue-50">
+                    Ovaj tekst je optimiziran za čitanje u LawViewer modu. Kliknite ispod kako biste otvorili zakon sa sidrima po članu i historijatom izmjena.
+                  </p>
+                </div>
+                <Link
+                  href={post.lawViewerPath}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-blue-900 shadow-lg shadow-blue-900/30 transition hover:-translate-y-0.5"
+                >
+                  Otvori u LawViewer-u
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          )}
 
           {/* Content */}
           <div className="prose prose-invert prose-slate max-w-none mt-10">
