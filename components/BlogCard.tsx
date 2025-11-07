@@ -9,7 +9,7 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post, featured = false }: BlogCardProps) {
-  const href = post.isLawDocument && post.lawViewerPath ? post.lawViewerPath : `/blog/${post.slug}`;
+  const href = `/blog/${post.slug}`;
   
   return (
     <article className={`group rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition overflow-hidden ${featured ? 'lg:col-span-2' : ''}`}>
@@ -40,6 +40,14 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
             {post.title}
           </h3>
           <p className="mt-2 text-sm text-slate-300 line-clamp-2">{post.excerpt}</p>
+          {post.isLawDocument && post.lawViewerPath && (
+            <div className="mt-3 inline-flex flex-wrap items-center gap-2 rounded-full border border-blue-300/40 bg-blue-900/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-blue-100">
+              <span>LawViewer</span>
+              <Link href={post.lawViewerPath} className="text-blue-200 underline underline-offset-2 hover:text-blue-50">
+                Otvori zakon
+              </Link>
+            </div>
+          )}
           <div className="mt-4 flex items-center justify-between">
             <div className="flex items-center gap-4 text-xs text-slate-400">
               <span className="inline-flex items-center gap-1">
