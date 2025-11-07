@@ -33,7 +33,7 @@ export const blogPosts: BlogPost[] = [
 ];
 
 /*
-Obrisani postovi - čuvam za referencu:
+Obrisani postovi:
   {
     slug: "zakon-o-izmjenama-stvarnih-prava-rs",
     title: "Zakon o izmjenama i dopunama Zakona o stvarnim pravima RS",
@@ -416,7 +416,6 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     },
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
   },
-*/
   {
     slug: "otkaz-ugovora-vodic-2025",
     title: "Otkaz ugovora o radu (FBiH & RS) – praktični vodič za 2025",
@@ -432,10 +431,7 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     featured: true,
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
   },
-];
-
-/*
-Obrisani postovi:
+*/
   {
     slug: "nda-it-projekti",
     title: "NDA u IT projektima – šta mora da sadrži",
