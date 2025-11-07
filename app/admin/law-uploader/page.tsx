@@ -25,6 +25,8 @@ export default function LawUploaderPage() {
   const [changeNotes, setChangeNotes] = useState('Službeni glasnik – unesite referencu izmjena');
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [isFormatting, setIsFormatting] = useState(false);
+  const [isApplyingInstruction, setIsApplyingInstruction] = useState(false);
+  const [aiInstruction, setAiInstruction] = useState('remove=Ovim se Zakonom');
 
   const handleFiles = useCallback((files: FileList | null) => {
     if (!files || files.length === 0) {
@@ -113,6 +115,37 @@ export default function LawUploaderPage() {
     }
   };
 
+  const applyInstruction = async (instructionText?: string) => {
+    const instructionValue = (instructionText ?? aiInstruction).trim();
+    if (!lawText.trim()) {
+      setStatusMsg('Nema sadržaja za obradu.');
+      return;
+    }
+    if (!instructionValue) {
+      setStatusMsg('Unesite instrukciju (npr. remove=Ovim se Zakonom).');
+      return;
+    }
+    setIsApplyingInstruction(true);
+    try {
+      const response = await fetch('/api/admin/format-law', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: lawText, instruction: instructionValue }),
+      });
+      if (!response.ok) {
+        throw new Error('Instrukcija nije uspjela');
+      }
+      const data = await response.json();
+      setLawText(data.formattedText);
+      setStatusMsg('Instrukcija primijenjena.');
+    } catch (error) {
+      console.error(error);
+      setStatusMsg('Neuspjela primjena instrukcije.');
+    } finally {
+      setIsApplyingInstruction(false);
+    }
+  };
+
   const generationSnippet = useMemo(
     () => `# Koraci za objavu
 1. Sačuvaj tekst u public/laws/${slug || 'novi-zakon'}.txt
@@ -146,7 +179,7 @@ export default function LawUploaderPage() {
           </p>
         )}
 
-        <section className="grid gap-6 lg:grid-cols-2">
+        <section className="grid gap-6 lg:grid-cols-[3fr,2fr]">
           <div className="space-y-5">
             <label
               onDragOver={(event) => event.preventDefault()}
@@ -196,6 +229,14 @@ export default function LawUploaderPage() {
               >
                 {isFormatting ? 'Formatiranje…' : 'Auto formatiraj (Član)'}
               </button>
+              <button
+                type="button"
+                onClick={() => applyInstruction(aiInstruction)}
+                disabled={isApplyingInstruction}
+                className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-100 disabled:opacity-60"
+              >
+                {isApplyingInstruction ? 'Primjena…' : 'Primijeni instrukciju'}
+              </button>
             </div>
           </div>
 
@@ -205,6 +246,26 @@ export default function LawUploaderPage() {
             <MetadataField label="Slug" value={slug} onChange={setSlug} hint="npr. zakon-o-nasljedjivanju" />
             <MetadataField label="PDF lokacija" value={pdfSource} onChange={setPdfSource} />
             <MetadataField label="Izmjene / Službeni glasnik" value={changeNotes} onChange={setChangeNotes} />
+
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                AI instrukcija
+              </span>
+              <textarea
+                value={aiInstruction}
+                onChange={(event) => setAiInstruction(event.target.value)}
+                rows={3}
+                className="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-blue-400 focus:outline-none"
+                placeholder={`Primjeri:
+remove=Ovim se Zakonom
+replace=oupotreba=>upotreba
+uppercase=glava`}
+              />
+              <span className="mt-1 block text-xs text-slate-400">
+                Podržana pravila: <code>remove=tekst</code>, <code>replace=staro=&gt;novo</code>,{' '}
+                <code>uppercase=ključna riječ</code>.
+              </span>
+            </label>
 
             <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">

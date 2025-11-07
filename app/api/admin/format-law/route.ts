@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { text } = await request.json();
+    const { text, instruction } = await request.json();
     if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: 'Nedostaje tekst zakona.' }, { status: 400 });
     }
 
     const { formattedText, articleCount } = formatByArticles(text);
-    return NextResponse.json({ formattedText, articleCount });
+    const finalText = instruction ? applyInstruction(formattedText, instruction) : formattedText;
+    return NextResponse.json({ formattedText: finalText, articleCount });
   } catch (error) {
     console.error('Format law error:', error);
     return NextResponse.json({ error: 'Neuspjelo formatiranje.' }, { status: 500 });
@@ -117,4 +118,42 @@ function romanToNumber(value: string): number {
     }
   }
   return result || Number.MAX_SAFE_INTEGER;
+}
+
+function applyInstruction(content: string, instruction: string): string {
+  const commands = instruction
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  let output = content;
+
+  commands.forEach(cmd => {
+    if (cmd.toLowerCase().startsWith('remove=')) {
+      const needle = cmd.slice('remove='.length).trim();
+      if (needle) {
+        const regex = new RegExp(`.*${escapeRegExp(needle)}.*\\n?`, 'gi');
+        output = output.replace(regex, '');
+      }
+    } else if (cmd.toLowerCase().startsWith('uppercase=')) {
+      const keyword = cmd.slice('uppercase='.length).trim().toLowerCase();
+      output = output
+        .split('\n')
+        .map(line => (line.toLowerCase().includes(keyword) ? line.toUpperCase() : line))
+        .join('\n');
+    } else if (cmd.toLowerCase().startsWith('replace=')) {
+      const body = cmd.slice('replace='.length);
+      const [from, to] = body.split('=>');
+      if (from) {
+        const regex = new RegExp(escapeRegExp(from.trim()), 'g');
+        output = output.replace(regex, to?.trim() ?? '');
+      }
+    }
+  });
+
+  return output.trim();
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
