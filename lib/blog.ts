@@ -792,6 +792,7 @@ Investirajte u dobar ugovor na početku. Jeftinije je od spora kasnije.
     image: BLOG_IMAGES['intelektualno-vlasnistvo-software']
   }
 ];
+*/
 
 export async function getAllPosts(): Promise<BlogPost[]> {
   await new Promise(resolve => setTimeout(resolve, 100));
