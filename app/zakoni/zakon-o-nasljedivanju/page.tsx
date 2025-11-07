@@ -23,9 +23,7 @@ export default async function ZakonONasljedjivanjuPage() {
         badge="Andrić Law · Nasljeđivanje"
         title="Zakon o nasljeđivanju u Federaciji BiH"
         description="Kompletan pregled nasljednih redova, testamentarnih formi, nužnog dijela i ostavinskog postupka – sa napomenama o odluci Ustavnog suda 32/19."
-        actions={[
-          { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
-        ]}
+        actions={[]}
         highlights={[
           { label: 'Službene novine FBiH 80/14', description: 'Novi okvir nasljeđivanja' },
           { label: 'Odluka US FBiH 32/19', description: 'Tumačenje nužnog dijela i prava bračnog partnera' },

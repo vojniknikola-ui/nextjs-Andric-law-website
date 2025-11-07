@@ -23,9 +23,7 @@ export default async function PolitikaDirektnihUlaganjaPage() {
         badge="Andrić Law · Strana ulaganja"
         title="Zakon o politici direktnih stranih ulaganja u BiH"
         description="Kompletan konsolidovani tekst sa izmjenama 2003, 2010. i 2015. godine – uključuje prava ulagača, garancije, procedure i rješavanje sporova."
-        actions={[
-          { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
-        ]}
+        actions={[]}
         highlights={[
           { label: 'Službeni glasnik BiH 4/98 – 22/15', description: 'Ugrađene sve izmjene (2003, 2010, 2015)' },
           { label: 'Članovi', description: `${articleCount} članova kroz 7 dijelova` },

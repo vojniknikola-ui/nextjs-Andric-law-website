@@ -48,16 +48,14 @@ export default async function KazneniZakonPage() {
         badge="Andrić Law · Kazneno pravo"
         title="Kazneni zakon Federacije BiH – pročišćeni tekst"
         description="Jedinstvena LawViewer verzija sa kompletnim člancima, historijatom izmjena i sidrima za brzo kretanje kroz OPĆI i POSEBNI dio zakona."
-        actions={[
-          { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
-        ]}
+        actions={[]}
         highlights={[
           { label: 'Službene novine FBiH 36/03 → 58/25', description: 'Sve izmjene uključene (opći i posebni dio)' },
           { label: 'Historijat', description: `${historyCount}+ bilješki uz članke` },
         ]}
       />
 
-      <LawViewer lawContent={lawContent} mode="minimal" />
+      <LawViewer lawContent={lawContent} mode="minimal" showHistory allowHistoryToggle />
 
       <section className="mx-auto max-w-5xl px-6 py-12">
         <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-sm">

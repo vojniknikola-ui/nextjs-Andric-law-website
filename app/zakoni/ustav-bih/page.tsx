@@ -36,7 +36,6 @@ export default async function UstavBiHPage() {
         title="Ustav Bosne i Hercegovine – LawViewer izdanje"
         description="Pravno obavezujući tekst iz Aneksa IV sa jasno označenim člancima i eksplicitno izdvojenim Amandmanom I za Brčko distrikt."
         actions={[
-          { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
           { type: 'link', label: 'Amandman I (Brčko distrikt)', href: '#law-amandmani', variant: 'secondary' },
         ]}
         highlights={[

@@ -29,7 +29,7 @@ export default async function ReprezentativnostFBiHPage() {
         badge="Andrić Law · Radno pravo"
         title="Zakon o reprezentativnosti sindikata i udruženja poslodavaca FBiH"
         description="Konsolidovani prikaz članka sa fokusom na kriterije i postupak utvrđivanja reprezentativnosti sindikata i udruženja poslodavaca."
-        actions={[{ type: 'render', label: 'Preuzmi PDF', variant: 'primary' }]}
+        actions={[]}
         highlights={[
           { label: 'Službene novine FBiH 103/21', description: 'Objava 22.12.2021.' },
           { label: 'Struktura', description: articleCount ? `${articleCount} članova` : 'više članova' },

@@ -24,10 +24,7 @@ export default async function AdvokatskaTarifaFBiHPage() {
         badge="Andrić Law · Tarife"
         title="Advokatska tarifa Federacije BiH"
         description="Tarifa o nagradama i naknadi za rad odvjetnika – pregled tarifnih brojeva i osnovica, spremno za brzu provjeru i rad sa strankama."
-        actions={[
-          { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
-          { type: 'link', label: 'Službene novine 43/25 (PDF)', href: '/laws/advokatska-tarifa-fbih.pdf', variant: 'secondary', download: true },
-        ]}
+        actions={[]}
         highlights={[
           { label: 'Službene novine FBiH 43/25', description: 'Aktuelna tarifa (FBiH)' },
           { label: 'Tarifni brojevi', description: tariffCount ? `${tariffCount} stavki` : 'više od 30 stavki' },

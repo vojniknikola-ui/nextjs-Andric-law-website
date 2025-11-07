@@ -18,10 +18,14 @@ export default function LawViewer({
   lawContent,
   amendmentContent,
   mode = 'full',
+  showHistory = false,
+  allowHistoryToggle = false,
 }: {
   lawContent: string;
   amendmentContent?: string;
   mode?: LawViewerMode;
+  showHistory?: boolean;
+  allowHistoryToggle?: boolean;
 }) {
   const isMinimal = mode === 'minimal';
   const [expandedHistory, setExpandedHistory] = useState<Set<string>>(new Set());
@@ -31,6 +35,7 @@ export default function LawViewer({
   const sections = parseLawContent(lawContent);
   // GLAVA/POGLAVLJE logika uklonjena na zahtjev – fokus isključivo na članke
   const sectionGroups: Array<{ label: string; anchor: string }> = [];
+  const hasAnyHistory = useMemo(() => sections.some((s) => !!s.history), [sections]);
 
   const toggleHistory = (id: string) => {
     setExpandedHistory(prev => {
@@ -57,13 +62,15 @@ export default function LawViewer({
                   Amandman I
                 </a>
               )}
-              <button
-                type="button"
-                onClick={() => setExpandAllHistory((v) => !v)}
-                className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100"
-              >
-                {expandAllHistory ? 'Sakrij historijat' : 'Prikaži historijat'}
-              </button>
+              {allowHistoryToggle && hasAnyHistory && (
+                <button
+                  type="button"
+                  onClick={() => setExpandAllHistory((v) => !v)}
+                  className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100"
+                >
+                  {expandAllHistory ? 'Sakrij historijat' : 'Prikaži historijat'}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -82,7 +89,7 @@ export default function LawViewer({
               className="prose prose-slate max-w-none text-sm leading-relaxed"
               dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }}
             />
-            {section.history && (
+            {showHistory && section.history && (
               <details open={expandAllHistory} className="rounded-xl border border-blue-100 bg-blue-50/50 p-3 text-sm text-blue-900">
                 <summary className="cursor-pointer font-semibold">Historijat izmjena</summary>
                 <div className="mt-2 space-y-2" dangerouslySetInnerHTML={{ __html: formatLawContent(section.history) }} />
@@ -177,7 +184,7 @@ export default function LawViewer({
               />
             </div>
             
-            {section.history && (
+            {showHistory && section.history && (
               <div className="mt-6">
                 <button
                   onClick={() => toggleHistory(section.id)}

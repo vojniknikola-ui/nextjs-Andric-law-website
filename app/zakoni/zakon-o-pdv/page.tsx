@@ -23,11 +23,8 @@ export default async function PDVLawPage() {
       <LawHero
         badge="Andrić Law · PDV"
         title="Zakon o porezu na dodatu vrijednost (PDV)"
-        description="Neslužbeni pregled PDV propisa u LawViewer formatu – članci, glave i brzi pristup PDF-u."
-        actions={[
-          { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
-          { type: 'link', label: 'PDF (neslužbeni tekst)', href: '/laws/zakon-o-pdv-bih.pdf', download: true, variant: 'secondary' },
-        ]}
+        description="Neslužbeni pregled PDV propisa u LawViewer formatu – članci i jasna struktura."
+        actions={[]}
         highlights={[
           { label: 'Napomena', description: 'Neslužbeni konsolidovani tekst' },
           { label: 'Struktura', description: articleCount ? `${articleCount} članova` : 'više članova' },

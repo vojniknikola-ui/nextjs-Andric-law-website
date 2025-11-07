@@ -24,9 +24,7 @@ export default async function AdvokatskaTarifaRSPage() {
         badge="Andrić Law · Tarife"
         title="Advokatska tarifa Republike Srpske"
         description="Digitalno izdanje službene tarife sa tarifnim brojevima, osnovicama i pravilima obračuna – spremno za brzu provjeru nagrada i naknada."
-        actions={[
-          { type: 'render', label: 'Preuzmi PDF', variant: 'primary' },
-        ]}
+        actions={[]}
         highlights={[
           { label: 'Službeni glasnik RS 68/05', description: 'Tarifa o nagradama i naknadi troškova' },
           { label: 'Tarifni brojevi', description: tariffCount ? `${tariffCount} dostupnih stavki` : '30+ stavki' },
