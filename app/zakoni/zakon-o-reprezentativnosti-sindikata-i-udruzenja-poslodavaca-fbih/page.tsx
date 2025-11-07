@@ -36,7 +36,7 @@ export default async function ReprezentativnostFBiHPage() {
         ]}
       />
 
-      <LawViewer lawContent={lawContent} />
+      <LawViewer lawContent={lawContent} mode="minimal" />
     </main>
   );
 }

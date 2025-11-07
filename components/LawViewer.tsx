@@ -28,20 +28,8 @@ export default function LawViewer({
   const [showAmendment, setShowAmendment] = useState(false);
 
   const sections = parseLawContent(lawContent);
-  const sectionGroups = useMemo(() => {
-    const map = new Map<string, string>();
-    sections.forEach(section => {
-      if (
-        section.group &&
-        section.groupLevel === 'head' &&
-        section.type === 'article' &&
-        !map.has(section.group)
-      ) {
-        map.set(section.group, section.id);
-      }
-    });
-    return Array.from(map.entries()).map(([label, anchor]) => ({ label, anchor }));
-  }, [sections]);
+  // GLAVA/POGLAVLJE logika uklonjena na zahtjev – fokus isključivo na članke
+  const sectionGroups: Array<{ label: string; anchor: string }> = [];
 
   const toggleHistory = (id: string) => {
     setExpandedHistory(prev => {
@@ -143,11 +131,6 @@ export default function LawViewer({
           >
             <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/40 pb-5">
               <div>
-                {section.group && (
-                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
-                    {section.group}
-                  </p>
-                )}
                 <h2 className="text-2xl font-bold text-slate-950">
                   {section.title}
                 </h2>

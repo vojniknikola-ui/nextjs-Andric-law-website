@@ -33,7 +33,7 @@ export default async function ZakonONasljedjivanjuPage() {
         ]}
       />
 
-      <LawViewer lawContent={lawContent} />
+      <LawViewer lawContent={lawContent} mode="minimal" />
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
         <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-slate-700 shadow-sm">

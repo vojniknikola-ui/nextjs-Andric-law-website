@@ -34,8 +34,7 @@ export default async function PDVLawPage() {
         ]}
       />
 
-      <LawViewer lawContent={lawContent} />
+      <LawViewer lawContent={lawContent} mode="minimal" />
     </main>
   );
 }
-
