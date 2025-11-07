@@ -95,6 +95,8 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
 
 function formatLawContent(content: string): string {
   return content
+    .replace(/\\\*/g, '*')
+    .replace(/\\#/g, '#')
     .replace(/\\/g, '')
     .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-lg">$1</strong>')
     .replace(/\*(.+?)\*/g, '$1')
