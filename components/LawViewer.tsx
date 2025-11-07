@@ -64,8 +64,12 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
       )}
       
       {sections.map(section => (
-        <article key={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <div className="text-black leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: formatLawContent(section.content) }} />
+        <article key={section.id} id={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+          <div className="text-black leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}>
+            {section.content.split('\n').map((line, idx) => (
+              <p key={idx} className="mb-2">{line}</p>
+            ))}
+          </div>
           
           {section.history && (
             <div className="mt-6">
