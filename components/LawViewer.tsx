@@ -96,19 +96,11 @@ export default function LawViewer({ lawContent, amendmentContent }: { lawContent
                 </h2>
               </div>
               {isArticle ? (
-                <div className="flex flex-wrap items-center gap-2">
-                  {section.history && (
-                    <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
-                      Ima historijat
-                    </span>
-                  )}
-                  <a
-                    href={`#${section.id}`}
-                    className="rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 hover:bg-slate-50"
-                  >
-                    Sidro
-                  </a>
-                </div>
+                section.history ? (
+                  <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
+                    Ima historijat
+                  </span>
+                ) : null
               ) : (
                 <span className="rounded-full border border-blue-300 bg-white/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-blue-900">
                   {section.type === 'preamble' ? 'Preambula' : 'Uvod'}
