@@ -26,6 +26,7 @@ export default async function UstavBiHPage() {
 
   const articleMatches = lawContent.match(/Član(?:ak)?\s+[A-Z0-9.\-]+/gi);
   const articleCount = articleMatches ? articleMatches.length : 0;
+  const amendmentParagraphs = amendmentContent.split('\n').filter((line) => line.trim().length > 0);
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -43,7 +44,7 @@ export default async function UstavBiHPage() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a
-                href="#law-amandmani"
+                href="#amandman-i"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/40 transition hover:-translate-y-0.5"
               >
                 Amandman I (Brčko distrikt)
@@ -99,6 +100,23 @@ export default async function UstavBiHPage() {
           </div>
         </div>
       </section>
+
+      <section id="amandman-i" className="mx-auto mt-10 max-w-5xl px-6">
+        <details className="group rounded-3xl border border-amber-200/80 bg-amber-50/90 p-6 text-amber-900 shadow-sm">
+          <summary className="flex cursor-pointer items-center justify-between gap-4 text-sm font-semibold uppercase tracking-[0.2em] text-amber-800">
+            <span>Amandman I na Ustav BiH (Brčko distrikt)</span>
+            <span className="rounded-full bg-amber-200 px-3 py-1 text-xs font-semibold text-amber-900 transition group-open:bg-amber-900 group-open:text-amber-50">
+              {`Prikaži`}
+            </span>
+          </summary>
+          <div className="mt-4 space-y-3 text-sm leading-relaxed text-amber-950">
+            {amendmentParagraphs.map((paragraph, index) => (
+              <p key={`amandman-${index}`}>{paragraph}</p>
+            ))}
+          </div>
+        </details>
+      </section>
+
       <LawViewer lawContent={lawContent} amendmentContent={amendmentContent} />
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
