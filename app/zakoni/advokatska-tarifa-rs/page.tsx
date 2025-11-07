@@ -25,8 +25,7 @@ export default async function AdvokatskaTarifaRSPage() {
         title="Advokatska tarifa Republike Srpske"
         description="Digitalno izdanje službene tarife sa tarifnim brojevima, osnovicama i pravilima obračuna – spremno za brzu provjeru nagrada i naknada."
         actions={[
-          { type: 'link', label: 'Preuzmi PDF', href: '/laws/advokatska-tarifa-rs.pdf', download: true, variant: 'primary' },
-          { type: 'renderPdf', label: 'Generiši PDF (piksel-perfekt)', variant: 'secondary' },
+          { label: 'Preuzmi PDF', href: '/laws/advokatska-tarifa-rs.pdf', download: true, variant: 'primary' },
         ]}
         stats={[
           { label: 'Tarifni brojevi', value: tariffCount ? `${tariffCount}` : '30+', description: 'Osnovni i posebni brojevi' },

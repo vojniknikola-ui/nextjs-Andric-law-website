@@ -1,19 +1,3 @@
-import { RenderPdfButton } from './RenderPdfButton';
-
-type LawHeroAction =
-  | {
-      type: 'link';
-      label: string;
-      href: string;
-      download?: boolean;
-      variant?: 'primary' | 'secondary';
-    }
-  | {
-      type: 'renderPdf';
-      label: string;
-      variant?: 'primary' | 'secondary';
-    };
-
 interface LawHeroStat {
   label: string;
   value: string;
@@ -24,7 +8,12 @@ interface LawHeroProps {
   badge: string;
   title: string;
   description: string;
-  actions: LawHeroAction[];
+  actions: Array<{
+    label: string;
+    href: string;
+    download?: boolean;
+    variant?: 'primary' | 'secondary';
+  }>;
   stats: LawHeroStat[];
 }
 
@@ -47,26 +36,15 @@ export function LawHero({ badge, title, description, actions, stats }: LawHeroPr
             <div className="mt-6 flex flex-wrap gap-3">
               {actions.map((action) => {
                 const variant = action.variant ?? 'primary';
-                const baseClass =
+                const className =
                   variant === 'primary'
                     ? 'inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/40 transition hover:-translate-y-0.5'
                     : 'inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-100';
-
-                if (action.type === 'renderPdf') {
-                  return (
-                    <RenderPdfButton
-                      key={action.label}
-                      label={action.label}
-                      className={baseClass}
-                    />
-                  );
-                }
-
                 return (
                   <a
                     key={action.label}
                     href={action.href}
-                    className={baseClass}
+                    className={className}
                     download={action.download}
                   >
                     {action.label}
