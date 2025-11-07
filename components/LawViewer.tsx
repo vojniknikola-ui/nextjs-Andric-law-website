@@ -123,14 +123,15 @@ function parseLawContent(content: string): LawSection[] {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const plainLine = line.replace(/<[^>]+>/g, '').trim();
+    const normalizedLine = plainLine.replace(/\\([#*_])/g, '$1');
 
-    if (plainLine.match(/^PREAMBULA/i)) {
+    if (normalizedLine.match(/^PREAMBULA/i)) {
       inPreamble = true;
       preambleContent.push(line);
       continue;
     }
 
-    const articleMatch = plainLine.match(articleRegex);
+    const articleMatch = normalizedLine.match(articleRegex);
     if (articleMatch) {
       if (inPreamble && preambleContent.length > 0) {
         sections.push({
@@ -163,12 +164,12 @@ function parseLawContent(content: string): LawSection[] {
       continue;
     }
 
-    if (plainLine.includes('Historijat izmjena')) {
+    if (normalizedLine.includes('Historijat izmjena')) {
       inHistory = true;
       continue;
     }
 
-    if (plainLine.match(/^\\?\*\\?\*GLAVA/i) || plainLine.match(/^GLAVA/i) || plainLine.match(/^DIO [IVX]+/i)) {
+    if (normalizedLine.match(/^\\?\*\\?\*GLAVA/i) || normalizedLine.match(/^GLAVA/i) || normalizedLine.match(/^DIO [IVX]+/i)) {
       pendingGlava = line;
       continue;
     }
