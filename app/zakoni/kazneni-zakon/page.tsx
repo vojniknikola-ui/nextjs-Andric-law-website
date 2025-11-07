@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import LawViewer from '@/components/LawViewer';
+import { LawHero } from '@/components/LawHero';
 
 export const metadata = {
   title: 'Kazneni zakon Federacije BiH | Andrić Law',
@@ -43,76 +44,18 @@ export default async function KazneniZakonPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      <section className="border-b border-slate-200 bg-white/80">
-        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 lg:grid-cols-[3fr,2fr]">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-blue-700">
-              Andrić Law · Kazneno pravo
-            </span>
-            <h1 className="mt-5 text-4xl font-bold text-slate-950 lg:text-5xl">
-              Kazneni zakon Federacije BiH – pročišćeni tekst
-            </h1>
-            <p className="mt-4 text-lg leading-relaxed text-slate-600">
-              Jedinstvena LawViewer verzija sa kompletnim člancima, historijatom izmjena i sidrima za brzo kretanje kroz OPĆI i POSEBNI dio zakona.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="/laws/kazneni-zakon-fbih.md"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/40 transition hover:-translate-y-0.5"
-                download
-              >
-                Preuzmi MD pročišćeni tekst
-              </a>
-              <a
-                href="/search?q=kazneni%20zakon"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-100"
-              >
-                Pretraži izmjene
-              </a>
-            </div>
-
-            <div className="mt-10 grid gap-4 text-sm text-slate-600 sm:grid-cols-2">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">Službene novine</p>
-                <p className="mt-2 text-base font-semibold text-slate-900">
-                  36/03 → 58/25
-                </p>
-                <p className="text-slate-600">
-                  Uključuje sve izmjene (ispravke, dopune i 2025. izmjene zasnovane na EU direktivi).
-                </p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">Historijat</p>
-                <p className="mt-2 text-base font-semibold text-slate-900">{historyCount}+ anotacija</p>
-                <p className="text-slate-600">
-                  Klikom na “Historijat izmjena” otvara se verzija člana prije izmjene.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-blue-100 bg-blue-50/70 p-6 shadow-inner">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-700">Status dokumenta</p>
-            <h2 className="mt-4 text-3xl font-semibold text-slate-950">{articleCount}+ članaka</h2>
-            <p className="mt-1 text-slate-600">
-              OPĆI dio + POSEBNI dio sa svim kaznenim djelima i bilješkama o izmjenama.
-            </p>
-            <dl className="mt-6 grid grid-cols-2 gap-4 text-sm text-slate-600">
-              <div className="rounded-2xl border border-white/60 bg-white/70 p-4">
-                <dt className="text-[11px] font-semibold uppercase tracking-[0.24em] text-blue-600">Glave</dt>
-                <dd className="mt-1 text-lg font-semibold text-slate-900">25</dd>
-              </div>
-              <div className="rounded-2xl border border-white/60 bg-white/70 p-4">
-                <dt className="text-[11px] font-semibold uppercase tracking-[0.24em] text-blue-600">Historijat</dt>
-                <dd className="mt-1 text-lg font-semibold text-slate-900">{historyCount}+ članova</dd>
-              </div>
-            </dl>
-            <p className="mt-5 text-xs text-slate-500">
-              LawViewer format omogućava uredniku da samo ubaci novi MD/TXT fajl u <code className="rounded bg-white/60 px-1 py-0.5 font-mono text-[11px]">/public/laws</code>, bez dodatnog kodiranja.
-            </p>
-          </div>
-        </div>
-      </section>
+      <LawHero
+        badge="Andrić Law · Kazneno pravo"
+        title="Kazneni zakon Federacije BiH – pročišćeni tekst"
+        description="Jedinstvena LawViewer verzija sa kompletnim člancima, historijatom izmjena i sidrima za brzo kretanje kroz OPĆI i POSEBNI dio zakona."
+        actions={[
+          { label: 'Preuzmi PDF', href: '/laws/kazneni-zakon-fbih.pdf', download: true, variant: 'primary' },
+        ]}
+        stats={[
+          { label: 'Članovi', value: `${articleCount}+`, description: 'Opći + posebni dio' },
+          { label: 'Historijat izmjena', value: `${historyCount}+ bilješki`, description: 'SN FBiH 36/03 – 58/25' },
+        ]}
+      />
 
       <LawViewer lawContent={lawContent} />
 
