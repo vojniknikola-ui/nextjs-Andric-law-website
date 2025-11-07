@@ -16,8 +16,6 @@
 \*\*Članak 1.\*\*  
 \*\*Predmet ovoga Zakona\*\*
 
-Ovim se Zakonom uređuje opći dio kaznenog zakonodavstva u Federaciji Bosne i Hercegovine i kaznena djela iz nadležnosti Federacije Bosne i Hercegovine (u daljnjem tekstu: Federacija).
-
 \*\*\*  
 \*\*\*Članak 1a. je dodan Zakonom o izmjenama i dopunama Kaznenoga zakona ("Službene novine Federacije BiH", br. 58/25 od 1.8.2025.)\*\*\*
 
@@ -1301,7 +1299,6 @@ Tko na područje Federacije upućuje ili prebacuje oružane grupe ljudi, teroris
 \*\*Unošenje opasnih tvari u Federaciju\*\*
 
 (1) Tko protivno propisima unese u Federaciju za život ili zdravlje ljudi štetne radioaktivne ili druge opasne tvari ili otpatke, kaznit će se novčanom kaznom ili kaznom zatvora do tri godine.  
-(2) Tko zlouporabom svojeg položaja ili ovlasti protivno propisima omogući da se u Federaciju unesu za život ili zdravlje ljudi štetne radioaktivne ili druge opasne tvari ili otpaci, kaznit će se kaznom zatvora od šest mjeseci do pet godina.
 
 \*\*Članak 161.\*\*  
 \*\*Ubojstvo najviših dužnosnika Federacije\*\*
@@ -3368,4 +3365,3 @@ Ovaj Zakon stupa na snagu osmog dana od dana objave u "Službenim novinama Feder
 
 \---  
 \*\*Napomena:\*\* Završene su sve glave i članovi Zakona, uključujući prijelazne i završne odredbe. Materijal koji ste dostavili (SN 58/25) sadržavao je izmjene samo do člana 224\. te nove glave XIXa, pa su svi članovi nakon te točke koji nisu bili eksplicitno mijenjani u priloženom materijalu prikazani u svojoj posljednjoj poznatoj verziji, koja je bila iz SN 36/03, osim ako je ranije identificirana promjena.
-
