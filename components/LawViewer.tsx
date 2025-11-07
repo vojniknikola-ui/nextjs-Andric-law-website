@@ -9,8 +9,9 @@ interface LawSection {
   history?: string;
 }
 
-export default function LawViewer({ lawContent }: { lawContent: string }) {
+export default function LawViewer({ lawContent, amendmentContent }: { lawContent: string; amendmentContent?: string }) {
   const [expandedHistory, setExpandedHistory] = useState<Set<string>>(new Set());
+  const [showAmendment, setShowAmendment] = useState(false);
 
   const sections = parseLawContent(lawContent);
 
@@ -40,6 +41,27 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
           </div>
         </div>
       </div>
+
+      {amendmentContent && (
+        <div className="mb-6">
+          <button
+            onClick={() => setShowAmendment(!showAmendment)}
+            className={`w-full px-5 py-4 text-base font-semibold rounded-lg transition-all ${
+              showAmendment
+                ? 'bg-amber-600 text-white shadow-lg'
+                : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+            }`}
+          >
+            📜 {showAmendment ? 'Sakrij Amandmane' : 'Prikaži Amandmane'}
+          </button>
+          
+          {showAmendment && (
+            <div className="mt-4 bg-amber-50 rounded-lg shadow-sm border border-amber-200 p-8">
+              <div className="text-black leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: formatLawContent(amendmentContent) }} />
+            </div>
+          )}
+        </div>
+      )}
       
       {sections.map(section => (
         <article key={section.id} className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
