@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { getDb, acts, provisions } from '../db';
+import { parseMarkdownArticles } from '../lib/lawParser';
 
 interface SeedOptions {
   slug: string;
@@ -38,7 +39,7 @@ export async function seedLawFromMarkdown(options: SeedOptions) {
     throw new Error(`Act ${options.slug} already exists. Delete it or change the slug.`);
   }
 
-  const parsedProvisions = parseMarkdownIntoProvisions(fileContent);
+  const parsedProvisions = parseMarkdownArticles(fileContent);
 
   const provisionRows = parsedProvisions.map((section, index) => ({
     actId: actRecord.id,
@@ -60,39 +61,17 @@ export async function seedLawFromMarkdown(options: SeedOptions) {
   console.log(`✔ Seeded ${provisionRows.length} provisions for ${options.title}`);
 }
 
-function parseMarkdownIntoProvisions(markdown: string) {
-  const blocks = markdown.split(/\n(?=# )/).map((block) => block.trim()).filter(Boolean);
-
-  if (blocks.length === 0) {
-    return [];
-  }
-
-  const sections = [] as Array<{ key: string; heading: string; body: string; level: 'article' | 'chapter' }>;
-
-  blocks.forEach((block, idx) => {
-    const headingMatch = block.match(/^#\s+(.+)$/m);
-    const heading = headingMatch ? headingMatch[1].trim() : `Član ${idx + 1}`;
-    const body = block.replace(/^#.+$/m, '').trim();
-    sections.push({
-      key: `auto_${idx + 1}`,
-      heading,
-      body,
-      level: 'article',
-    });
-  });
-
-  return sections;
-}
-
 async function runFromCLI() {
-  const sourceFile = process.argv[2] ?? 'public/laws/kazneni-zakon-fbih.md';
-  await seedLawFromMarkdown({
-    slug: 'sample-law',
-    title: 'Sample Law (imported from markdown)',
-    jurisdiction: 'FBiH',
-    sourceFile,
-    snapshotDate: DEFAULT_SNAPSHOT,
-  });
+  const args = process.argv.slice(2);
+  const options: SeedOptions = {
+    slug: getArg(args, '--slug') ?? 'sample-law',
+    title: getArg(args, '--title') ?? 'Sample Law (imported from markdown)',
+    jurisdiction: getArg(args, '--jurisdiction') ?? 'FBiH',
+    sourceFile: getArg(args, '--source') ?? 'public/laws/kazneni-zakon-fbih.md',
+    snapshotDate: getArg(args, '--snapshot') ?? DEFAULT_SNAPSHOT,
+  };
+
+  await seedLawFromMarkdown(options);
 }
 
 const isDirectExecution = import.meta.url === pathToFileURL(process.argv[1] ?? '').href;
@@ -102,4 +81,10 @@ if (isDirectExecution) {
     console.error('Failed to seed law from markdown', error);
     process.exit(1);
   });
+}
+
+function getArg(args: string[], key: string): string | undefined {
+  const index = args.indexOf(key);
+  if (index === -1) return undefined;
+  return args[index + 1];
 }

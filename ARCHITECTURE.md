@@ -94,10 +94,23 @@ Each step should end with `npm run lint` + `npm run build` to keep CI green. Doc
 3. Generate migrations (when schema changes): `npm run db:generate`, then push to your Postgres instance with `npm run db:push`.
 4. Optional: inspect data with `npm run db:studio`.
 5. Verify connectivity via the new health endpoint: start `npm run dev` and hit `GET /api/health/db`.
-6. Seed test data from an existing markdown law: `npx tsx etl/seedLawFromMarkdown.ts public/laws/kazneni-zakon-fbih.md`.
+6. Seed test data from an existing markdown law: `npx ts-node --compiler-options '{"module":"commonjs"}' etl/seedLawFromMarkdown.ts --slug sample-law --source public/laws/kazneni-zakon-fbih.md`.
 
 The ETL script is intentionally simple—replace it with the real AKN parser once available.
 
 ### Previewing the viewer route
 - After seeding, visit `/zakoni/sample-law` (or any slug you imported) to see the new SSR page pulling from Postgres.
 - Pass `?at=YYYY-MM-DD` to preview historical snapshots once intervals exist, e.g. `/zakoni/sample-law?at=2024-01-01`.
++
+### CLI seeding example
+
+```
+npx ts-node --compiler-options '{"module":"commonjs"}' etl/seedLawFromMarkdown.ts \
+  --slug zakon-o-advokaturi-fbih \
+  --title "Zakon o advokaturi Federacije BiH" \
+  --jurisdiction FBiH \
+  --source public/laws/zakon-o-advokaturi-fbih.md \
+  --snapshot 2025-01-10
+```
+
+> Tip: Ako Postgres konekcija nije podešena, `/zakoni/[slug]` sada pokušava da učita odgovarajući fajl iz `public/laws` (vidi `lib/lawFallbacks.ts`). Dodaj fallback unos za svaki zakon koji treba da radi i prije migracije u bazu.

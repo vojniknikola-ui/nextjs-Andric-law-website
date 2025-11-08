@@ -145,13 +145,57 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {post.isLawDocument && (
             <div className="mt-8 mb-8 rounded-2xl border border-blue-400/40 bg-blue-950/40 p-6 text-sm text-blue-50 shadow-lg">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">
-                Digitalni zakon
-              </p>
-              <p className="mt-3 text-blue-50">
-                Kompletan tekst zakona objavljen je u nastavku ove stranice, formatiran za lako
-                čitanje i pretragu.
-              </p>
+              <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">
+                    Digitalni zakon
+                  </p>
+                  <p className="mt-2 text-blue-50">
+                    Kompletan tekst objavljen je u nastavku ove stranice, formatiran za pretragu i citiranje.
+                  </p>
+                </div>
+                <div className="flex gap-2 mt-3 md:mt-0">
+                  {post.lawSlug && (
+                    <Link
+                      href={`/zakoni/${post.lawSlug}`}
+                      className="inline-flex items-center gap-2 rounded-xl border border-blue-300/40 px-4 py-2 text-sm font-semibold text-blue-50 hover:bg-blue-500/10"
+                    >
+                      Otvori LawViewer
+                    </Link>
+                  )}
+                  {resolveLawFile(post.lawFile) && (
+                    <a
+                      href={resolveLawFile(post.lawFile)!}
+                      className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2 text-sm text-blue-100 hover:bg-white/10"
+                      download
+                    >
+                      Preuzmi tekst
+                    </a>
+                  )}
+                </div>
+              </div>
+              <dl className="mt-6 grid gap-4 sm:grid-cols-3">
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.3em] text-blue-300">Objava</dt>
+                  <dd className="mt-1 text-base text-blue-50">
+                    {post.lawMeta?.citation ?? 'Neslužbena konsolidacija'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.3em] text-blue-300">Status</dt>
+                  <dd className="mt-1 text-base text-blue-50">
+                    {post.lawMeta?.status ?? 'Radna verzija'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.3em] text-blue-300">Datum</dt>
+                  <dd className="mt-1 text-base text-blue-50">
+                    {post.lawMeta?.publishedAt
+                      ? new Date(post.lawMeta.publishedAt).toLocaleDateString('bs-BA')
+                      : new Date(post.date).toLocaleDateString('bs-BA')}
+                  </dd>
+                </div>
+              </dl>
             </div>
           )}
 
@@ -317,4 +361,9 @@ function LawTextSection({ text }: { text: string }) {
       <div className="mt-4 whitespace-pre-wrap text-slate-100/90">{text}</div>
     </section>
   );
+}
+
+function resolveLawFile(lawFile?: string | string[] | null) {
+  if (!lawFile) return null;
+  return Array.isArray(lawFile) ? lawFile[0] : lawFile;
 }
