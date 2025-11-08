@@ -1,119 +1,180 @@
 "use client";
 
-import type { Law, Article } from "@/types/law";
-import { Button, Chip, Accordion, AccordionItem, Input } from "@nextui-org/react";
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight, Search } from "lucide-react";
+import Link from "next/link";
+import type { Law, Article } from "@/types/law";
+import { Search, Copy, ExternalLink } from "lucide-react";
 
 export default function LawViewerTop({ law }: { law: Law }) {
-  const [q, setQ] = useState("");
-  const [filtered, setFiltered] = useState<Article[]>(law.articles);
+  const [query, setQuery] = useState("");
+  const [filteredArticles, setFilteredArticles] = useState<Article[]>(law.articles);
   const articleRefs = useRef<Record<number, HTMLElement | null>>({});
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!q.trim()) {
-      setFiltered(law.articles);
+    if (!query.trim()) {
+      setFilteredArticles(law.articles);
       return;
     }
-    const rx = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
-    const subset = law.articles.filter((a) => rx.test(a.text) || (a.title && rx.test(a.title)));
-    setFiltered(subset);
-  }, [q, law.articles]);
+    const rx = new RegExp(query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    setFilteredArticles(
+      law.articles.filter(
+        (article) =>
+          rx.test(article.title ?? "") ||
+          rx.test(article.text) ||
+          (article.history ?? []).some((h) => (h.text ?? "").match(rx)),
+      ),
+    );
+  }, [law.articles, query]);
 
-  function scrollToArticle(no: number) {
-    const el = articleRefs.current[no];
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (typeof history !== "undefined") {
-        history.replaceState(null, "", `#clan-${no}`);
-      }
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: "-25% 0px -65% 0px", threshold: [0, 0.4, 0.6] },
+    );
+    const nodes = Object.values(articleRefs.current).filter(Boolean) as HTMLElement[];
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [law.articles]);
+
+  const officialGazette = useMemo(() => {
+    if (Array.isArray(law.officialGazette)) {
+      return law.officialGazette.map((g: any) => `${g.no}${g.date ? ` (${g.date})` : ""}`).join(", ");
     }
-  }
+    return law.officialGazette;
+  }, [law.officialGazette]);
+
+  const scrollToArticle = (no: number) => {
+    const el = articleRefs.current[no];
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof history !== "undefined") {
+      history.replaceState(null, "", `#clan-${no}`);
+    }
+  };
 
   return (
-    <div className="bg-slate-950 text-slate-100 min-h-screen">
-      {/* Hero Section */}
-      <section className="relative border-b border-white/10 bg-slate-900">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[120vw] h-[120vw] rounded-full bg-zinc-500/10 blur-3xl" />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 md:py-18">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-xl font-bold text-white ring-1 ring-white/15">AL</div>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{law.title}</h1>
-              <div className="flex flex-wrap items-center gap-2 mt-2">
-                <Chip size="sm" color="primary" variant="flat">{law.entity}</Chip>
-                {Array.isArray(law.officialGazette) ? (
-                  <p className="text-sm text-slate-400">
-                    Objave: {law.officialGazette.map((g: any) => `${g.no}${g.date ? ` (${g.date})` : ""}`).join(", ")}
-                  </p>
-                ) : law.officialGazette ? (
-                  <p className="text-sm text-slate-400">Objava: {law.officialGazette}</p>
-                ) : null}
+    <div className="bg-gradient-to-b from-slate-50 to-white text-slate-900">
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.35em] text-blue-600">LawViewer dokument</p>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">
+              {law.title}
+            </h1>
+            <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-500">
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                {law.entity}
+              </span>
+              {officialGazette && (
+                <span>
+                  Objave: <span className="font-medium text-slate-900">{officialGazette}</span>
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm">
+            <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Pregled</p>
+            <div className="mt-3 grid grid-cols-2 gap-3 text-sm text-slate-600">
+              <div>
+                <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Članova</p>
+                <p className="text-base font-semibold text-slate-900">{law.articles.length}</p>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Sadržaj</p>
+                <p className="text-base font-semibold text-slate-900">
+                  {law.features.history ? "Historijat uključen" : "Standardni pregled"}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Layout: TOC + Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-12 gap-8">
-          {/* TOC */}
-          <aside className="col-span-12 lg:col-span-3 order-2 lg:order-1">
-            <div className="sticky top-24 space-y-4">
-              <Input
-                aria-label="Pretraga unutar zakona"
-                size="sm"
-                placeholder="Pretraga članova..."
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                startContent={<Search className="text-slate-500" size={16} />}
-                className="w-full"
-              />
-              <nav className="max-h-[calc(100vh-12rem)] overflow-auto pr-2">
-                <ul className="space-y-1">
-                  {law.articles.map((a) => (
-                    <li key={a.number}>
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:grid lg:grid-cols-[320px,1fr] lg:gap-6">
+        <aside className="order-2 lg:order-1">
+          <div className="sticky top-8 space-y-4">
+            <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
+              <label className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Pretraga
+              </label>
+              <div className="relative mt-2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Član, pojam..."
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-10 py-2 text-sm outline-none focus:border-blue-400"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-slate-100 px-2 text-xs text-slate-500"
+                    aria-label="Resetuj pretragu"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+              <div className="mt-5 border-t border-slate-100 pt-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Lista članova</p>
+                <div className="mt-3 max-h-[60vh] space-y-1 overflow-auto pr-1">
+                  {law.articles.map((article) => {
+                    const isActive = activeId === `clan-${article.number}`;
+                    return (
                       <button
-                        onClick={() => scrollToArticle(a.number)}
-                        className="block w-full text-left text-sm px-3 py-2 rounded-md hover:bg-slate-800 transition-colors duration-150"
-                        title={`Član ${a.number}`}
+                        key={article.number}
+                        onClick={() => scrollToArticle(article.number)}
+                        className={`w-full rounded-xl px-3 py-2 text-left text-sm transition ${
+                          isActive ? "bg-blue-50 text-blue-900 font-semibold shadow-sm" : "text-slate-600 hover:bg-slate-100"
+                        }`}
                       >
-                        <span className="font-medium">Član {a.number}</span>
-                        {a.title && <span className="text-slate-400 ml-2 truncate">{a.title}</span>}
+                        <span className="font-medium">Član {article.number}</span>
+                        {article.title && (
+                          <span className="ml-1 text-xs text-slate-400 block truncate">
+                            {article.title}
+                          </span>
+                        )}
                       </button>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
-          </aside>
-
-          {/* Content */}
-          <section className="col-span-12 lg:col-span-9 order-1 lg:order-2">
-            <div className="space-y-12">
-              {filtered.length > 0 ? (
-                filtered.map((a) => (
-                  <ArticleBlock key={a.number} lawId={law.id} lawFeatures={law.features} article={a} articleRefs={articleRefs} query={q} />
-                ))
-              ) : (
-                <div className="flex flex-col items-center justify-center rounded-2xl bg-slate-800/50 p-12 text-center">
-                  <h3 className="text-lg font-semibold text-white">Nema rezultata</h3>
-                  <p className="text-sm text-slate-400">Pokušajte s drugim pojmom za pretragu.</p>
+                    );
+                  })}
                 </div>
-              )}
+              </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </aside>
+
+        <section className="order-1 space-y-6 lg:order-2">
+          {filteredArticles.length === 0 ? (
+            <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">
+              Nema rezultata za “{query}”. Pokušajte drugi izraz.
+            </div>
+          ) : (
+            filteredArticles.map((article) => (
+              <ArticleCard
+                key={article.number}
+                article={article}
+                lawId={law.id}
+                lawFeatures={law.features}
+                articleRefs={articleRefs}
+                query={query}
+              />
+            ))
+          )}
+        </section>
       </div>
     </div>
   );
 }
 
-function ArticleBlock({
+function ArticleCard({
   lawId,
   lawFeatures,
   article,
@@ -126,97 +187,162 @@ function ArticleBlock({
   articleRefs: React.MutableRefObject<Record<number, HTMLElement | null>>;
   query: string;
 }) {
-  const eff = useMemo(() => ({ ...lawFeatures, ...(article.features || {}) }), [lawFeatures, article.features]);
+  const effectiveFeatures = useMemo(
+    () => ({ ...lawFeatures, ...(article.features || {}) }),
+    [lawFeatures, article.features],
+  );
+
+  const hasHistory = effectiveFeatures.history && article.history && article.history.length > 0;
+  const hasAmendments = effectiveFeatures.amendments && article.amendments && article.amendments.length > 0;
+  const hasCaseLaw = effectiveFeatures.caseLaw && article.caseLaw && article.caseLaw.length > 0;
+  const hasExtra = effectiveFeatures.extraInfo && article.extraInfo;
 
   return (
-    <article id={`clan-${article.number}`} ref={(el) => { articleRefs.current[article.number] = el; }} className="scroll-mt-24 p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg">
-      <div className="flex items-center gap-3 mb-4">
-        <h2 className="text-2xl font-bold text-white">Član {article.number}</h2>
-        {article.title && <span className="text-slate-400 text-lg">— {article.title}</span>}
+    <article
+      id={`clan-${article.number}`}
+      ref={(el) => {
+        articleRefs.current[article.number] = el;
+      }}
+      className="scroll-mt-28 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60"
+    >
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Član {article.number}</p>
+          {article.title && (
+            <h2 className="mt-1 text-2xl font-semibold text-slate-950">{article.title}</h2>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {hasHistory && (
+            <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+              Historijat dostupan
+            </span>
+          )}
+          <CopyLinkButton anchor={`clan-${article.number}`} />
+        </div>
       </div>
 
-      <div className="prose prose-invert max-w-none leading-relaxed text-slate-300">
-        <Highlight text={article.text} query={query} />
+      <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-slate-700">
+        {article.text.split(/\n{2,}/).map((block, index) => (
+          <p key={index}>
+            <Highlight text={block} query={query} />
+          </p>
+        ))}
       </div>
 
-      {/* Dinamične sekcije ispod člana */}
-      <div className="mt-6">
-        <Accordion selectionMode="multiple" variant="splitted" itemClasses={{
-          base: "bg-slate-800/50 !shadow-none",
-          title: "font-semibold text-white",
-          trigger: "data-[hover=true]:bg-slate-800",
-          content: "text-slate-400",
-        }}>
-          {eff.history && article.history && article.history.length > 0 ? (
-            <AccordionItem key="h" aria-label="Istorija" title="Istorija izmjena člana">
-              <ul className="text-sm list-disc ml-5 space-y-2">
-                {article.history.map((h, i) => (
-                  <li key={i}>
-                    <span className="text-slate-500 mr-2">{h.date ? `(${h.date})` : ""}</span>
-                    {h.text}
-                  </li>
-                ))}
-              </ul>
-            </AccordionItem>
-          ) : null}
+      {hasHistory && article.history && (
+        <details className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+          <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.2em] text-blue-700">
+            Historijat izmjena
+          </summary>
+          <div className="mt-3 space-y-2">
+            {article.history.map((entry, index) => (
+              <p key={index}>
+                {entry.date && <span className="mr-2 font-semibold text-blue-800">{entry.date}</span>}
+                <Highlight text={entry.text} query={query} />
+              </p>
+            ))}
+          </div>
+        </details>
+      )}
 
-          {eff.amendments && article.amendments && article.amendments.length > 0 ? (
-            <AccordionItem key="a" aria-label="Amandmani" title="Amandmani / izmjene">
-              <ul className="text-sm list-disc ml-5 space-y-2">
-                {article.amendments.map((am, i) => (
-                  <li key={i}>
-                    {am.date ? <span className="text-slate-500 mr-2">({am.date})</span> : null}
-                    {am.text || am.note || am.amendmentId}
-                  </li>
-                ))}
-              </ul>
-            </AccordionItem>
-          ) : null}
+      {hasAmendments && article.amendments && (
+        <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-700">Amandmani / izmjene</p>
+          <ul className="mt-2 space-y-2">
+            {article.amendments.map((amendment, index) => (
+              <li key={index}>
+                {amendment.date && <span className="mr-2 text-amber-800">({amendment.date})</span>}
+                {amendment.text || amendment.note || amendment.amendmentId}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-          {eff.caseLaw && article.caseLaw && article.caseLaw.length > 0 ? (
-            <AccordionItem key="c" aria-label="Sudska praksa" title="Sudska praksa (povezane odluke)">
-              <ul className="text-sm list-disc ml-5 space-y-2">
-                {article.caseLaw.map((cl, i) => (
-                  <li key={i}>
-                    <span className="font-semibold text-white">{cl.caseId}</span>
-                    {cl.court ? <span className="text-slate-500"> — {cl.court}</span> : null}
-                    {": "}
-                    {cl.description}
-                    {cl.url ? (
-                      <Link href={cl.url} target="_blank" rel="noopener noreferrer" className="text-primary-400 hover:underline ml-1">
-                        link <ChevronRight className="inline h-4 w-4" />
-                      </Link>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </AccordionItem>
-          ) : null}
+      {hasCaseLaw && article.caseLaw && (
+        <div className="mt-4 rounded-2xl border border-purple-200 bg-purple-50 p-4 text-sm text-purple-900">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-700">Sudska praksa</p>
+          <ul className="mt-2 space-y-2">
+            {article.caseLaw.map((caseItem, index) => (
+              <li key={index}>
+                <span className="font-semibold">{caseItem.caseId}</span>
+                {caseItem.court && <span className="text-purple-700"> — {caseItem.court}</span>}
+                {": "}
+                {caseItem.description}
+                {caseItem.url && (
+                  <Link
+                    href={caseItem.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-1 inline-flex items-center gap-1 text-purple-900 underline"
+                  >
+                    link
+                    <ExternalLink className="h-3 w-3" />
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-          {eff.extraInfo && article.extraInfo ? (
-            <AccordionItem key="x" aria-label="Dodatne informacije" title="Dodatne informacije">
-              <div className="text-sm whitespace-pre-line">{article.extraInfo}</div>
-            </AccordionItem>
-          ) : null}
-        </Accordion>
-      </div>
+      {hasExtra && (
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            Dodatne informacije
+          </p>
+          <p className="mt-2 whitespace-pre-line">{article.extraInfo}</p>
+        </div>
+      )}
     </article>
   );
 }
 
+function CopyLinkButton({ anchor }: { anchor: string }) {
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 1500);
+    return () => clearTimeout(timer);
+  }, [copied]);
+
+  const handleCopy = () => {
+    if (typeof window === "undefined") return;
+    const url = `${window.location.origin}${window.location.pathname}#${anchor}`;
+    navigator.clipboard?.writeText(url).then(() => setCopied(true));
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs ${
+        copied
+          ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+          : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+      }`}
+    >
+      <Copy className="h-3.5 w-3.5" />
+      {copied ? "Kopirano" : "Kopiraj link"}
+    </button>
+  );
+}
+
 function Highlight({ text, query }: { text: string; query: string }) {
-  if (!query) return <>{text}</>;
+  if (!query.trim()) return <>{text}</>;
   try {
     const rx = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
-    const parts = text.split(rx);
     return (
       <>
-        {parts.map((p, i) =>
-          rx.test(p) ? (
-            <mark key={i} className="bg-primary-500/30 text-primary-200 rounded px-1">{p}</mark>
+        {text.split(rx).map((chunk, index) =>
+          rx.test(chunk) ? (
+            <mark key={`${chunk}-${index}`} className="rounded bg-yellow-200 px-1 text-slate-900">
+              {chunk}
+            </mark>
           ) : (
-            <span key={i}>{p}</span>
-          )
+            <span key={`${chunk}-${index}`}>{chunk}</span>
+          ),
         )}
       </>
     );
