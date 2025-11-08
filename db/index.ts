@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
+import { Pool, PoolConfig } from 'pg';
 import * as schema from './schema';
 
 const connectionString = process.env.DATABASE_URL;
@@ -8,11 +8,20 @@ if (!connectionString) {
   console.warn('[db] DATABASE_URL is not set. Database access is disabled until it is provided.');
 }
 
-let pool: Pool | null = null;
+function createPool(): Pool | null {
+  if (!connectionString) return null;
 
-if (connectionString) {
-  pool = new Pool({ connectionString });
+  const config: PoolConfig = {
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+
+  return new Pool(config);
 }
+
+const pool = createPool();
 
 export const db = pool ? drizzle(pool, { schema }) : null;
 
