@@ -114,3 +114,15 @@ npx ts-node --compiler-options '{"module":"commonjs"}' etl/seedLawFromMarkdown.t
 ```
 
 > Tip: Ako Postgres konekcija nije podešena, `/zakoni/[slug]` sada pokušava da učita odgovarajući fajl iz `public/laws` (vidi `lib/lawFallbacks.ts`). Dodaj fallback unos za svaki zakon koji treba da radi i prije migracije u bazu.
+
+## Search integration (Typesense)
+
+1. Provision Typesense (self-hosted ili cloud) i zapiši `TYPESENSE_HOST`, `TYPESENSE_PORT`, `TYPESENSE_PROTOCOL`, `TYPESENSE_API_KEY`.
+2. Dodaj varijable u `.env.local` / Vercel (vidi `.env.example`).
+3. Nakon što postoji najmanje jedan zakon u bazi, pokreni:
+   ```
+   DATABASE_URL=... TYPESENSE_* envs... npm run db:push   # ako treba ponovo
+   env DATABASE_URL=... TYPESENSE_* npx tsx scripts/index-typesense.ts
+   ```
+   Skripta će redefinisati kolekciju `law_provisions` i importovati sve članke.
+4. `app/api/search/route.ts` sada kombinuje Typesense rezultate (zakoni) + blog rezultate. Ako Typesense env varijable nedostaju, API automatski preskače zakone.

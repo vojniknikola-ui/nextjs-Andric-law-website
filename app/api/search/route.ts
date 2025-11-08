@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getAllPosts } from '@/lib/blog';
 import { searchBlogPosts, type HighlightSnippet } from '@/lib/search/blog-search';
+import { typesenseClient } from '@/lib/typesense';
+import type { SearchResponse } from 'typesense/lib/Typesense/Documents';
 
 export const runtime = 'nodejs';
 
@@ -37,9 +39,10 @@ export async function GET(request: Request) {
 
   try {
     const posts = await getAllPosts();
-    const matches = searchBlogPosts(posts, q);
+    const lawResults = await searchLaws(q, filter);
+    const blogMatches = searchBlogPosts(posts, q);
 
-    const results = matches
+    const blogResults = blogMatches
       .map((match) => ({
         id: match.post.slug,
         slug: match.post.slug,
@@ -53,6 +56,7 @@ export async function GET(request: Request) {
         similarity: match.similarity,
         matchedField: match.matchedField,
         snippetText: snippetToPlainText(match.snippet ?? null),
+        type: 'blog' as const,
       }))
       .filter((result) => {
         if (filter === 'all') {
@@ -71,6 +75,8 @@ export async function GET(request: Request) {
       })
       .sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0));
 
+    const results = [...lawResults, ...blogResults];
+
     return NextResponse.json(
       { results: results.slice(0, 20) },
       {
@@ -82,5 +88,70 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Search API error', error);
     return NextResponse.json({ error: 'Search failed' }, { status: 500 });
+  }
+}
+
+type LawSearchResult = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  date?: string;
+  tags: string[];
+  category: 'zakoni';
+  similarity?: number;
+  matchedField?: string;
+  snippetText?: string | null;
+  type: 'law';
+};
+
+async function searchLaws(q: string, filter: string): Promise<LawSearchResult[]> {
+  if (!typesenseClient) {
+    return [];
+  }
+
+  const allowLawCategory =
+    filter === 'all' || filter === 'zakoni';
+
+  if (!allowLawCategory) {
+    return [];
+  }
+
+  try {
+    const response = await typesenseClient
+      .collections('law_provisions')
+      .documents()
+      .search({
+        q,
+        query_by: 'content,plain_content,heading,act_title,provision_key',
+        highlight_full_fields: 'content,plain_content,heading',
+        per_page: 20,
+      }) as SearchResponse<Record<string, any>>;
+
+    return (response.hits || []).map((hit) => {
+      const doc = hit.document;
+      const highlightValue =
+        hit.highlights?.find((hl) => hl.field === 'content' || hl.field === 'plain_content')?.snippet ??
+        hit.highlights?.[0]?.snippet ??
+        '';
+
+      return {
+        id: doc.id,
+        slug: `/zakoni/${doc.act_slug}?focus=${doc.provision_key}`,
+        title: `${doc.act_title} · ${doc.heading || doc.provision_key}`,
+        excerpt: doc.heading || doc.act_title,
+        content: doc.content,
+        tags: ['Digitalni zakon', doc.jurisdiction].filter(Boolean),
+        category: 'zakoni',
+        similarity: hit.text_match,
+        matchedField: hit.highlights?.[0]?.field,
+        snippetText: highlightValue,
+        type: 'law',
+      };
+    });
+  } catch (error) {
+    console.error('Typesense search failed', error);
+    return [];
   }
 }

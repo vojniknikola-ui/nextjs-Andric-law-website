@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push",
+    "db:push": "node scripts/apply-migration.mjs",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
@@ -22,7 +22,8 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-markdown": "^10.1.0",
-    "rehype-raw": "^7.0.0"
+    "rehype-raw": "^7.0.0",
+    "typesense": "^1.8.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
