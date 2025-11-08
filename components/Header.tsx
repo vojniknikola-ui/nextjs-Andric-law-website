@@ -22,7 +22,7 @@ export function Header({ onContactClick }: HeaderProps) {
 
   const navigation = [
     { name: 'Usluge', href: '/#usluge' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'LawViewer', href: '/lawviewer' },
     { name: 'Glosarij', href: '/#glosarij' },
     { name: 'O nama', href: '/#o-nama' },
     { name: 'Kontakt', href: '/#kontakt' },
