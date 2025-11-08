@@ -1,5 +1,5 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool, PoolConfig } from 'pg';
+import { neon, neonConfig } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema';
 
 const connectionString = process.env.DATABASE_URL;
@@ -8,22 +8,11 @@ if (!connectionString) {
   console.warn('[db] DATABASE_URL is not set. Database access is disabled until it is provided.');
 }
 
-function createPool(): Pool | null {
-  if (!connectionString) return null;
+neonConfig.fetchConnectionCache = true;
 
-  const config: PoolConfig = {
-    connectionString,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  };
+const sql = connectionString ? neon(connectionString) : null;
 
-  return new Pool(config);
-}
-
-const pool = createPool();
-
-export const db = pool ? drizzle(pool, { schema }) : null;
+export const db = sql ? drizzle(sql, { schema }) : null;
 
 export function getDb() {
   if (!db) {
