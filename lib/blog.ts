@@ -2,6 +2,7 @@ import { BlogPost } from '@/types/blog';
 import { kaznenZakonFBiH } from '@/content/blog/kazneni-zakon-fbih-procisceni-tekst';
 import { ustavBiHPost } from '@/content/blog/ustav-bosne-i-hercegovine';
 import { advokatskaTarifaRSPort } from '@/content/blog/advokatska-tarifa-rs';
+import { advokatskaTarifaFBiHPost } from '@/content/blog/advokatska-tarifa-fbih';
 import { politikaDirektnihUlaganjaPost } from '@/content/blog/politika-direktnih-ulaganja';
 import { zakonONasljedjivanjuPost } from '@/content/blog/zakon-o-nasljedivanju';
 import { zakonReprezentativnostiPost } from '@/content/blog/zakon-o-reprezentativnosti-sindikata-i-udruzenja-poslodavaca-fbih';
@@ -19,6 +20,7 @@ const BLOG_IMAGES = {
 };
 
 export const blogPosts: BlogPost[] = [
+  advokatskaTarifaFBiHPost,
   advokatskaTarifaRSPort,
   politikaDirektnihUlaganjaPost,
   zakonONasljedjivanjuPost,

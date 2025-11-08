@@ -40,12 +40,9 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
             {post.title}
           </h3>
           <p className="mt-2 text-sm text-slate-300 line-clamp-2">{post.excerpt}</p>
-          {post.isLawDocument && post.lawViewerPath && (
-            <div className="mt-3 inline-flex flex-wrap items-center gap-2 rounded-full border border-blue-300/40 bg-blue-900/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-blue-100">
-              <span>LawViewer</span>
-              <Link href={post.lawViewerPath} className="text-blue-200 underline underline-offset-2 hover:text-blue-50">
-                Otvori zakon
-              </Link>
+          {post.isLawDocument && (
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-blue-300/30 bg-blue-900/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-blue-100">
+              <span>Digitalni zakon</span>
             </div>
           )}
           <div className="mt-4 flex items-center justify-between">

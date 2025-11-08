@@ -13,8 +13,8 @@ export interface BlogPost {
   featured?: boolean;
   image?: string;
   isLawDocument?: boolean;
-  lawViewerPath?: string;
   canonicalUrl?: string;
+  lawFile?: string | string[];
 }
 
 export interface BlogCategory {

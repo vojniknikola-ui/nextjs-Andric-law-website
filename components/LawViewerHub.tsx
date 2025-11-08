@@ -3,93 +3,49 @@
 import { useMemo, useState } from "react";
 import Fuse from "fuse.js";
 import Link from "next/link";
-import type { LawIndexItem } from "@/types/law";
 import type { BlogPost } from "@/types/blog";
 import { BlogCard } from "@/components/BlogCard";
 import { Search as SearchIcon, ChevronRight } from "lucide-react";
 
 type Tab = "all" | "zakoni" | "clanci";
 
-type LawHubItem = {
-  id: string;
-  title: string;
-  href: string;
-  entity?: string;
-  source: "json" | "blog";
-};
-
-export default function LawViewerHub({
-  laws,
-  posts,
-}: {
-  laws: LawIndexItem[];
-  posts: BlogPost[];
-}) {
+export default function LawViewerHub({ posts }: { posts: BlogPost[] }) {
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<Tab>("all");
 
-  const allLaws: LawHubItem[] = useMemo(() => {
-    const fromIndex = (laws || []).map((it) => ({
-      id: it.id,
-      title: it.title,
-      href: `/zakoni/${it.id}`,
-      entity: it.entity,
-      source: "json" as const,
-    }));
-
-    const fromBlog = (posts || [])
-      .filter((p) => p.isLawDocument && p.lawViewerPath)
-      .map((p) => ({
-        id: p.slug,
-        title: p.title,
-        href: p.lawViewerPath!,
-        entity: undefined,
-        source: "blog" as const,
-      }));
-
-    const map = new Map<string, LawHubItem>();
-    [...fromIndex, ...fromBlog].forEach((x) => {
-      map.set(x.href, x);
-    });
-    return Array.from(map.values());
-  }, [laws, posts]);
-
-  const blogArticles = useMemo(
-    () => posts.filter((p) => !p.isLawDocument),
-    [posts]
-  );
+  const lawPosts = useMemo(() => posts.filter((p) => p.isLawDocument), [posts]);
+  const articlePosts = useMemo(() => posts.filter((p) => !p.isLawDocument), [posts]);
 
   const fuseLaws = useMemo(
     () =>
-      new Fuse(allLaws, {
-        includeScore: true,
-        threshold: 0.35,
-        keys: ["title", "id", "entity"],
-      }),
-    [allLaws]
-  );
-  const fusePosts = useMemo(
-    () =>
-      new Fuse(blogArticles, {
+      new Fuse(lawPosts, {
         includeScore: true,
         threshold: 0.35,
         keys: ["title", "excerpt", "tags"],
       }),
-    [blogArticles]
+    [lawPosts],
+  );
+  const fuseArticles = useMemo(
+    () =>
+      new Fuse(articlePosts, {
+        includeScore: true,
+        threshold: 0.35,
+        keys: ["title", "excerpt", "tags"],
+      }),
+    [articlePosts],
   );
 
   const filteredLaws = useMemo(
-    () => (q.trim() ? fuseLaws.search(q).map((r) => r.item) : allLaws),
-    [q, allLaws, fuseLaws]
+    () => (q.trim() ? fuseLaws.search(q).map((r) => r.item) : lawPosts),
+    [q, lawPosts, fuseLaws],
   );
-  const filteredPosts = useMemo(
-    () =>
-      q.trim() ? fusePosts.search(q).map((r) => r.item) : blogArticles,
-    [q, blogArticles, fusePosts]
+  const filteredArticles = useMemo(
+    () => (q.trim() ? fuseArticles.search(q).map((r) => r.item) : articlePosts),
+    [q, articlePosts, fuseArticles],
   );
 
   const showLaws = tab === "all" || tab === "zakoni";
-  const showPosts = tab === "all" || tab === "clanci";
+  const showArticles = tab === "all" || tab === "clanci";
 
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 text-white">
@@ -142,7 +98,7 @@ export default function LawViewerHub({
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {filteredLaws.map((law) => (
-                <LawCard key={law.href} law={law} />
+                <LawCard key={law.slug} post={law} />
               ))}
             </div>
           )}
@@ -150,17 +106,17 @@ export default function LawViewerHub({
       )}
 
       {/* Articles */}
-      {showPosts && (
+      {showArticles && (
         <div className="mt-12">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl font-semibold text-white">Članci</h2>
-            <span className="text-sm text-slate-400">{filteredPosts.length} zapisa</span>
+            <span className="text-sm text-slate-400">{filteredArticles.length} zapisa</span>
           </div>
-          {filteredPosts.length === 0 && !showLaws ? (
+          {filteredArticles.length === 0 && !showLaws ? (
             <EmptyState message="Nema članaka za zadani pojam. Pokušajte ponovno." />
           ) : (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredPosts.map((post) => (
+              {filteredArticles.map((post) => (
                 <BlogCard key={post.slug} post={post} />
               ))}
             </div>
@@ -179,21 +135,21 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-function LawCard({ law }: { law: LawHubItem }) {
+function LawCard({ post }: { post: BlogPost }) {
   return (
     <Link
-      href={law.href}
+      href={`/blog/${post.slug}`}
       className="group block rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-5 shadow-xl shadow-black/30 ring-1 ring-white/10 transition hover:-translate-y-1 hover:border-white/40 hover:ring-white/30"
     >
       <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.25em] text-slate-300">
-        <span>LawViewer</span>
-        <span>{law.entity || (law.source === "blog" ? "Blog" : "Zakon")}</span>
+        <span>Digitalni zakon</span>
+        <span>{post.tags[0] ?? "Zakon"}</span>
       </div>
       <p className="mt-4 text-lg font-semibold leading-snug text-white">
-        {law.title}
+        {post.title}
       </p>
       <div className="mt-6 flex items-center justify-between text-sm text-slate-200">
-        <span>{law.source === "blog" ? "Blog + zakon" : "Zakon"}</span>
+        <span>{new Date(post.date).toLocaleDateString("bs-BA")}</span>
         <span className="inline-flex items-center gap-1 text-white">
           Otvori
           <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1" />

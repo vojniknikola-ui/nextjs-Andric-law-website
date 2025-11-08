@@ -1,4 +1,3 @@
-import { getLawIndex } from "@/lib/blob";
 import { getAllPosts } from "@/lib/blog";
 import LawViewerHub from "@/components/LawViewerHub";
 
@@ -6,10 +5,7 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function LawViewerIndexPage() {
-  const [index, posts] = await Promise.all([
-    getLawIndex().catch(() => ({ items: [] } as any)),
-    getAllPosts().catch(() => []),
-  ]);
+  const posts = await getAllPosts().catch(() => []);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100">
@@ -28,7 +24,7 @@ export default async function LawViewerIndexPage() {
         </div>
       </section>
 
-      <LawViewerHub laws={index.items} posts={posts} />
+      <LawViewerHub posts={posts} />
     </main>
   );
 }

@@ -14,13 +14,13 @@ Konzistentan pristup stranim ulaganjima podrazumijeva transparentan zakon. Pripr
 - **Istorijske napomene** uz članove kojima su mijenjani termini ili procedure
 - **Jedan klik = Preuzmi PDF** – piksel-perfekt verzija trenutne stranice pogodna za arhivu ili rad sa klijentom
 
-[**Otvori zakon u LawViewer-u →**](/zakoni/politika-direktnih-ulaganja)
+[**Skoči na tekst zakona →**](#tekst-zakona)
 
 > Napomena: Tekst služi za lakše snalaženje. Za službenu verziju konsultujte „Službeni glasnik BiH“.
   `,
   date: '2025-02-18',
   readMinutes: 4,
-  tags: ['Investicije', 'BiH', 'LawViewer', 'Strana ulaganja'],
+  tags: ['Investicije', 'BiH', 'Digitalni zakon', 'Strana ulaganja'],
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
@@ -28,6 +28,5 @@ Konzistentan pristup stranim ulaganjima podrazumijeva transparentan zakon. Pripr
   featured: true,
   image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1200&h=675&fit=crop',
   isLawDocument: true,
-  lawViewerPath: '/zakoni/politika-direktnih-ulaganja',
-  canonicalUrl: 'https://andric.law/zakoni/politika-direktnih-ulaganja',
+  lawFile: '/laws/politika-direktnih-stranih-ulaganja-bih.txt',
 };

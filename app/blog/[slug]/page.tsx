@@ -4,12 +4,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { ArrowLeft, ArrowRight, Calendar, BookOpen, Tag, Share2 } from 'lucide-react';
+import { Calendar, BookOpen, Tag, Share2 } from 'lucide-react';
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { BlogCard } from '@/components/BlogCard';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -36,11 +38,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     };
   }
 
-  const canonicalUrl =
-    post.canonicalUrl ||
-    (post.isLawDocument && post.lawViewerPath
-      ? `https://andric.law${post.lawViewerPath}`
-      : `https://andric.law/blog/${post.slug}`);
+  const canonicalUrl = post.canonicalUrl || `https://andric.law/blog/${post.slug}`;
 
   return {
     title: `${post.title} | Andrić Law Blog`,
@@ -70,6 +68,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound();
   }
+
+  const lawText = await loadLawText(post.lawFile);
 
   // Get related posts (same tags)
   const allPosts = await getAllPosts();
@@ -143,23 +143,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </span>
           </div>
 
-          {post.isLawDocument && post.lawViewerPath && (
+          {post.isLawDocument && (
             <div className="mt-8 mb-8 rounded-2xl border border-blue-400/40 bg-blue-950/40 p-6 text-sm text-blue-50 shadow-lg">
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">LawViewer dokument</p>
-                  <p className="mt-2 text-base text-blue-50">
-                    Ovaj tekst je optimiziran za čitanje u LawViewer modu. Kliknite ispod kako biste otvorili zakon sa sidrima po članu i historijatom izmjena.
-                  </p>
-                </div>
-                <Link
-                  href={post.lawViewerPath}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-blue-900 shadow-lg shadow-blue-900/30 transition hover:-translate-y-0.5"
-                >
-                  Otvori u LawViewer-u
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">
+                Digitalni zakon
+              </p>
+              <p className="mt-3 text-blue-50">
+                Kompletan tekst zakona objavljen je u nastavku ove stranice, formatiran za lako
+                čitanje i pretragu.
+              </p>
             </div>
           )}
 
@@ -240,6 +232,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </ReactMarkdown>
           </div>
 
+          {lawText && (
+            <LawTextSection text={lawText} />
+          )}
+
           {/* Share */}
           <div className="mt-12 pt-8 border-t border-white/10">
             <div className="flex items-center justify-between">
@@ -293,5 +289,32 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <Footer />
     </main>
+  );
+}
+
+async function loadLawText(lawFile?: string | string[]): Promise<string | null> {
+  if (!lawFile) return null;
+  const files = Array.isArray(lawFile) ? lawFile : [lawFile];
+  try {
+    const contents = await Promise.all(
+      files.map(async (file) => {
+        const relative = file.startsWith('/') ? file.slice(1) : file;
+        const filePath = path.join(process.cwd(), 'public', relative);
+        return fs.readFile(filePath, 'utf-8');
+      }),
+    );
+    return contents.join('\n\n');
+  } catch (error) {
+    console.warn('Failed to load law text', error);
+    return null;
+  }
+}
+
+function LawTextSection({ text }: { text: string }) {
+  return (
+    <section id="tekst-zakona" className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8 text-sm leading-relaxed text-slate-200 shadow-lg shadow-black/20">
+      <h2 className="text-2xl font-semibold text-white">Tekst zakona</h2>
+      <div className="mt-4 whitespace-pre-wrap text-slate-100/90">{text}</div>
+    </section>
   );
 }

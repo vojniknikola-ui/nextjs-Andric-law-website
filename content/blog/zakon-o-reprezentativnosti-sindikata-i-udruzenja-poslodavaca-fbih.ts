@@ -7,15 +7,15 @@ export const zakonReprezentativnostiPost: BlogPost = {
   content: `
 # Reprezentativnost sindikata i udruženja poslodavaca – FBiH
 
-U LawViewer modu možete brzo pretražiti kriterije i postupke utvrđivanja reprezentativnosti za sindikate i udruženja poslodavaca – uz čitljiv raspored po člancima i hero highlights.
+Digitalni prikaz omogućava brzo pretraživanje kriterija i postupka utvrđivanja reprezentativnosti za sindikate i udruženja poslodavaca – uz čitljiv raspored po člancima.
 
-[**Otvori zakon u LawViewer-u →**](/zakoni/zakon-o-reprezentativnosti-sindikata-i-udruzenja-poslodavaca-fbih)
+[**Skoči na tekst zakona →**](#tekst-zakona)
 
 > Napomena: Tekst služi za orijentaciju; provjerite „Službene novine FBiH“ (103/21) za zvaničnu objavu.
   `,
   date: '2025-02-18',
   readMinutes: 3,
-  tags: ['Radno pravo', 'Sindikalno pravo', 'LawViewer'],
+  tags: ['Radno pravo', 'Sindikalno pravo', 'Digitalni zakon'],
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
@@ -23,7 +23,5 @@ U LawViewer modu možete brzo pretražiti kriterije i postupke utvrđivanja repr
   featured: true,
   image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1200&h=675&fit=crop',
   isLawDocument: true,
-  lawViewerPath: '/zakoni/zakon-o-reprezentativnosti-sindikata-i-udruzenja-poslodavaca-fbih',
-  canonicalUrl: 'https://andric.law/zakoni/zakon-o-reprezentativnosti-sindikata-i-udruzenja-poslodavaca-fbih',
+  lawFile: '/laws/zakon-o-reprezentativnosti-sindikata-i-udruzenja-poslodavaca-fbih.txt',
 };
-

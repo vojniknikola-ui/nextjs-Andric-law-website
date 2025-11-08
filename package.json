@@ -9,17 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@sparticuz/chromium": "^127.0.0",
-    "@sparticuz/chromium": "^127.0.0",
-    "@nextui-org/react": "^2.4.6",
-    "@react-pdf/renderer": "^4.1.6",
-    "fuse.js": "^7.0.0",
     "@vercel/blob": "^2.0.0",
+    "fuse.js": "^7.0.0",
     "lucide-react": "^0.552.0",
     "next": "16.0.1",
-    "puppeteer-core": "^23.7.0",
-    "puppeteer-core": "^23.11.1",
-    "framer-motion": "^11.11.17",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-markdown": "^10.1.0",

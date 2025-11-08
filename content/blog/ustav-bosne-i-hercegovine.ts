@@ -5,7 +5,7 @@ export const ustavBiHPost: BlogPost = {
   title: 'Ustav Bosne i Hercegovine – LawViewer izdanje sa Amandmanom I',
   excerpt: 'Reobjavljena LawViewer verzija Ustava BiH: sidra po članu, jasno označeni dijelovi i integrisan Amandman I za Brčko distrikt.',
   content: `
-# Ustav Bosne i Hercegovine – LawViewer refresh 2025.
+# Ustav Bosne i Hercegovine – digitalni refresh 2025.
 
 Ponovno smo objavili kompletan tekst Ustava BiH u LawViewer formatu kako bi klijenti i urednici imali čist, visokokontrastni prikaz sa pratećim amandmanom.
 
@@ -13,10 +13,10 @@ Ponovno smo objavili kompletan tekst Ustava BiH u LawViewer formatu kako bi klij
 - **Hero u dvije kolone** – odmah se vidi status dokumenta, broj glava i prečice ka ključnim članovima
 - **Amandman I kao kartica** – sadržaj iz "Službenog glasnika BiH", br. 25/09 prikazuje se u \`details\` elementu i u samom LawViewer-u
 - **Automatski intro/preambula** – dovoljno je ubaciti TXT/MD fajl iz *Downloads* i parser odrađuje sidra i grupisanje (GLAVA, DIO…)
-- **LawViewer badge na blogu i u pretrazi** – svi rezultati koji vode ka /zakoni/ustav-bih sada su jasno označeni
+- **Digitalni badge na blogu i u pretrazi** – svi rezultati koji vode ka ovom članku jasno su označeni
 
 ## Kako otvoriti zakon?
-- Posjetite [**/zakoni/ustav-bih**](/zakoni/ustav-bih) za interaktivni prikaz
+- Posjetite [**sekciju ispod**](#tekst-zakona) za kompletan tekst
 - Dugmad “Amandman I” i “Skoči na član VI.4” su dostupna u samom hero segmentu
 - Preuzmite izvorni \`ustav-bih.txt\` fajl klikom na “Preuzmi TXT” (korisno za offline rad)
 
@@ -30,7 +30,7 @@ Ponovno smo objavili kompletan tekst Ustava BiH u LawViewer formatu kako bi klij
   `,
   date: '2025-02-17',
   readMinutes: 4,
-  tags: ['Ustav', 'BiH', 'LawViewer', 'Zakoni'],
+  tags: ['Ustav', 'BiH', 'Digitalni zakon', 'Zakoni'],
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
@@ -38,6 +38,5 @@ Ponovno smo objavili kompletan tekst Ustava BiH u LawViewer formatu kako bi klij
   featured: true,
   image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1200&h=675&fit=crop',
   isLawDocument: true,
-  lawViewerPath: '/zakoni/ustav-bih',
-  canonicalUrl: 'https://andric.law/zakoni/ustav-bih',
+  lawFile: ['/laws/ustav-bih.txt', '/laws/ustav-bih-amandman.txt'],
 };

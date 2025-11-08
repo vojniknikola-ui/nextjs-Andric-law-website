@@ -13,7 +13,7 @@ Pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sada je ponov
 - **380+ članova** podijeljenih na OPĆI i POSEBNI dio sa automatskim sidrima  
 - **Historijat izmjena** – svaki član koji je mijenjan ima dugme “Historijat izmjena”  
 - **MD fajl za urednike** – /public/laws/kazneni-zakon-fbih.md je spreman za brze izmjene bez ručnog HTML-a  
-- **Search badge** – u pretrazi se jasno vidi da je riječ o LawViewer dokumentu i rezultat linka vodi direktno na /zakoni/kazneni-zakon
+- **Search badge** – u pretrazi se jasno vidi da je riječ o digitalnom zakonu i rezultat vodi na ovaj članak
 
 ## Pokrivena izdanja "Službenih novina"
 - 36/03 (osnovni tekst) uključujući 37/03 i 21/04 ispravke  
@@ -26,7 +26,7 @@ Pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sada je ponov
 3. LawViewer automatski grupiše GLAVE/DIO/POGLAVLJE linije i generiše sidra \`#clan-...\`  
 4. Pretraga i sitemap se pune automatski – nije potrebna dodatna konfiguracija
 
-[**Otvori pročišćeni tekst kaznenog zakona →**](/zakoni/kazneni-zakon)
+[**Skoči na tekst zakona →**](#tekst-zakona)
 
 > Napomena: U pitanju je neslužbena verzija za potrebe brzog snalaženja. Za pravno obavezujuće tumačenje koristite original objavljen u "Službenim novinama Federacije BiH".
   `,
@@ -40,6 +40,5 @@ Pročišćeni tekst Kaznenog zakona Federacije Bosne i Hercegovine sada je ponov
   featured: true,
   image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop',
   isLawDocument: true,
-  lawViewerPath: '/zakoni/kazneni-zakon',
-  canonicalUrl: 'https://andric.law/zakoni/kazneni-zakon'
+  lawFile: '/laws/kazneni-zakon-fbih.md'
 };
