@@ -1,7 +1,8 @@
 import { getLawIndex } from "@/lib/blob";
 import LawSearch from "@/components/LawSearch";
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function LawViewerIndexPage() {
   const index = await getLawIndex();

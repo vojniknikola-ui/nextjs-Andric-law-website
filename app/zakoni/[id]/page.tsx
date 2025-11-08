@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { getLawById } from "@/lib/blob";
 import LawViewerTop from "@/components/LawViewerTop";
 
-export const revalidate = 1800;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function LawPage({ params }: { params: { id: string } }) {
   const law = await getLawById(params.id);

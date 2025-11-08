@@ -4,6 +4,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { LawPdf } from "@/pdf/LawPdf";
 
 export const dynamic = "force-dynamic"; // PDF se generiše on-demand
+export const runtime = 'nodejs';
 
 export async function GET(_req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const { id } = await context.params;
