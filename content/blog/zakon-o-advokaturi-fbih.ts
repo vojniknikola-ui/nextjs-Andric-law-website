@@ -24,7 +24,7 @@ Objava: **Službene novine FBiH 1/2025 (10.01.2025.)** — kompletan tekst zakon
   image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1200&h=675&fit=crop',
   isLawDocument: true,
   lawFile: '/laws/zakon-o-advokaturi-fbih.md',
-  lawSlug: 'zakon-o-advokaturi-fbih',
+  lawSlug: 'zakon-o-advokaturi',
   lawMeta: {
     citation: 'Službene novine FBiH 1/2025 (10.01.2025)',
     publishedAt: '2025-01-10',

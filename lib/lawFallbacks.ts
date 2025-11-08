@@ -12,15 +12,18 @@ interface LawFallbackConfig {
   snapshotDate?: string;
 }
 
+const advokaturaConfig: LawFallbackConfig = {
+  slug: 'zakon-o-advokaturi-fbih',
+  title: 'Zakon o advokaturi Federacije BiH',
+  jurisdiction: 'FBiH',
+  citation: 'Službene novine FBiH 1/2025',
+  sourceFile: 'public/laws/zakon-o-advokaturi-fbih.md',
+  snapshotDate: '2025-01-10',
+};
+
 const LAW_FALLBACKS: Record<string, LawFallbackConfig> = {
-  'zakon-o-advokaturi-fbih': {
-    slug: 'zakon-o-advokaturi-fbih',
-    title: 'Zakon o advokaturi Federacije BiH',
-    jurisdiction: 'FBiH',
-    citation: 'Službene novine FBiH 1/2025',
-    sourceFile: 'public/laws/zakon-o-advokaturi-fbih.md',
-    snapshotDate: '2025-01-10',
-  },
+  'zakon-o-advokaturi-fbih': advokaturaConfig,
+  'zakon-o-advokaturi': advokaturaConfig,
 };
 
 export async function loadFallbackLaw(slug: string) {
