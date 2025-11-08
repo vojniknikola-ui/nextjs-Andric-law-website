@@ -2,13 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-type Section = {
+type SectionType = "intro" | "preamble" | "article";
+
+interface Section {
   id: string;
   title: string;
   content: string;
   history?: string;
-  type?: "intro" | "preamble" | "article";
-};
+  type: SectionType;
+}
 
 export default function LawViewerInteractive({
   lawContent,
@@ -20,162 +22,267 @@ export default function LawViewerInteractive({
   showHistory?: boolean;
 }) {
   const sections = useMemo(() => parseLawContent(lawContent), [lawContent]);
-  const hasAnyHistory = useMemo(() => sections.some((s) => !!s.history), [sections]);
+  const articles = useMemo(() => sections.filter((s) => s.type === "article"), [sections]);
+  const hasHistory = showHistory && sections.some((s) => !!s.history);
+  const hasAmendment = Boolean(amendmentContent);
 
-  const [q, setQ] = useState("");
-  const [expandAllHistory, setExpandAllHistory] = useState(false);
+  const [query, setQuery] = useState("");
+  const [expandHistory, setExpandHistory] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+
   const anchorsRef = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (a.boundingClientRect.top > b.boundingClientRect.top ? 1 : -1));
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
         if (visible[0]) {
           setActiveId(visible[0].target.id);
         }
       },
-      { rootMargin: "-20% 0px -70% 0px", threshold: [0, 0.2, 0.6, 1] },
+      { rootMargin: "-25% 0px -55% 0px", threshold: [0, 0.2, 0.5, 1] },
     );
     const nodes = Object.values(anchorsRef.current).filter(Boolean) as HTMLElement[];
-    nodes.forEach((n) => observer.observe(n));
+    nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
   }, [sections]);
 
-  const filtered = useMemo(() => {
-    if (!q.trim()) return sections;
-    const norm = q.trim().toLowerCase();
-    return sections.filter((s) =>
-      [s.title, s.content, s.history].filter(Boolean).some((t) => (t as string).toLowerCase().includes(norm)),
+  const filteredSections = useMemo(() => {
+    if (!query.trim()) return sections;
+    const q = query.trim().toLowerCase();
+    return sections.filter((section) =>
+      [section.title, section.content, section.history]
+        .filter(Boolean)
+        .some((chunk) => (chunk as string).toLowerCase().includes(q)),
     );
-  }, [sections, q]);
+  }, [sections, query]);
 
-  const onClickToc = (id: string) => {
+  const filteredArticles = useMemo(
+    () => filteredSections.filter((s) => s.type === "article"),
+    [filteredSections],
+  );
+
+  const stats = useMemo(() => {
+    const totalWords = lawContent.split(/\s+/).filter(Boolean).length;
+    return {
+      articles: articles.length,
+      words: totalWords,
+      filtered: filteredArticles.length,
+    };
+  }, [articles.length, filteredArticles.length, lawContent]);
+
+  const scrollTo = (id: string) => {
     const el = anchorsRef.current[id];
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (typeof history !== "undefined") history.replaceState(null, "", `#${id}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof history !== "undefined") {
+      history.replaceState(null, "", `#${id}`);
     }
   };
 
   return (
-    <div className="mx-auto grid max-w-6xl grid-cols-12 gap-6 px-4 py-6">
-      {/* Sidebar / TOC */}
-      <aside className="col-span-12 lg:col-span-4 xl:col-span-3 lg:order-1 order-2">
-        <div className="sticky top-4 space-y-4">
-          <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Pretraga članova…"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-blue-300"
-              aria-label="Pretraga unutar zakona"
-            />
-            {showHistory && hasAnyHistory && (
-              <button
-                type="button"
-                onClick={() => setExpandAllHistory((v) => !v)}
-                className="mt-3 w-full rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-800 hover:bg-blue-100"
-              >
-                {expandAllHistory ? "Sakrij historijat" : "Prikaži historijat"}
-              </button>
-            )}
+    <section className="mx-auto max-w-6xl px-4 py-6">
+      <div className="rounded-3xl bg-slate-950 text-slate-100 shadow-2xl ring-1 ring-white/5">
+        {/* Controls */}
+        <div className="border-b border-white/10 px-6 py-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-blue-300">LawViewer</p>
+              <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-slate-300">
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  {stats.articles} člana
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  {stats.words.toLocaleString("bs-BA")} riječi
+                </span>
+                {query && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-blue-300/20 bg-blue-900/40 px-3 py-1 text-blue-100">
+                    {stats.filtered} pogodaka
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="relative w-full sm:w-72">
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Pretraži član, pojam..."
+                  className="w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm outline-none placeholder:text-slate-400 focus:border-white/30"
+                  aria-label="Pretraga unutar zakona"
+                />
+                <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+              </div>
+              {hasHistory && (
+                <button
+                  type="button"
+                  onClick={() => setExpandHistory((v) => !v)}
+                  className="rounded-2xl border border-blue-400/40 bg-blue-900/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100 hover:bg-blue-900/50"
+                >
+                  {expandHistory ? "Sakrij historijat" : "Prikaži historijat"}
+                </button>
+              )}
+            </div>
           </div>
+        </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Sadržaj</p>
-            <div className="mt-2 max-h-[55vh] space-y-1 overflow-auto pr-2 text-sm">
-              {filtered
-                .filter((s) => s.type === "article")
-                .map((s) => (
+        <div className="grid gap-6 border-white/5 px-6 py-6 lg:grid-cols-[260px,1fr]">
+          {/* TOC */}
+          <aside className="order-2 lg:order-1">
+            <div className="sticky top-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Sadržaj</p>
+              <div className="mt-3 max-h-[60vh] space-y-1 overflow-auto pr-1 text-sm">
+                {articles.map((article) => (
                   <button
-                    key={s.id}
-                    onClick={() => onClickToc(s.id)}
-                    className={`block w-full rounded-lg px-2 py-1 text-left hover:bg-slate-100 ${
-                      activeId === s.id ? "bg-slate-100 font-medium text-slate-900" : "text-slate-700"
+                    key={article.id}
+                    onClick={() => scrollTo(article.id)}
+                    className={`block w-full rounded-xl px-3 py-2 text-left transition ${
+                      activeId === article.id ? 'bg-white/15 text-white' : 'text-slate-300 hover:bg-white/10'
                     }`}
-                    title={s.title}
                   >
-                    {s.title}
+                    {article.title}
                   </button>
                 ))}
+              </div>
             </div>
+          </aside>
+
+          {/* Content */}
+          <div className="order-1 space-y-6 lg:order-2">
+            {hasAmendment && amendmentContent && (
+              <AmandmentCard content={amendmentContent} />
+            )}
+
+            {filteredSections.length === 0 ? (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-sm text-slate-300">
+                Nema rezultata za “{query}”. Promijeni pojam ili resetuj pretragu.
+              </div>
+            ) : (
+              filteredSections.map((section) => (
+                <article
+                  key={section.id}
+                  id={section.id}
+                  ref={(el) => {
+                    anchorsRef.current[section.id] = el;
+                  }}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-900/30 backdrop-blur"
+                >
+                  <header className="flex flex-col gap-3 border-b border-white/5 pb-4 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
+                        {section.type === 'article' ? 'Član' : section.type === 'preamble' ? 'Preambula' : 'Uvod'}
+                      </p>
+                      <h2 className="text-xl font-semibold text-white">{section.title}</h2>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <CopyLinkButton id={section.id} />
+                      {showHistory && section.history && (
+                        <AnchorLinkButton id={`${section.id}-historijat`} label="Historijat" />
+                      )}
+                    </div>
+                  </header>
+
+                  <div
+                    className="prose prose-invert mt-4 max-w-none text-sm leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: highlightHTML(formatContent(section.content), query) }}
+                  />
+
+                  {showHistory && section.history && (
+                    <details
+                      id={`${section.id}-historijat`}
+                      open={expandHistory}
+                      className="mt-4 rounded-2xl border border-blue-400/30 bg-blue-900/30 p-4 text-sm text-blue-100"
+                    >
+                      <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">
+                        Historijat izmjena
+                      </summary>
+                      <div
+                        className="prose prose-invert mt-3 max-w-none text-sm"
+                        dangerouslySetInnerHTML={{ __html: formatContent(section.history) }}
+                      />
+                    </details>
+                  )}
+                </article>
+              ))
+            )}
           </div>
         </div>
-      </aside>
+      </div>
+    </section>
+  );
+}
 
-      {/* Main */}
-      <section className="col-span-12 lg:col-span-8 xl:col-span-9 lg:order-2 order-1">
-        {amendmentContent && (
-          <div id="amandman" className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold uppercase tracking-[0.2em] text-amber-800">Amandman</p>
-              <a href="#amandman" className="text-xs text-amber-700 underline">Permalink</a>
-            </div>
-            <div className="mt-2 space-y-2" dangerouslySetInnerHTML={{ __html: formatLawContent(amendmentContent) }} />
-          </div>
-        )}
-
-        <div className="space-y-6">
-          {filtered.map((s) => (
-            <article
-              key={s.id}
-              id={s.id}
-              ref={(el) => {
-                anchorsRef.current[s.id] = el;
-              }}
-              className="scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex items-start justify-between gap-4 border-b border-slate-200/60 pb-3">
-                <h2 className="text-lg font-semibold text-slate-950">{s.title}</h2>
-                <div className="flex items-center gap-2">
-                  <CopyLinkButton id={s.id} />
-                </div>
-              </div>
-
-              <div className="prose prose-slate mt-4 max-w-none text-sm leading-relaxed">
-                <div
-                  className="space-y-3"
-                  dangerouslySetInnerHTML={{ __html: highlightHTML(formatLawContent(s.content), q) }}
-                />
-              </div>
-
-              {showHistory && s.history && (
-                <details open={expandAllHistory} className="mt-4 rounded-xl border border-blue-100 bg-blue-50/60 p-3 text-sm text-blue-900">
-                  <summary className="cursor-pointer font-semibold">Historijat izmjena</summary>
-                  <div className="mt-2 space-y-2" dangerouslySetInnerHTML={{ __html: formatLawContent(s.history) }} />
-                </details>
-              )}
-            </article>
-          ))}
-        </div>
-      </section>
+function AmandmentCard({ content }: { content: string }) {
+  return (
+    <div className="rounded-2xl border border-amber-200/40 bg-amber-500/10 p-5 text-amber-50">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-200">Amandman</p>
+        <span className="rounded-full border border-amber-200/60 bg-amber-400/20 px-3 py-1 text-xs text-amber-50">
+          Brčko distrikt
+        </span>
+      </div>
+      <div
+        className="prose prose-invert mt-3 max-w-none text-sm"
+        dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+      />
     </div>
   );
 }
 
-function escapeHTML(str: string) {
-  return str.replace(/[&<>"]+/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch] as string));
+function CopyLinkButton({ id }: { id: string }) {
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 1500);
+    return () => clearTimeout(timer);
+  }, [copied]);
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        if (typeof window === "undefined") return;
+        const url = `${window.location.origin}${window.location.pathname}#${id}`;
+        navigator.clipboard?.writeText(url).then(() => setCopied(true));
+      }}
+      className={`rounded-xl border px-3 py-1 text-xs ${
+        copied
+          ? 'border-emerald-200 bg-emerald-500/20 text-emerald-100'
+          : 'border-white/20 bg-white/5 text-slate-200 hover:bg-white/10'
+      }`}
+      aria-label="Kopiraj link"
+    >
+      {copied ? 'Kopirano' : 'Kopiraj link'}
+    </button>
+  );
 }
 
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function AnchorLinkButton({ id, label }: { id: string; label: string }) {
+  return (
+    <a
+      href={`#${id}`}
+      className="rounded-xl border border-white/20 bg-white/5 px-3 py-1 text-xs text-slate-200 hover:bg-white/10"
+    >
+      {label}
+    </a>
+  );
 }
 
 function highlightHTML(html: string, query: string): string {
-  const q = query.trim();
-  if (!q) return html;
+  if (!query.trim()) return html;
   try {
-    const rx = new RegExp(`(${escapeRegExp(q)})`, "gi");
-    return html.replace(rx, '<mark class="rounded-sm bg-yellow-200 px-0.5">$1</mark>');
+    const rx = new RegExp(`(${escapeRegExp(query.trim())})`, "gi");
+    return html.replace(rx, '<mark class="rounded-sm bg-yellow-200/80 px-0.5 text-slate-900">$1</mark>');
   } catch {
     return html;
   }
 }
 
-function formatLawContent(content: string): string {
+function formatContent(content?: string): string {
+  if (!content) return "";
   const normalized = content
     .replace(/\r\n/g, "\n")
     .replace(/\r/g, "\n")
@@ -200,7 +307,11 @@ function formatLawContent(content: string): string {
   const openList = (type: "ul" | "ol") => {
     if (listType !== type) {
       closeList();
-      htmlParts.push(type === "ul" ? '<ul class="list-disc space-y-2 pl-6 text-slate-900">' : '<ol class="list-decimal space-y-2 pl-6 text-slate-900">');
+      htmlParts.push(
+        type === "ul"
+          ? '<ul class="list-disc space-y-2 pl-6 text-slate-100">'
+          : '<ol class="list-decimal space-y-2 pl-6 text-slate-100">',
+      );
       listType = type;
     }
   };
@@ -215,17 +326,16 @@ function formatLawContent(content: string): string {
       return;
     }
 
-    const isQuoteLine = trimmed.startsWith(">");
-    const withoutQuote = isQuoteLine ? trimmed.replace(/^>\s?/, "") : trimmed;
-    const headingCandidate = withoutQuote.replace(/^#+\s*/, "").replace(/^\*+|\*+$/g, "").trim();
+    const isQuote = trimmed.startsWith(">");
+    const withoutQuote = isQuote ? trimmed.replace(/^>\s?/, "") : trimmed;
     const formattedLine = withoutQuote
-      .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-slate-900">$1</strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>');
 
-    if (isQuoteLine) {
+    if (isQuote) {
       closeList();
       if (!inQuote) {
-        htmlParts.push('<blockquote class="rounded-2xl border border-blue-200 bg-blue-50/70 p-4 text-blue-900"><div class="space-y-2">');
+        htmlParts.push('<blockquote class="rounded-2xl border border-blue-200/40 bg-blue-900/30 p-4 text-blue-100"><div class="space-y-2">');
         inQuote = true;
       }
       htmlParts.push(`<p>${formattedLine}</p>`);
@@ -235,13 +345,15 @@ function formatLawContent(content: string): string {
 
     if (/^#{2,6}\s+/.test(withoutQuote)) {
       closeList();
-      htmlParts.push(`<p class="text-lg font-semibold text-slate-900 mt-6">${headingCandidate}</p>`);
+      const heading = withoutQuote.replace(/^#+\s*/, "");
+      htmlParts.push(`<p class="mt-5 text-base font-semibold text-white">${heading}</p>`);
       return;
     }
 
-    if (/^(-{3,}|_{3,}|\*{3,})$/.test(withoutQuote.replace(/\s+/g, ""))) {
-      closeList();
-      htmlParts.push('<hr class="my-6 border-slate-200" />');
+    if (/^(?:-|\u2022)\s+/.test(withoutQuote)) {
+      openList("ul");
+      const itemText = formattedLine.replace(/^(?:-|\u2022)\s+/, "");
+      htmlParts.push(`<li>${itemText}</li>`);
       return;
     }
 
@@ -253,15 +365,8 @@ function formatLawContent(content: string): string {
       return;
     }
 
-    if (/^(?:-|\u2022)\s+/.test(withoutQuote)) {
-      openList("ul");
-      const itemText = formattedLine.replace(/^(?:-|\u2022)\s+/, "");
-      htmlParts.push(`<li>${itemText}</li>`);
-      return;
-    }
-
     closeList();
-    htmlParts.push(`<p class="text-slate-900">${formattedLine}</p>`);
+    htmlParts.push(`<p class="text-slate-100">${formattedLine}</p>`);
   });
 
   closeList();
@@ -274,47 +379,52 @@ function parseLawContent(content: string): Section[] {
   const lines = normalized.split("\n");
 
   const sections: Section[] = [];
-  let current: null | { id: string; title: string; content: string[]; history?: string[]; type?: Section["type"] } = null;
-  let inHistory = false;
-  const intro: string[] = [];
+  let current: {
+    id: string;
+    title: string;
+    content: string[];
+    history?: string[];
+    type: SectionType;
+  } | null = null;
   let introTitle: string | null = null;
-  let inPreamble = false;
-  const preamble: string[] = [];
+  const introContent: string[] = [];
+  let preambleActive = false;
+  const preambleContent: string[] = [];
+  let capturingHistory = false;
 
   const pushCurrent = () => {
-    if (current) {
-      sections.push({
-        id: current.id,
-        title: current.title,
-        content: current.content.join("\n").trim(),
-        history: current.history && current.history.length ? current.history.join("\n").trim() : undefined,
-        type: current.type ?? "article",
-      });
-      current = null;
-    }
+    if (!current) return;
+    sections.push({
+      id: current.id,
+      title: current.title,
+      content: current.content.join("\n").trim(),
+      history: current.history && current.history.length ? current.history.join("\n").trim() : undefined,
+      type: current.type,
+    });
+    current = null;
   };
 
-  for (const raw of lines) {
-    const line = raw.replace(/\r/g, "").replace(/\\([#*_>\-])/g, "$1").trim();
+  for (const rawLine of lines) {
+    const line = rawLine.replace(/\r/g, "").trim();
     if (!line) {
-      if (inPreamble) preamble.push("");
-      else if (inHistory && current) current.history!.push("");
+      if (preambleActive) preambleContent.push("");
+      else if (capturingHistory && current) current.history!.push("");
       else if (current) current.content.push("");
-      else intro.push("");
+      else introContent.push("");
       continue;
     }
 
     if (/^PREAMBULA/i.test(line)) {
-      inPreamble = true;
+      preambleActive = true;
       continue;
     }
 
     if (/^Član(?:ak)?\s+/i.test(line)) {
-      inPreamble = false;
-      inHistory = false;
       pushCurrent();
-      const m = line.match(/^Član(?:ak)?\s+([A-Z0-9.\-]+)/i);
-      const articleId = m?.[1]?.replace(/\.$/, "") ?? `${sections.length + 1}`;
+      preambleActive = false;
+      capturingHistory = false;
+      const match = line.match(/^Član(?:ak)?\s+([A-Z0-9.\-]+)/i);
+      const articleId = match?.[1]?.replace(/\.$/, "") ?? `${sections.length + 1}`;
       current = {
         id: `clan-${articleId.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
         title: line,
@@ -325,58 +435,50 @@ function parseLawContent(content: string): Section[] {
       continue;
     }
 
-    if (inPreamble) {
-      preamble.push(raw);
+    if (preambleActive) {
+      preambleContent.push(rawLine);
       continue;
     }
 
     if (/historijat izmjena/i.test(line) && current) {
-      inHistory = true;
+      capturingHistory = true;
       current.history!.push(`### ${line}`);
       continue;
     }
 
     if (current) {
-      if (inHistory) current.history!.push(raw);
-      else current.content.push(raw);
+      if (capturingHistory) current.history!.push(rawLine);
+      else current.content.push(rawLine);
     } else {
       if (!introTitle) introTitle = line;
-      intro.push(raw);
+      introContent.push(rawLine);
     }
   }
 
-  if (inPreamble && preamble.length) {
-    sections.push({ id: "preambula", title: "PREAMBULA", content: preamble.join("\n").trim(), type: "preamble" });
+  if (preambleActive && preambleContent.length) {
+    sections.push({
+      id: "preambula",
+      title: "PREAMBULA",
+      content: preambleContent.join("\n").trim(),
+      type: "preamble",
+    });
   }
 
   pushCurrent();
 
-  if (intro.some((l) => l.trim().length)) {
-    sections.unshift({ id: "uvod", title: introTitle ?? "Uvod", content: intro.join("\n").trim(), type: "intro" });
+  if (introContent.some((line) => line.trim().length)) {
+    sections.unshift({
+      id: "uvod",
+      title: introTitle ?? "Uvod",
+      content: introContent.join("\n").trim(),
+      type: "intro",
+    });
   }
+
   return sections;
 }
 
-function CopyLinkButton({ id }: { id: string }) {
-  const [copied, setCopied] = useState(false);
-  useEffect(() => {
-    if (!copied) return;
-    const t = setTimeout(() => setCopied(false), 1500);
-    return () => clearTimeout(t);
-  }, [copied]);
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        if (typeof window === "undefined") return;
-        const url = `${window.location.origin}${window.location.pathname}#${id}`;
-        navigator.clipboard?.writeText(url).then(() => setCopied(true));
-      }}
-      className={`rounded-lg border px-2 py-1 text-xs ${copied ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-white'}`}
-      aria-label="Kopiraj link na član"
-    >
-      {copied ? "Kopirano" : "Kopiraj link"}
-    </button>
-  );
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
