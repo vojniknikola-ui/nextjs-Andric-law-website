@@ -31,7 +31,10 @@ export default async function PDVLawPage() {
         ]}
       />
 
-      <LawViewerInteractive lawContent={lawContent} />
+      <LawViewerInteractive
+        lawContent={lawContent}
+        gazetteNote="Službeni glasnik BiH: 9/05, 35/05, 100/07, 33/08, 35/09, 65/10, 26/11, 38/12"
+      />
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import LawViewer from '@/components/LawViewer';
+import LawViewerInteractive from '@/components/LawViewerInteractive';
 import { LawHero } from '@/components/LawHero';
 
 export const metadata = {
@@ -36,7 +36,10 @@ export default async function ReprezentativnostFBiHPage() {
         ]}
       />
 
-      <LawViewer lawContent={lawContent} mode="minimal" />
+      <LawViewerInteractive
+        lawContent={lawContent}
+        gazetteNote="Službene novine FBiH 103/21"
+      />
     </main>
   );
 }

@@ -16,10 +16,12 @@ export default function LawViewerInteractive({
   lawContent,
   amendmentContent,
   showHistory = false,
+  gazetteNote,
 }: {
   lawContent: string;
   amendmentContent?: string;
   showHistory?: boolean;
+  gazetteNote?: string;
 }) {
   const sections = useMemo(() => parseLawContent(lawContent), [lawContent]);
   const articles = useMemo(() => sections.filter((s) => s.type === "article"), [sections]);
@@ -65,15 +67,6 @@ export default function LawViewerInteractive({
     [filteredSections],
   );
 
-  const stats = useMemo(() => {
-    const totalWords = lawContent.split(/\s+/).filter(Boolean).length;
-    return {
-      articles: articles.length,
-      words: totalWords,
-      filtered: filteredArticles.length,
-    };
-  }, [articles.length, filteredArticles.length, lawContent]);
-
   const scrollTo = (id: string) => {
     const el = anchorsRef.current[id];
     if (!el) return;
@@ -85,33 +78,25 @@ export default function LawViewerInteractive({
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-6">
-      <div className="rounded-3xl bg-slate-950 text-slate-100 shadow-2xl ring-1 ring-white/5">
+      <div className="rounded-3xl border border-slate-200 bg-white text-slate-900 shadow-lg">
         {/* Controls */}
-        <div className="border-b border-white/10 px-6 py-5">
+        <div className="border-b border-slate-200 px-6 py-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-blue-300">LawViewer</p>
-              <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-slate-300">
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                  {stats.articles} člana
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                  {stats.words.toLocaleString("bs-BA")} riječi
-                </span>
-                {query && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-blue-300/20 bg-blue-900/40 px-3 py-1 text-blue-100">
-                    {stats.filtered} pogodaka
-                  </span>
-                )}
-              </div>
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">LawViewer</p>
+              {gazetteNote ? (
+                <p className="text-sm text-slate-600">Objava: <span className="font-medium text-slate-900">{gazetteNote}</span></p>
+              ) : (
+                <p className="text-sm text-slate-500">Neslužbeni pregled zakona</p>
+              )}
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="relative w-full sm:w-72">
                 <input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Pretraži član, pojam..."
-                  className="w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm outline-none placeholder:text-slate-400 focus:border-white/30"
+                  placeholder="Pretraži član ili pojam..."
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none placeholder:text-slate-400 focus:border-blue-400"
                   aria-label="Pretraga unutar zakona"
                 />
                 <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
@@ -120,7 +105,7 @@ export default function LawViewerInteractive({
                 <button
                   type="button"
                   onClick={() => setExpandHistory((v) => !v)}
-                  className="rounded-2xl border border-blue-400/40 bg-blue-900/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100 hover:bg-blue-900/50"
+                  className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-800 hover:bg-blue-100"
                 >
                   {expandHistory ? "Sakrij historijat" : "Prikaži historijat"}
                 </button>
@@ -129,18 +114,18 @@ export default function LawViewerInteractive({
           </div>
         </div>
 
-        <div className="grid gap-6 border-white/5 px-6 py-6 lg:grid-cols-[260px,1fr]">
+        <div className="grid gap-6 border-t border-slate-100 px-6 py-6 lg:grid-cols-[260px,1fr]">
           {/* TOC */}
           <aside className="order-2 lg:order-1">
-            <div className="sticky top-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Sadržaj</p>
+            <div className="sticky top-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Sadržaj</p>
               <div className="mt-3 max-h-[60vh] space-y-1 overflow-auto pr-1 text-sm">
                 {articles.map((article) => (
                   <button
                     key={article.id}
                     onClick={() => scrollTo(article.id)}
                     className={`block w-full rounded-xl px-3 py-2 text-left transition ${
-                      activeId === article.id ? 'bg-white/15 text-white' : 'text-slate-300 hover:bg-white/10'
+                      activeId === article.id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:bg-white'
                     }`}
                   >
                     {article.title}
@@ -157,8 +142,8 @@ export default function LawViewerInteractive({
             )}
 
             {filteredSections.length === 0 ? (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-sm text-slate-300">
-                Nema rezultata za “{query}”. Promijeni pojam ili resetuj pretragu.
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
+                Nema rezultata za “{query}”. Promijenite pojam ili resetujte pretragu.
               </div>
             ) : (
               filteredSections.map((section) => (
@@ -168,7 +153,7 @@ export default function LawViewerInteractive({
                   ref={(el) => {
                     anchorsRef.current[section.id] = el;
                   }}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-900/30 backdrop-blur"
+                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                 >
                   <header className="flex flex-col gap-3 border-b border-white/5 pb-4 md:flex-row md:items-start md:justify-between">
                     <div>
@@ -185,22 +170,22 @@ export default function LawViewerInteractive({
                     </div>
                   </header>
 
-                  <div
-                    className="prose prose-invert mt-4 max-w-none text-sm leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: highlightHTML(formatContent(section.content), query) }}
-                  />
+                    <div
+                      className="prose mt-4 max-w-none text-sm leading-relaxed text-slate-800"
+                      dangerouslySetInnerHTML={{ __html: highlightHTML(formatContent(section.content), query) }}
+                    />
 
                   {showHistory && section.history && (
                     <details
                       id={`${section.id}-historijat`}
                       open={expandHistory}
-                      className="mt-4 rounded-2xl border border-blue-400/30 bg-blue-900/30 p-4 text-sm text-blue-100"
+                      className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900"
                     >
-                      <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">
+                      <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.2em] text-blue-700">
                         Historijat izmjena
                       </summary>
                       <div
-                        className="prose prose-invert mt-3 max-w-none text-sm"
+                        className="prose mt-3 max-w-none text-sm text-blue-900"
                         dangerouslySetInnerHTML={{ __html: formatContent(section.history) }}
                       />
                     </details>
@@ -481,4 +466,3 @@ function parseLawContent(content: string): Section[] {
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
-

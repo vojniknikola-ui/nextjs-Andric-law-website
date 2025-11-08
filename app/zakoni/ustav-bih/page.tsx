@@ -60,7 +60,11 @@ export default async function UstavBiHPage() {
         </details>
       </section>
 
-      <LawViewerInteractive lawContent={lawContent} amendmentContent={amendmentContent} />
+      <LawViewerInteractive
+        lawContent={lawContent}
+        amendmentContent={amendmentContent}
+        gazetteNote="Službeni glasnik BiH: Aneks IV Ustava + Amandman I (25/09)"
+      />
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
         <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-slate-700 shadow-sm">

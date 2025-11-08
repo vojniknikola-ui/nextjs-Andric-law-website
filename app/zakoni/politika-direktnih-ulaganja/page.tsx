@@ -30,7 +30,10 @@ export default async function PolitikaDirektnihUlaganjaPage() {
         ]}
       />
 
-      <LawViewerInteractive lawContent={lawContent} />
+      <LawViewerInteractive
+        lawContent={lawContent}
+        gazetteNote="Službeni glasnik BiH: 4/98, 17/98, 13/03, 48/10, 22/15"
+      />
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
         <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-slate-700 shadow-sm">

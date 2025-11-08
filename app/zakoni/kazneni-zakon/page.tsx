@@ -32,7 +32,11 @@ export default async function KazneniZakonPage() {
         ]}
       />
 
-      <LawViewerInteractive lawContent={lawContent} showHistory />
+      <LawViewerInteractive
+        lawContent={lawContent}
+        showHistory
+        gazetteNote="Službene novine FBiH: 36/03, 69/04, 18/05, 42/10, 42/11, 59/14, 75/17, 31/23, 58/25"
+      />
     </main>
   );
 }
