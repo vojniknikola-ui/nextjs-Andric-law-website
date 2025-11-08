@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Providers from "@/components/NextUIProviderClient";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -109,7 +110,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="dark" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

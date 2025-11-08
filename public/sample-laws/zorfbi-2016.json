@@ -1,0 +1,30 @@
+{
+  "id": "zorfbi-2016",
+  "title": "Zakon o radu Federacije BiH — neslužbeni pročišćeni tekst (demo)",
+  "entity": "FBiH",
+  "officialGazette": [
+    { "no": "26/16", "date": "2016-05-09" },
+    { "no": "89/18", "date": "2018-11-10" },
+    { "no": "44/22", "date": "2022-06-15" }
+  ],
+  "features": { "history": true, "caseLaw": true, "amendments": true, "extraInfo": false, "pdfExport": false },
+  "articles": [
+    {
+      "number": 1,
+      "title": "Predmet i cilj",
+      "text": "Ovim zakonom uređuju se prava, obaveze i odgovornosti iz radnog odnosa...",
+      "history": [{ "date": "2018-11-10", "text": "Izmjena u vezi probnog rada." }],
+      "amendments": [{ "amendmentId": "ZID-2018", "date": "2018-11-10", "text": "Promjena trajanja probnog rada." }]
+    },
+    {
+      "number": 7,
+      "title": "Probni rad",
+      "text": "Ugovor o radu može sadržavati probni rad do 3 mjeseca...",
+      "caseLaw": [
+        { "caseId": "U-123/21", "court": "Ustavni sud BiH", "description": "Odluka o usklađenosti odredbi.", "url": "https://primjer" }
+      ]
+    }
+  ],
+  "metadata": { "adoptionDate": "2016-05-01", "entryIntoForce": "2016-05-09" }
+}
+
