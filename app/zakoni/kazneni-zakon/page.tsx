@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import LawViewer from '@/components/LawViewer';
+import LawViewerInteractive from '@/components/LawViewerInteractive';
 import { LawHero } from '@/components/LawHero';
 
 export const metadata = {
@@ -55,7 +55,7 @@ export default async function KazneniZakonPage() {
         ]}
       />
 
-      <LawViewer lawContent={lawContent} mode="minimal" showHistory allowHistoryToggle />
+      <LawViewerInteractive lawContent={lawContent} showHistory />
 
       <section className="mx-auto max-w-5xl px-6 py-12">
         <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-sm">

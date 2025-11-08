@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import LawViewer from '@/components/LawViewer';
+import LawViewerInteractive from '@/components/LawViewerInteractive';
 import { LawHero } from '@/components/LawHero';
 
 export const metadata = {
@@ -30,7 +30,7 @@ export default async function PolitikaDirektnihUlaganjaPage() {
         ]}
       />
 
-      <LawViewer lawContent={lawContent} mode="minimal" />
+      <LawViewerInteractive lawContent={lawContent} />
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
         <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-slate-700 shadow-sm">
