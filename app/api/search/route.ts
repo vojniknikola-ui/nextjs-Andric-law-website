@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAllPosts } from '@/lib/blog';
 import { searchBlogPosts, type HighlightSnippet } from '@/lib/search/blog-search';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 const inferCategory = (tags: string[]): 'zakoni' | 'sudska-praksa' | 'vijesti-clanci' => {
   const normalized = tags.map((tag) => tag.toLowerCase());
