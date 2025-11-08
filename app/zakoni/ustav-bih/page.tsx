@@ -25,8 +25,6 @@ export default async function UstavBiHPage() {
     fs.readFile(amendmentPath, 'utf-8'),
   ]);
 
-  const articleMatches = lawContent.match(/Član(?:ak)?\s+[A-Z0-9.\-]+/gi);
-  const articleCount = articleMatches ? articleMatches.length : 0;
   const amendmentParagraphs = amendmentContent.split('\n').filter((line) => line.trim().length > 0);
 
   return (
@@ -39,8 +37,8 @@ export default async function UstavBiHPage() {
           { type: 'link', label: 'Amandman I (Brčko distrikt)', href: '#law-amandmani', variant: 'secondary' },
         ]}
         highlights={[
-          { label: 'Službeni glasnik BiH 25/09', description: 'Amandman I – Brčko distrikt' },
-          { label: 'Struktura', description: `${articleCount}+ članova · Glave I – XII` },
+          { label: 'Službeni glasnik BiH', description: 'Aneks IV + Amandman I (25/09)' },
+          { label: 'Amandman I', description: 'Brčko distrikt jasno izdvojen u tekstu' },
         ]}
       />
 

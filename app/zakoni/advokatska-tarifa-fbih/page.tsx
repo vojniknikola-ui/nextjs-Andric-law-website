@@ -15,9 +15,6 @@ export default async function AdvokatskaTarifaFBiHPage() {
   const lawPath = path.join(process.cwd(), 'public', 'laws', 'advokatska-tarifa-fbih.md');
   const lawContent = await fs.readFile(lawPath, 'utf-8');
 
-  const tariffMatches = lawContent.match(/tarifni broj/gi);
-  const tariffCount = tariffMatches ? tariffMatches.length : undefined;
-
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <LawHero
@@ -26,8 +23,8 @@ export default async function AdvokatskaTarifaFBiHPage() {
         description="Tarifa o nagradama i naknadi za rad odvjetnika – pregled tarifnih brojeva i osnovica, spremno za brzu provjeru i rad sa strankama."
         actions={[]}
         highlights={[
-          { label: 'Službene novine FBiH 43/25', description: 'Aktuelna tarifa (FBiH)' },
-          { label: 'Tarifni brojevi', description: tariffCount ? `${tariffCount} stavki` : 'više od 30 stavki' },
+          { label: 'Službene novine FBiH', description: '43/25 – Tarifa o nagradama i naknadama' },
+          { label: 'Namjena', description: 'Tarifni brojevi, napomene i LawViewer pretraga' },
         ]}
       />
 

@@ -14,9 +14,6 @@ export const metadata = {
 export default async function PolitikaDirektnihUlaganjaPage() {
   const lawPath = path.join(process.cwd(), 'public', 'laws', 'politika-direktnih-stranih-ulaganja-bih.txt');
   const lawContent = await fs.readFile(lawPath, 'utf-8');
-  const articleMatches = lawContent.match(/Član\s+\d+/gi);
-  const articleCount = articleMatches ? articleMatches.length : 0;
-
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <LawHero
@@ -25,8 +22,8 @@ export default async function PolitikaDirektnihUlaganjaPage() {
         description="Kompletan konsolidovani tekst sa izmjenama 2003, 2010. i 2015. godine – uključuje prava ulagača, garancije, procedure i rješavanje sporova."
         actions={[]}
         highlights={[
-          { label: 'Službeni glasnik BiH 4/98 – 22/15', description: 'Ugrađene sve izmjene (2003, 2010, 2015)' },
-          { label: 'Članovi', description: `${articleCount} članova kroz 7 dijelova` },
+          { label: 'Službeni glasnik BiH', description: '4/98, 17/98, 13/03, 48/10, 22/15' },
+          { label: 'Garancije', description: 'Prava ulagača, repatrijacija dobiti, zaštita od eksproprijacije' },
         ]}
       />
 

@@ -20,9 +20,6 @@ export default async function ReprezentativnostFBiHPage() {
   );
   const lawContent = await fs.readFile(lawPath, 'utf-8');
 
-  const articleMatches = lawContent.match(/Član(?:ak)?\s+[A-Z0-9.\-]+/gi);
-  const articleCount = articleMatches ? articleMatches.length : undefined;
-
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <LawHero
@@ -31,8 +28,8 @@ export default async function ReprezentativnostFBiHPage() {
         description="Konsolidovani prikaz članka sa fokusom na kriterije i postupak utvrđivanja reprezentativnosti sindikata i udruženja poslodavaca."
         actions={[]}
         highlights={[
-          { label: 'Službene novine FBiH 103/21', description: 'Objava 22.12.2021.' },
-          { label: 'Struktura', description: articleCount ? `${articleCount} članova` : 'više članova' },
+          { label: 'Službene novine FBiH', description: '103/21 — 22.12.2021.' },
+          { label: 'Fokus', description: 'Kriteriji i postupak utvrđivanja reprezentativnosti' },
         ]}
       />
 

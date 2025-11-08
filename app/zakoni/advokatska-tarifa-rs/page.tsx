@@ -15,9 +15,6 @@ export default async function AdvokatskaTarifaRSPage() {
   const lawPath = path.join(process.cwd(), 'public', 'laws', 'advokatska-tarifa-rs.txt');
   const lawContent = await fs.readFile(lawPath, 'utf-8');
 
-  const tariffMatches = lawContent.match(/tarifni broj/gi);
-  const tariffCount = tariffMatches ? tariffMatches.length : undefined;
-
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <LawHero
@@ -26,8 +23,8 @@ export default async function AdvokatskaTarifaRSPage() {
         description="Digitalno izdanje službene tarife sa tarifnim brojevima, osnovicama i pravilima obračuna – spremno za brzu provjeru nagrada i naknada."
         actions={[]}
         highlights={[
-          { label: 'Službeni glasnik RS 68/05', description: 'Tarifa o nagradama i naknadi troškova' },
-          { label: 'Tarifni brojevi', description: tariffCount ? `${tariffCount} dostupnih stavki` : '30+ stavki' },
+          { label: 'Službeni glasnik RS', description: '68/05 – Tarifa o nagradama i naknadama' },
+          { label: 'Namjena', description: 'Tarifni brojevi, napomene, LawViewer pretraga' },
         ]}
       />
 

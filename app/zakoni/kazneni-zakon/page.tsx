@@ -14,11 +14,6 @@ export const metadata = {
 export default async function KazneniZakonPage() {
   const filePath = path.join(process.cwd(), 'public', 'laws', 'kazneni-zakon-fbih.md');
   const lawContent = await fs.readFile(filePath, 'utf-8');
-  const articleMatches = lawContent.match(/Član(?:ak)?\s+[A-Z0-9.\-]+/gi);
-  const articleCount = articleMatches ? articleMatches.length : 0;
-  const historyMatches = lawContent.match(/Historijat izmjena/gi);
-  const historyCount = historyMatches ? historyMatches.length : 0;
-
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <LawHero
@@ -27,8 +22,8 @@ export default async function KazneniZakonPage() {
         description="Jedinstvena LawViewer verzija sa kompletnim člancima, historijatom izmjena i sidrima za brzo kretanje kroz OPĆI i POSEBNI dio zakona."
         actions={[]}
         highlights={[
-          { label: 'Službene novine FBiH 36/03 → 58/25', description: 'Sve izmjene uključene (opći i posebni dio)' },
-          { label: 'Historijat', description: `${historyCount}+ bilješki uz članke` },
+          { label: 'Službene novine FBiH', description: '36/03, 69/04, 18/05, 42/10, 42/11, 59/14, 75/17, 31/23, 58/25' },
+          { label: 'Historijat', description: 'Svaki član sadrži bilješku o izmjenama (LawViewer historijat)' },
         ]}
       />
 

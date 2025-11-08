@@ -14,9 +14,6 @@ export const metadata = {
 export default async function ZakonONasljedjivanjuPage() {
   const lawPath = path.join(process.cwd(), 'public', 'laws', 'zakon-o-nasljedivanju-fbih.txt');
   const lawContent = await fs.readFile(lawPath, 'utf-8');
-  const articleMatches = lawContent.match(/Član\s+\d+/gi);
-  const articleCount = articleMatches ? articleMatches.length : 0;
-
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <LawHero
@@ -25,15 +22,14 @@ export default async function ZakonONasljedjivanjuPage() {
         description="Kompletan pregled nasljednih redova, testamentarnih formi, nužnog dijela i ostavinskog postupka – sa napomenama o odluci Ustavnog suda 32/19."
         actions={[]}
         highlights={[
-          { label: 'Službene novine FBiH 80/14', description: 'Novi okvir nasljeđivanja' },
-          { label: 'Odluka US FBiH 32/19', description: 'Tumačenje nužnog dijela i prava bračnog partnera' },
-          { label: 'Struktura', description: `${articleCount} članova · 7 cjelina` },
+          { label: 'Službene novine FBiH', description: '80/14 + Odluka US 32/19' },
+          { label: 'Fokus', description: 'Nužni dio, testament i ostavinski postupak' },
         ]}
       />
 
       <LawViewerInteractive
         lawContent={lawContent}
-        gazetteNote="Službene novine FBiH 80/14, Odluka US 32/19"
+        gazetteNote="Službene novine FBiH: 80/14 + Odluka US 32/19"
       />
 
       <section className="mx-auto max-w-5xl px-6 pb-16">

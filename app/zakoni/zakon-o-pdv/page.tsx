@@ -15,9 +15,6 @@ export default async function PDVLawPage() {
   const lawPath = path.join(process.cwd(), 'public', 'laws', 'zakon-o-pdv-bih.txt');
   const lawContent = await fs.readFile(lawPath, 'utf-8');
 
-  const articleMatches = lawContent.match(/Član(?:ak)?\s+[A-Z0-9.\-]+/gi);
-  const articleCount = articleMatches ? articleMatches.length : undefined;
-
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <LawHero
@@ -26,8 +23,8 @@ export default async function PDVLawPage() {
         description="Neslužbeni pregled PDV propisa u LawViewer formatu – članci i jasna struktura."
         actions={[]}
         highlights={[
-          { label: 'Napomena', description: 'Neslužbeni konsolidovani tekst' },
-          { label: 'Struktura', description: articleCount ? `${articleCount} članova` : 'više članova' },
+          { label: 'Službeni glasnik BiH', description: '9/05, 35/05, 100/07, 33/08, 35/09, 65/10, 26/11, 38/12' },
+          { label: 'Napomena', description: 'Neslužbeni konsolidovani tekst – provjerite objave UIO BiH' },
         ]}
       />
 

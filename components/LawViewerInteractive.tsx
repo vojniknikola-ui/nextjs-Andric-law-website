@@ -117,9 +117,8 @@ export default function LawViewerInteractive({
         <div className="grid gap-6 border-t border-slate-100 px-6 py-6 lg:grid-cols-[260px,1fr]">
           {/* TOC */}
           <aside className="order-2 lg:order-1">
-            <div className="sticky top-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Sadržaj</p>
-              <div className="mt-3 max-h-[60vh] space-y-1 overflow-auto pr-1 text-sm">
+            <div className="sticky top-6 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+              <div className="max-h-[60vh] space-y-1 overflow-auto pr-1 text-sm">
                 {articles.map((article) => (
                   <button
                     key={article.id}
@@ -155,14 +154,19 @@ export default function LawViewerInteractive({
                   }}
                   className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                 >
-                  <header className="flex flex-col gap-3 border-b border-white/5 pb-4 md:flex-row md:items-start md:justify-between">
+                  <header className="flex flex-col gap-3 border-b border-slate-200/60 pb-4 md:flex-row md:items-start md:justify-between">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
+                      <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
                         {section.type === 'article' ? 'Član' : section.type === 'preamble' ? 'Preambula' : 'Uvod'}
                       </p>
-                      <h2 className="text-xl font-semibold text-white">{section.title}</h2>
+                      <h2 className="text-xl font-semibold text-slate-900">{section.title}</h2>
                     </div>
                     <div className="flex flex-wrap gap-2">
+                      {showHistory && section.history && (
+                        <span className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+                          Historijat dostupno
+                        </span>
+                      )}
                       <CopyLinkButton id={section.id} />
                       {showHistory && section.history && (
                         <AnchorLinkButton id={`${section.id}-historijat`} label="Historijat" />
@@ -202,15 +206,15 @@ export default function LawViewerInteractive({
 
 function AmandmentCard({ content }: { content: string }) {
   return (
-    <div className="rounded-2xl border border-amber-200/40 bg-amber-500/10 p-5 text-amber-50">
+    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-200">Amandman</p>
-        <span className="rounded-full border border-amber-200/60 bg-amber-400/20 px-3 py-1 text-xs text-amber-50">
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-700">Amandman</p>
+        <span className="rounded-full border border-amber-300 bg-white px-3 py-1 text-xs text-amber-800">
           Brčko distrikt
         </span>
       </div>
       <div
-        className="prose prose-invert mt-3 max-w-none text-sm"
+        className="prose mt-3 max-w-none text-sm text-amber-900"
         dangerouslySetInnerHTML={{ __html: formatContent(content) }}
       />
     </div>
@@ -235,8 +239,8 @@ function CopyLinkButton({ id }: { id: string }) {
       }}
       className={`rounded-xl border px-3 py-1 text-xs ${
         copied
-          ? 'border-emerald-200 bg-emerald-500/20 text-emerald-100'
-          : 'border-white/20 bg-white/5 text-slate-200 hover:bg-white/10'
+          ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+          : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
       }`}
       aria-label="Kopiraj link"
     >
@@ -249,7 +253,7 @@ function AnchorLinkButton({ id, label }: { id: string; label: string }) {
   return (
     <a
       href={`#${id}`}
-      className="rounded-xl border border-white/20 bg-white/5 px-3 py-1 text-xs text-slate-200 hover:bg-white/10"
+      className="rounded-xl border border-slate-200 bg-white px-3 py-1 text-xs text-slate-700 hover:bg-slate-50"
     >
       {label}
     </a>
