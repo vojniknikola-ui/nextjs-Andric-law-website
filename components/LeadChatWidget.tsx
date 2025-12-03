@@ -90,9 +90,15 @@ function LeadChatWidgetContent() {
 
   useEffect(() => {
     if (!sessionShort) return;
+    console.log('[chat] Connecting SSE stream:', { sessionId, sessionShort });
     const source = new EventSource(`/api/chat/stream?sessionId=${sessionShort}`);
 
+    source.onopen = () => {
+      console.log('[chat] SSE connected');
+    };
+
     source.onmessage = (event) => {
+      console.log('[chat] SSE message:', event.data);
       try {
         const data = JSON.parse(event.data);
         if (data.type === 'message' && data.payload?.text) {
@@ -106,19 +112,21 @@ function LeadChatWidgetContent() {
             },
           ]);
         }
-      } catch {
-        // ignore parse errors
+      } catch (err) {
+        console.error('[chat] Parse error:', err);
       }
     };
 
-    source.onerror = () => {
+    source.onerror = (err) => {
+      console.error('[chat] SSE error:', err);
       source.close();
     };
 
     return () => {
+      console.log('[chat] Closing SSE');
       source.close();
     };
-  }, [sessionId]);
+  }, [sessionShort]);
 
   useEffect(() => {
     if (!messagesRef.current) return;
