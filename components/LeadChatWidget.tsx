@@ -38,6 +38,7 @@ function LeadChatWidgetContent() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sessionShort, setSessionShort] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [pageUrl, setPageUrl] = useState('');
   const [pageType, setPageType] = useState('');
   const [form, setForm] = useState<FormState>({
@@ -88,45 +89,7 @@ function LeadChatWidgetContent() {
     setPageType(pathname || window.location.pathname);
   }, [pathname, search]);
 
-  useEffect(() => {
-    if (!sessionShort) return;
-    console.log('[chat] Connecting SSE stream:', { sessionId, sessionShort });
-    const source = new EventSource(`/api/chat/stream?sessionId=${sessionShort}`);
 
-    source.onopen = () => {
-      console.log('[chat] SSE connected');
-    };
-
-    source.onmessage = (event) => {
-      console.log('[chat] SSE message:', event.data);
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === 'message' && data.payload?.text) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: `${Date.now()}-${prev.length}`,
-              from: data.payload.from === 'lawyer' ? 'lawyer' : 'you',
-              text: data.payload.text as string,
-              ts: typeof data.payload.ts === 'number' ? data.payload.ts : Date.now(),
-            },
-          ]);
-        }
-      } catch (err) {
-        console.error('[chat] Parse error:', err);
-      }
-    };
-
-    source.onerror = (err) => {
-      console.error('[chat] SSE error:', err);
-      source.close();
-    };
-
-    return () => {
-      console.log('[chat] Closing SSE');
-      source.close();
-    };
-  }, [sessionShort]);
 
   useEffect(() => {
     if (!messagesRef.current) return;
@@ -174,18 +137,9 @@ function LeadChatWidgetContent() {
       }
 
       const userMessage: ChatMessage = { id: `${Date.now()}-you`, from: 'you', text: form.message, ts: Date.now() };
-      const autoReply: ChatMessage = {
-        id: `${Date.now()}-auto`,
-        from: 'lawyer',
-        text: 'Poštovani,\n\nVaša poruka je zaprimljena u Andrić Law. Pregledat ću je i javiti vam se.\n\nLijep pozdrav,\nAdvokat Nikola Andrić',
-        ts: Date.now() + 100,
-      };
-      
-      setMessages((prev) => [
-        ...prev,
-        userMessage,
-        ...(prev.length === 0 ? [autoReply] : []),
-      ]);
+      setMessages((prev) => [...prev, userMessage]);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 5000);
       if (payload?.sessionShort) {
         const key = 'andric_chat_session_short';
         window.localStorage.setItem(key, payload.sessionShort);
@@ -236,28 +190,25 @@ function LeadChatWidgetContent() {
               <form className="space-y-3" onSubmit={handleSubmit}>
                 <div className="flex items-center gap-2 text-[11px] text-slate-300 bg-white/5 border border-white/10 rounded-lg px-3 py-2">
                   <ShieldCheck className="size-4 text-emerald-400" />
-                  Samo e-mail ili telefon + kratko pitanje. Brzi odgovor.
+                  Poruka ide direktno advokatu. Odgovor na vaš kontakt.
                 </div>
+
+                {showSuccess && (
+                  <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-100">
+                    <p className="font-semibold mb-1">✓ Poruka poslana!</p>
+                    <p className="text-xs">Javit ćemo vam se na {form.contact} u najkraćem roku.</p>
+                  </div>
+                )}
 
                 {messages.length > 0 && (
                   <div className="rounded-lg border border-white/10 bg-slate-900/60 p-3 text-xs text-slate-100 max-h-[30vh] sm:max-h-44 overflow-y-auto space-y-2" ref={messagesRef}>
                     {messages.map((msg) => (
                       <div key={msg.id} className="flex flex-col gap-1">
                         <div className="flex items-center justify-between text-[11px] text-slate-400">
-                          <span>
-                            {msg.from === 'lawyer' ? 'Odvjetnik' : msg.from === 'system' ? 'Info' : 'Vi'}
-                          </span>
+                          <span>Vi</span>
                           <span>{new Date(msg.ts).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
-                        <div
-                          className={`whitespace-pre-wrap rounded-md px-3 py-2 ${
-                            msg.from === 'lawyer'
-                              ? 'bg-white/5 border border-white/10'
-                              : msg.from === 'system'
-                                ? 'bg-amber-500/10 border border-amber-500/30 text-amber-100'
-                                : 'bg-cyan-500/10 border border-cyan-500/30'
-                          }`}
-                        >
+                        <div className="whitespace-pre-wrap rounded-md px-3 py-2 bg-cyan-500/10 border border-cyan-500/30">
                           {msg.text}
                         </div>
                       </div>
