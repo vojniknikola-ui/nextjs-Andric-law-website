@@ -170,7 +170,7 @@ export async function PUT(request: Request) {
         lawMeta: payload.lawMeta ?? null,
         authorName: payload.authorName ?? undefined,
         authorRole: payload.authorRole ?? undefined,
-        publishedAt: payload.publishedAt ? new Date(payload.publishedAt) : undefined,
+        publishedAt: payload.publishedAt ? new Date(payload.publishedAt).toISOString().slice(0, 10) : undefined,
         updatedAt: new Date(),
       })
       .where(eq(cmsPosts.slug, slug))
