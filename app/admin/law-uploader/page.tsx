@@ -1,7 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
-import { useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import LawViewer from '@/components/LawViewer';
 
@@ -18,7 +17,7 @@ Svaki član treba biti na zasebnoj liniji.
 
 const INITIAL_BADGE = 'Andrić Law · Novi zakon';
 
-export default function LawUploaderPage() {
+function LawUploaderContent() {
   const [lawText, setLawText] = useState<string>(SAMPLE_TEXT);
   const [badge, setBadge] = useState(INITIAL_BADGE);
   const [title, setTitle] = useState('Novi zakon – radna verzija');
@@ -270,14 +269,13 @@ export default function LawUploaderPage() {
   };
 
   useEffect(() => {
-    const slugParam = searchParams.get('slug');
+    const slugParam = searchParams?.get('slug');
     if (slugParam) {
       setSlug(slugParam);
-      // auto-load but avoid infinite loop
       loadExisting();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     if (!slugEdited && title.trim()) {
@@ -587,4 +585,12 @@ function slugify(value: string) {
 function slugifyFilename(filename?: string) {
   if (!filename) return '';
   return slugify(filename.replace(/\.[^.]+$/, ''));
+}
+
+export default function LawUploaderPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center"><p>Učitavanje...</p></div>}>
+      <LawUploaderContent />
+    </Suspense>
+  );
 }
