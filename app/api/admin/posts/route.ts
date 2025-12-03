@@ -102,7 +102,7 @@ export async function POST(request: Request) {
     readMinutes = parsed.readMinutes;
   }
 
-  const publishedAt = payload.publishedAt ? new Date(payload.publishedAt) : new Date();
+  const publishedAt = payload.publishedAt ? new Date(payload.publishedAt).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
   
   if (!slug || !title) {
     return NextResponse.json({ error: 'slug i title su obavezni.' }, { status: 400 });
@@ -128,6 +128,7 @@ export async function POST(request: Request) {
         authorName: payload.authorName ?? 'Andrić Law',
         authorRole: payload.authorRole ?? 'Advokatski ured',
         publishedAt,
+        createdAt: new Date(),
         updatedAt: new Date(),
       })
       .returning();
