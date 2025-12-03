@@ -165,10 +165,10 @@ function LeadChatWidgetContent() {
         throw new Error(payload?.message ?? payload?.error ?? 'Neuspjelo slanje poruke.');
       }
 
-      const userMessage = { id: `${Date.now()}-you`, from: 'you', text: form.message, ts: Date.now() };
-      const autoReply = {
+      const userMessage: ChatMessage = { id: `${Date.now()}-you`, from: 'you', text: form.message, ts: Date.now() };
+      const autoReply: ChatMessage = {
         id: `${Date.now()}-auto`,
-        from: 'lawyer' as const,
+        from: 'lawyer',
         text: 'Poštovani,\n\nVaša poruka je zaprimljena u Andrić Law. Pregledat ću je i javiti vam se.\n\nLijep pozdrav,\nAdvokat Nikola Andrić',
         ts: Date.now() + 100,
       };
