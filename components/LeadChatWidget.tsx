@@ -45,6 +45,7 @@ function LeadChatWidgetContent() {
     message: '',
     consent: false,
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -142,8 +143,7 @@ function LeadChatWidgetContent() {
     !sessionId ||
     !sessionShort ||
     !form.message.trim() ||
-    !form.consent ||
-    Boolean(validateContact(form.contact));
+    (!isSubmitted && (!form.consent || Boolean(validateContact(form.contact))));
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -185,6 +185,7 @@ function LeadChatWidgetContent() {
         window.localStorage.setItem(key, payload.sessionShort);
         setSessionShort(payload.sessionShort);
       }
+      setIsSubmitted(true);
       setForm((prev) => ({ ...prev, message: '' }));
       setStatus('idle');
     } catch (err) {
@@ -258,51 +259,55 @@ function LeadChatWidgetContent() {
                   </div>
                 )}
 
-                <div className="space-y-2">
-                  <label className="text-xs text-slate-300">E-mail ili telefon *</label>
-                  <div className="relative">
-                    <input
-                      value={form.contact}
-                      onChange={(e) => setForm((prev) => ({ ...prev, contact: e.target.value }))}
-                      required
-                      placeholder="marko@example.com / +387..."
-                      className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-cyan-500/60"
-                    />
-                    <Mail className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+                {!isSubmitted && (
+                  <div className="space-y-2">
+                    <label className="text-xs text-slate-300">E-mail ili telefon *</label>
+                    <div className="relative">
+                      <input
+                        value={form.contact}
+                        onChange={(e) => setForm((prev) => ({ ...prev, contact: e.target.value }))}
+                        required
+                        placeholder="marko@example.com / +387..."
+                        className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-cyan-500/60"
+                      />
+                      <Mail className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-300">Vaše pitanje (kratko, obavezno)</label>
+                  <label className="text-xs text-slate-300">{isSubmitted ? 'Nastavite razgovor' : 'Vaše pitanje (kratko, obavezno)'}</label>
                   <textarea
                     value={form.message}
                     onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
                     required
-                    rows={4}
-                    placeholder="U kratkim crtama opišite situaciju..."
+                    rows={isSubmitted ? 3 : 4}
+                    placeholder={isSubmitted ? 'Napišite poruku...' : 'U kratkim crtama opišite situaciju...'}
                     className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-cyan-500/60 resize-none"
                   />
                 </div>
 
-                <label className="flex items-start gap-2 text-xs text-slate-300">
-                  <input
-                    type="checkbox"
-                    checked={form.consent}
-                    onChange={(e) => setForm((prev) => ({ ...prev, consent: e.target.checked }))}
-                    className="mt-0.5 size-4 rounded border-white/20 bg-slate-950/70 text-cyan-500 focus:ring-0"
-                  />
-                  <span>
-                    Saglasan sam s obradom podataka u svrhu povratnog kontakta.{' '}
-                    <a
-                      href="/politika-privatnosti"
-                      className="underline text-slate-200 hover:text-white"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Politika privatnosti
-                    </a>
-                  </span>
-                </label>
+                {!isSubmitted && (
+                  <label className="flex items-start gap-2 text-xs text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={form.consent}
+                      onChange={(e) => setForm((prev) => ({ ...prev, consent: e.target.checked }))}
+                      className="mt-0.5 size-4 rounded border-white/20 bg-slate-950/70 text-cyan-500 focus:ring-0"
+                    />
+                    <span>
+                      Saglasan sam s obradom podataka u svrhu povratnog kontakta.{' '}
+                      <a
+                        href="/politika-privatnosti"
+                        className="underline text-slate-200 hover:text-white"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Politika privatnosti
+                      </a>
+                    </span>
+                  </label>
+                )}
 
                 {error && (
                   <div className="text-xs text-amber-200 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
@@ -319,6 +324,10 @@ function LeadChatWidgetContent() {
                     <>
                       <Loader2 className="size-4 animate-spin" /> Slanje...
                     </>
+                  ) : isSubmitted ? (
+                    <>
+                      Pošalji poruku <Send className="size-4" />
+                    </>
                   ) : (
                     <>
                       Pošalji · brzi odgovor <Send className="size-4" />
@@ -326,10 +335,12 @@ function LeadChatWidgetContent() {
                   )}
                 </button>
 
-                <div className="flex items-center gap-2 text-[11px] text-slate-400">
-                  <ShieldCheck className="size-4 text-emerald-400" />
-                  Lead ide direktno u Telegram + e-mail. Bez spama, samo ozbiljni upiti.
-                </div>
+                {!isSubmitted && (
+                  <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                    <ShieldCheck className="size-4 text-emerald-400" />
+                    Lead ide direktno u Telegram + e-mail. Bez spama, samo ozbiljni upiti.
+                  </div>
+                )}
 
                 <div className="flex flex-wrap items-center gap-2 text-[12px]">
                   <span className="text-slate-400">Ili brzi ping:</span>
