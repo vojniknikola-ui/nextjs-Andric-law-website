@@ -66,7 +66,7 @@ export async function POST(request: Request) {
           actId: createdAct.id,
           provisionKey: section.id,
           heading: section.title,
-          level: section.level,
+          level: section.type,
           path: `#${section.id}`,
           orderIndex: section.orderIndex,
           validFrom: publishedAt,
