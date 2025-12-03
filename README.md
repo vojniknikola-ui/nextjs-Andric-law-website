@@ -20,6 +20,14 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Pametni parseri za zakone i blogove
+
+- `lib/smartParsers.ts` – napredni parseri koji automatski prepoznaju strukturu:
+  - **Za zakone**: detektuje članove, glave, odjele, preambule
+  - **Za blogove**: auto-generira naslov, sažetak, tagove, vrijeme čitanja
+- `POST /api/admin/smart-publish` – pametan blog publishing sa auto-analizom
+- Komponenta `LawViewer` koristi smart parser za prikaz zakona
+
 ## Admin backend za članke i zakone
 
 API endpointi:
@@ -58,3 +66,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   - `DATABASE_URL` for Drizzle/Neon
   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and `LEADS_FROM_EMAIL` (fallbacks to `SMTP_FROM_EMAIL`/`SMTP_USER`)
   - optional `LEADS_INBOX_EMAIL` (defaults to office@andric.law)
+
+### Postavljanje Telegram webhook-a (nakon deploya na Vercel)
+
+```bash
+# Postavi webhook na production URL
+TELEGRAM_BOT_TOKEN=your_token node scripts/setup-telegram-webhook.mjs https://andric.law/api/chat/telegram-webhook
+```
+
+Ili ručno:
+```bash
+curl -X POST "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://andric.law/api/chat/telegram-webhook"}'
+```
