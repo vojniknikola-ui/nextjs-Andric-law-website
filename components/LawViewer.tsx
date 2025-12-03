@@ -50,7 +50,7 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
             </span>
           </header>
           <div className={`prose prose-slate mt-2 max-w-none ${fontClass}`}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents as any}>
               {section.content}
             </ReactMarkdown>
           </div>
@@ -66,17 +66,17 @@ export default function LawViewer({ lawContent }: { lawContent: string }) {
 }
 
 const markdownComponents = {
-  table: ({ children }) => (
+  table: ({ children }: any) => (
     <div className="overflow-x-auto rounded-2xl border border-slate-200">
       <table className="w-full border-collapse text-sm text-slate-800">{children}</table>
     </div>
   ),
-  thead: ({ children }) => (<thead className="bg-slate-100">{children}</thead>),
-  tbody: ({ children }) => <tbody>{children}</tbody>,
-  tr: ({ children }) => (<tr className="border-b border-slate-200 last:border-none">{children}</tr>),
-  th: ({ children }) => (<th className="px-3 py-2 text-left text-xs uppercase tracking-[0.12em] text-slate-600">{children}</th>),
-  td: ({ children }) => (<td className="px-3 py-2 align-top text-slate-800">{children}</td>),
-  code: ({ children }) => (<code className="bg-slate-100 px-1.5 py-0.5 rounded text-[12px] text-slate-800">{children}</code>),
-  pre: ({ children }) => (<pre className="overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-[13px] text-slate-900 shadow-inner">{children}</pre>),
-  blockquote: ({ children }) => (<blockquote className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">{children}</blockquote>),
+  thead: ({ children }: any) => (<thead className="bg-slate-100">{children}</thead>),
+  tbody: ({ children }: any) => <tbody>{children}</tbody>,
+  tr: ({ children }: any) => (<tr className="border-b border-slate-200 last:border-none">{children}</tr>),
+  th: ({ children }: any) => (<th className="px-3 py-2 text-left text-xs uppercase tracking-[0.12em] text-slate-600">{children}</th>),
+  td: ({ children }: any) => (<td className="px-3 py-2 align-top text-slate-800">{children}</td>),
+  code: ({ children }: any) => (<code className="bg-slate-100 px-1.5 py-0.5 rounded text-[12px] text-slate-800">{children}</code>),
+  pre: ({ children }: any) => (<pre className="overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-[13px] text-slate-900 shadow-inner">{children}</pre>),
+  blockquote: ({ children }: any) => (<blockquote className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">{children}</blockquote>),
 };
