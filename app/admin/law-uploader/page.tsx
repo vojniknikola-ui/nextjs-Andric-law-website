@@ -53,7 +53,7 @@ export default function LawUploaderPage() {
         if (meta.slug) setSlug(meta.slug);
         if (meta.title) setTitle(meta.title);
         if (meta.excerpt) setExcerpt(meta.excerpt);
-        if (meta.tags?.length) setTagsInput(meta.tags.join(', '));
+        if (meta.tags && meta.tags.length > 0) setTagsInput(meta.tags.join(', '));
         setStatusMsg(`Učitan fajl: ${file.name}`);
       }
     };
