@@ -487,7 +487,7 @@ uppercase=glava`}
             </p>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white shadow-lg p-6">
-            <LawViewer lawContent={lawText} mode="minimal" />
+            <LawViewer lawContent={lawText} />
           </div>
         </section>
       </div>
