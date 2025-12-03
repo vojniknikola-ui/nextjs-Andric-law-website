@@ -21,22 +21,27 @@ export async function POST(request: NextRequest) {
   const chatId = message?.chat?.id;
   const text = message?.text as string | undefined;
 
+  console.log('[telegram-webhook] Received:', { chatId, text });
+
   if (!TELEGRAM_CHAT_ID || !message || !text) {
     return NextResponse.json({ ok: true });
   }
 
   if (String(chatId) !== String(TELEGRAM_CHAT_ID)) {
+    console.log('[telegram-webhook] Wrong chat ID');
     return NextResponse.json({ ok: true });
   }
 
   const code = extractSessionId(text);
   if (!code) {
+    console.log('[telegram-webhook] No session code found in:', text);
     return NextResponse.json({ ok: true, ignored: true });
   }
 
   const sessionId = resolveSession(code) ?? code;
-  const short = sessionId.replace(/-/g, '').slice(0, 8);
   const cleaned = cleanReply(text, code);
+
+  console.log('[telegram-webhook] Processing:', { code, sessionId, cleaned });
 
   if (!cleaned) {
     return NextResponse.json({ ok: true, ignored: true });
@@ -50,6 +55,7 @@ export async function POST(request: NextRequest) {
 
   // Broadcast samo na resolved session ID da se izbjegnu duplikati
   broadcastToSession(sessionId, payload);
+  console.log('[telegram-webhook] Broadcasted to:', sessionId);
 
   return NextResponse.json({ ok: true, delivered: true });
 }
