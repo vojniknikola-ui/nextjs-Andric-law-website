@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Clock4, Loader2, Mail, MessageCircle, Send, ShieldCheck, X } from 'lucide-react';
 
@@ -30,7 +30,7 @@ function validateContact(value: string) {
   return 'Upišite ispravan e-mail ili broj telefona.';
 }
 
-export function LeadChatWidget() {
+function LeadChatWidgetContent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [status, setStatus] = useState<SubmitState>('idle');
@@ -48,7 +48,7 @@ export function LeadChatWidget() {
   const messagesRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const search = searchParams?.toString();
+  const search = searchParams.toString();
 
   const deriveShort = (id: string) => id.replace(/-/g, '').slice(0, 8);
 
@@ -369,5 +369,13 @@ export function LeadChatWidget() {
         </div>
       )}
     </div>
+  );
+}
+
+export function LeadChatWidget() {
+  return (
+    <Suspense fallback={null}>
+      <LeadChatWidgetContent />
+    </Suspense>
   );
 }
