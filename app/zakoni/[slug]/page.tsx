@@ -7,18 +7,20 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // 1h snapshot cache
 
 interface Params {
-  params: { slug: string };
-  searchParams?: { at?: string };
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ at?: string }>;
 }
 
 export default async function ActViewerPage({ params, searchParams }: Params) {
-  const snapshotDate = searchParams?.at || new Date().toISOString().slice(0, 10);
+  const { slug } = await params;
+  const { at } = (await searchParams) ?? {};
+  const snapshotDate = at || new Date().toISOString().slice(0, 10);
 
   const record = process.env.DATABASE_URL
-    ? await fetchActSnapshot(params.slug, snapshotDate).catch(() => null)
+    ? await fetchActSnapshot(slug, snapshotDate).catch(() => null)
     : null;
 
-  const fallbackRecord = record ?? (await loadFallbackLaw(params.slug));
+  const fallbackRecord = record ?? (await loadFallbackLaw(slug));
 
   if (!fallbackRecord) {
     if (!process.env.DATABASE_URL) {
@@ -63,10 +65,10 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
               <InfoChip label="Glava" value={headCount || '—'} />
               <InfoChip label="Objava" value={fallbackRecord.act.officialNumber ?? 'n/a'} />
               <Link
-                href="/lawviewer"
+                href="/zakoni"
                 className="rounded-full border border-white/15 px-4 py-1 text-slate-200 hover:border-white/40"
               >
-                ← Nazad na hub
+                ← Nazad na zakone
               </Link>
             </div>
           </div>
@@ -119,7 +121,11 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
           </aside>
         </section>
 
-        <footer className="mt-12 rounded-3xl border border-white/10 bg-slate-900/60 p-6 text-sm text-slate-300">
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 text-xs text-slate-300">
+          Informacije na ovoj stranici služe samo u informativne svrhe i ne predstavljaju pravni savjet. Za zvanično tumačenje provjerite službene izvore ili kontaktirajte Andrić Law.
+        </div>
+
+        <footer className="mt-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 text-sm text-slate-300">
           <p>
             Treba vam stručno tumačenje ili analiza izmjena? Pišite nam nenametljivo na{' '}
             <a href="mailto:info@andric.law" className="text-white hover:underline">

@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Calendar, BookOpen, Tag, Share2 } from 'lucide-react';
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { BlogCard } from '@/components/BlogCard';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 import { promises as fs } from 'fs';
@@ -18,6 +18,8 @@ interface BlogPostPageProps {
     slug: string;
   }>;
 }
+
+const FALLBACK_OG_IMAGE = 'https://andric.law/fallbacks/andric-law.jpg';
 
 // SSG - Generate static pages for all blog posts
 export async function generateStaticParams() {
@@ -54,6 +56,13 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       authors: [post.author.name],
       tags: post.tags,
       url: canonicalUrl,
+      images: [{ url: FALLBACK_OG_IMAGE }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} | Andrić Law Blog`,
+      description: post.excerpt,
+      images: [FALLBACK_OG_IMAGE],
     },
   };
 }
@@ -82,23 +91,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <Header />
 
       {/* Hero Image */}
-      {post.image && (
-        <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden border-b border-white/10">
-          <Image
-            src={post.image}
-            alt={post.title}
-            fill
-            className="object-cover"
-            priority
-          fetchPriority="high"
-          quality={85}
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
-        </div>
-      )}
-
-      {/* Article */}
       <article className="py-16 md:py-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Tags */}
@@ -137,10 +129,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 day: 'numeric',
               })}
             </span>
-            <span className="inline-flex items-center gap-2">
-              <BookOpen className="size-4" />
-              {post.readMinutes} min čitanja
-            </span>
           </div>
 
           {post.isLawDocument && (
@@ -160,7 +148,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       href={`/zakoni/${post.lawSlug}`}
                       className="inline-flex items-center gap-2 rounded-xl border border-blue-300/40 px-4 py-2 text-sm font-semibold text-blue-50 hover:bg-blue-500/10"
                     >
-                      Otvori LawViewer
+                      Otvori zakon
                     </Link>
                   )}
                   {resolveLawFile(post.lawFile) && (
@@ -199,81 +187,97 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           )}
 
-          {/* Content */}
-          <div className="prose prose-invert prose-slate max-w-none mt-10">
-            <ReactMarkdown
-              rehypePlugins={[rehypeRaw]}
-              components={{
-                h1: ({ children }) => (
-                  <h1 className="text-3xl font-bold mt-10 mb-4">{children}</h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 className="text-2xl font-bold mt-8 mb-4">{children}</h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="text-xl font-semibold mt-6 mb-3">{children}</h3>
-                ),
-                p: ({ children }) => (
-                  <p className="text-slate-300 leading-relaxed mb-4">{children}</p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="list-disc list-inside space-y-2 mb-4 text-slate-300">
-                    {children}
-                  </ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="list-decimal list-inside space-y-2 mb-4 text-slate-300">
-                    {children}
-                  </ol>
-                ),
-                li: ({ children }) => (
-                  <li className="ml-4">{children}</li>
-                ),
-                strong: ({ children }) => (
-                  <strong className="font-semibold text-slate-100">{children}</strong>
-                ),
-                code: ({ children }) => (
-                  <code className="bg-white/10 px-1.5 py-0.5 rounded text-sm text-zinc-300">
-                    {children}
-                  </code>
-                ),
-                hr: () => (
-                  <hr className="my-10 border-white/10" />
-                ),
-                details: ({ node, ...props }) => {
-                  const {
-                    className = '',
-                    children,
-                    ...rest
-                  } = props as DetailedHTMLProps<HTMLAttributes<HTMLDetailsElement>, HTMLDetailsElement>;
-                  return (
-                    <details
-                      {...rest}
-                      className={`group rounded-2xl border border-blue-200/60 bg-blue-50/70 p-4 text-blue-900 shadow-sm transition-all [&[open]]:border-blue-400/80 [&[open]]:bg-blue-50/90 ${className}`}
-                    >
+          {/* Content + Disclaimer */}
+          <div className="mt-10 space-y-8">
+            <div className="prose prose-invert prose-slate max-w-none">
+              <ReactMarkdown
+                rehypePlugins={[rehypeRaw]}
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ children }) => (
+                    <h1 className="text-3xl font-bold mt-10 mb-4">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="text-2xl font-bold mt-8 mb-4">{children}</h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="text-xl font-semibold mt-6 mb-3">{children}</h3>
+                  ),
+                  p: ({ children }) => (
+                    <p className="text-slate-300 leading-relaxed mb-4">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="list-disc list-inside space-y-2 mb-4 text-slate-300">
                       {children}
-                    </details>
-                  );
-                },
-                summary: ({ node, ...props }) => {
-                  const {
-                    className = '',
-                    children,
-                    ...rest
-                  } = props as DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>;
-                  return (
-                    <summary
-                      {...rest}
-                      className={`flex cursor-pointer select-none items-center justify-between gap-3 text-sm font-semibold text-blue-800 [&::-webkit-details-marker]:hidden ${className}`}
-                    >
+                    </ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal list-inside space-y-2 mb-4 text-slate-300">
                       {children}
-                    </summary>
-                  );
-                },
-              }}
-            >
-              {post.content}
-            </ReactMarkdown>
+                    </ol>
+                  ),
+                  li: ({ children }) => (
+                    <li className="ml-4">{children}</li>
+                  ),
+                  strong: ({ children }) => (
+                    <strong className="font-semibold text-slate-100">{children}</strong>
+                  ),
+                  code: ({ children }) => (
+                    <code className="bg-white/10 px-1.5 py-0.5 rounded text-sm text-zinc-300">
+                      {children}
+                    </code>
+                  ),
+                  pre: ({ children }) => (
+                    <pre className="overflow-x-auto rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-slate-100 shadow-inner">
+                      {children}
+                    </pre>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-slate-200">
+                      {children}
+                    </blockquote>
+                  ),
+                  hr: () => (
+                    <hr className="my-10 border-white/10" />
+                  ),
+                  details: ({ node, ...props }) => {
+                    const {
+                      className = '',
+                      children,
+                      ...rest
+                    } = props as DetailedHTMLProps<HTMLAttributes<HTMLDetailsElement>, HTMLDetailsElement>;
+                    return (
+                      <details
+                        {...rest}
+                        className={`group rounded-2xl border border-blue-200/60 bg-blue-50/70 p-4 text-blue-900 shadow-sm transition-all [&[open]]:border-blue-400/80 [&[open]]:bg-blue-50/90 ${className}`}
+                      >
+                        {children}
+                      </details>
+                    );
+                  },
+                  summary: ({ node, ...props }) => {
+                    const {
+                      className = '',
+                      children,
+                      ...rest
+                    } = props as DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>;
+                    return (
+                      <summary
+                        {...rest}
+                        className={`flex cursor-pointer select-none items-center justify-between gap-3 text-sm font-semibold text-blue-800 [&::-webkit-details-marker]:hidden ${className}`}
+                      >
+                        {children}
+                      </summary>
+                    );
+                  },
+                }}
+              >
+                {post.content}
+              </ReactMarkdown>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-slate-300">
+              Informacije na ovoj stranici služe samo u informativne svrhe i ne predstavljaju pravni savjet. Za zvanično tumačenje obratite se nadležnim izvorima ili kontaktirajte Andrić Law.
+            </div>
           </div>
 
           {lawText && (

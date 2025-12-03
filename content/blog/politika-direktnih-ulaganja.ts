@@ -3,13 +3,13 @@ import { BlogPost } from '@/types/blog';
 export const politikaDirektnihUlaganjaPost: BlogPost = {
   slug: 'politika-direktnih-ulaganja-bih',
   title: 'Politika direktnih stranih ulaganja u BiH – konsolidovani tekst',
-  excerpt: 'Objavljen LawViewer prikaz Zakona o politici direktnih stranih ulaganja (SG BiH 4/98 – 22/15) sa svim garancijama i procedurama na jednom mjestu.',
+  excerpt: 'Objavljen digitalni prikaz Zakona o politici direktnih stranih ulaganja (SG BiH 4/98 – 22/15) sa svim garancijama i procedurama na jednom mjestu.',
   content: `
-# Politika direktnih stranih ulaganja – LawViewer izdanje
+# Politika direktnih stranih ulaganja – digitalno izdanje
 
 Konzistentan pristup stranim ulaganjima podrazumijeva transparentan zakon. Pripremili smo konsolidovani tekst Zakona o politici direktnih stranih ulaganja u Bosni i Hercegovini, uključujući izmjene iz 2003., 2010. i 2015. godine.
 
-## Šta dobijate u LawViewer-u?
+## Šta dobijate u digitalnom prikazu?
 - **Dio I – VII**: od definicija i principa, preko procedura registracije, do sporova i međunarodnih garancija
 - **Istorijske napomene** uz članove kojima su mijenjani termini ili procedure
 - **Jedan klik = Preuzmi PDF** – piksel-perfekt verzija trenutne stranice pogodna za arhivu ili rad sa klijentom

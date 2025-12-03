@@ -2,8 +2,8 @@ import { BlogPost } from '@/types/blog';
 
 export const zakonReprezentativnostiPost: BlogPost = {
   slug: 'zakon-o-reprezentativnosti-sindikata-i-udruzenja-poslodavaca-fbih',
-  title: 'Zakon o reprezentativnosti sindikata i udruženja poslodavaca FBiH – LawViewer',
-  excerpt: 'Objavljen LawViewer prikaz reprezentativnosti sindikata i udruženja poslodavaca (SN FBiH 103/21) sa jasnim člancima i brzim PDF-om.',
+  title: 'Zakon o reprezentativnosti sindikata i udruženja poslodavaca FBiH – digitalni prikaz',
+  excerpt: 'Objavljen digitalni prikaz reprezentativnosti sindikata i udruženja poslodavaca (SN FBiH 103/21) sa jasnim člancima i brzim PDF-om.',
   content: `
 # Reprezentativnost sindikata i udruženja poslodavaca – FBiH
 

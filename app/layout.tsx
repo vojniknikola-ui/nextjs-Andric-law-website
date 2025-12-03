@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { LeadChatWidget } from "@/components/LeadChatWidget";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -92,7 +93,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="bs" className={inter.variable}>
+    <html lang="bs" className={inter.variable} suppressHydrationWarning>
       <head>
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://public.blob.vercel-storage.com" />
@@ -108,7 +109,10 @@ export default function RootLayout({
         <meta name="theme-color" content="#0f172a" />
         <meta name="color-scheme" content="dark" />
       </head>
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${inter.className} antialiased`}>
+        {children}
+        <LeadChatWidget />
+      </body>
     </html>
   );
 }

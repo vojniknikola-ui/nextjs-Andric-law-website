@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import Link from "next/link";
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { GlossarySection } from '@/components/GlossarySection';
@@ -10,7 +9,7 @@ import { AboutSection } from '@/components/AboutSection';
 import { ContactSection } from '@/components/ContactSection';
 import SearchBoxLazy from '@/components/SearchBoxLazy';
 import {
-  Phone, ChevronRight, Clock, MessageSquare,
+  ChevronRight, Clock,
 } from "lucide-react";
 
 export default function AndricLawLanding() {
@@ -74,22 +73,7 @@ export default function AndricLawLanding() {
       <ContactSection ref={kontaktRef} />
 
       <Footer />
-
-      <QuickActions />
     </main>
-  );
-}
-
-function QuickActions() {
-  return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-      <a href="https://wa.me/38761000000" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full px-5 py-3 bg-[#128C7E] hover:bg-[#075E54] text-white font-semibold shadow-lg border border-white/10">
-        <MessageSquare className="size-4" /> WhatsApp
-      </a>
-      <a href="tel:+38761000000" className="inline-flex items-center gap-2 rounded-full px-5 py-3 bg-white/90 hover:bg-white text-slate-900 font-semibold shadow-lg border border-white/10">
-        <Phone className="size-4" /> Poziv
-      </a>
-    </div>
   );
 }
 

@@ -1,7 +1,8 @@
 import { unstable_noStore } from 'next/cache';
 import Link from 'next/link';
 import { sql, desc } from 'drizzle-orm';
-import { getDb, acts, provisions } from '@/db';
+import { getDb, acts, provisions, cmsPosts } from '@/db';
+import AdminPostsTable from './AdminPostsTable';
 
 export default async function AdminDashboardPage() {
   unstable_noStore();
@@ -21,6 +22,7 @@ export default async function AdminDashboardPage() {
 
   const [{ value: actCount }] = await db.select({ value: sql<number>`count(*)` }).from(acts);
   const [{ value: provisionCount }] = await db.select({ value: sql<number>`count(*)` }).from(provisions);
+  const posts = await db.select().from(cmsPosts).orderBy(desc(cmsPosts.publishedAt), desc(cmsPosts.createdAt));
   const recentActs = await db
     .select({
       id: acts.id,
@@ -35,6 +37,7 @@ export default async function AdminDashboardPage() {
     .limit(5);
 
   const lastImport = recentActs[0]?.createdAt ? new Date(recentActs[0]!.createdAt as unknown as string) : null;
+  const postRows = posts;
 
   return (
     <div className="space-y-10">
@@ -57,9 +60,9 @@ export default async function AdminDashboardPage() {
           external
         />
         <QuickActionCard
-          title="LawViewer pregled"
-          description="Provjeri kako zakon izgleda klijentima."
-          href="/lawviewer"
+          title="Zakoni i članci"
+          description="Pregled javne liste propisa i analiza."
+          href="/zakoni"
         />
         <QuickActionCard
           title="Objavi blog karticu"
@@ -99,6 +102,8 @@ export default async function AdminDashboardPage() {
           </ul>
         )}
       </section>
+
+      <AdminPostsTable posts={postRows} />
 
       <section className="rounded-3xl border border-dashed border-white/20 bg-slate-900/40 p-6 text-sm text-slate-300">
         <p className="font-semibold text-white">ETL job queue stiže uskoro</p>

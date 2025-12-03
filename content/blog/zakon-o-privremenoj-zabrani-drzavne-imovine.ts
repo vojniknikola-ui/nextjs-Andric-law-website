@@ -2,7 +2,7 @@ import { BlogPost } from '@/types/blog';
 
 export const privremenaZabranaImovinePost: BlogPost = {
   slug: 'zakon-o-privremenoj-zabrani-drzavne-imovine',
-  title: 'Privremena zabrana raspolaganja državnom imovinom – LawViewer izdanje',
+  title: 'Privremena zabrana raspolaganja državnom imovinom – digitalno izdanje',
   excerpt: 'Neslužbeni prečišćeni tekst zakona kojim se zabranjuje prenos državne imovine BiH, sa jasno označenim izuzecima i svim OHR izmjenama od 2005. do 2022. godine.',
   content: `
 # Privremena zabrana raspolaganja državnom imovinom – digitalni prikaz

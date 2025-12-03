@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { Calendar, BookOpen, Tag, ArrowRight } from 'lucide-react';
+import { Calendar, Tag, ArrowRight } from 'lucide-react';
 import { BlogPost } from '@/types/blog';
 
 interface BlogCardProps {
@@ -10,23 +9,13 @@ interface BlogCardProps {
 
 export function BlogCard({ post, featured = false }: BlogCardProps) {
   const href = `/blog/${post.slug}`;
-  
+  const formattedDate = formatDate(post.date);
+
   return (
     <article className={`group rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition overflow-hidden ${featured ? 'lg:col-span-2' : ''}`}>
       <Link href={href} className="block">
-        <div className={`relative w-full overflow-hidden ${featured ? 'aspect-[21/9]' : 'aspect-[16/9]'}`}>
-          {post.image ? (
-            <Image
-              src={post.image}
-              alt={post.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes={featured ? '(max-width: 1024px) 100vw, 66vw' : '(max-width: 768px) 100vw, 33vw'}
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-zinc-700/30 via-slate-800 to-slate-900" />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+        <div className="relative h-36 w-full overflow-hidden bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.08),transparent_40%),radial-gradient(circle_at_80%_0%,rgba(148,163,184,0.12),transparent_35%)]" />
         </div>
         <div className="p-6">
           <div className="flex flex-wrap gap-2 text-xs">
@@ -49,11 +38,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
             <div className="flex items-center gap-4 text-xs text-slate-400">
               <span className="inline-flex items-center gap-1">
                 <Calendar className="size-3" />
-                {new Date(post.date).toLocaleDateString('bs-BA')}
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <BookOpen className="size-3" />
-                {post.readMinutes} min
+                {formattedDate}
               </span>
             </div>
             <span className="inline-flex items-center gap-1 text-sm text-zinc-300 group-hover:gap-2 transition-all">
@@ -64,4 +49,13 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
       </Link>
     </article>
   );
+}
+
+function formatDate(value: string) {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${dd}.${mm}.${yyyy}.`;
 }

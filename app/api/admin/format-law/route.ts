@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { parseSmartLaw, autoFormatContent } from '@/lib/smartParsers';
 
 export async function POST(request: Request) {
   try {
@@ -7,9 +8,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Nedostaje tekst zakona.' }, { status: 400 });
     }
 
-    const { formattedText, articleCount } = formatByArticles(text);
-    const finalText = instruction ? applyInstruction(formattedText, instruction) : formattedText;
-    return NextResponse.json({ formattedText: finalText, articleCount });
+    const autoFormatted = autoFormatContent(text);
+    const sections = parseSmartLaw(autoFormatted);
+    const finalText = instruction ? applyInstruction(autoFormatted, instruction) : autoFormatted;
+    return NextResponse.json({ 
+      formattedText: finalText, 
+      articleCount: sections.filter(s => s.type === 'article').length,
+      sectionsDetected: sections.length,
+      structure: sections.map(s => ({ type: s.type, title: s.title })).slice(0, 10)
+    });
   } catch (error) {
     console.error('Format law error:', error);
     return NextResponse.json({ error: 'Neuspjelo formatiranje.' }, { status: 500 });

@@ -7,7 +7,7 @@ export const zakonOAdvokaturiFBiHPost: BlogPost = {
   content: `
 # Zakon o advokaturi Federacije Bosne i Hercegovine
 
-Objava: **Službene novine FBiH 1/2025 (10.01.2025.)** — kompletan tekst zakona dostupan je na ovoj stranici u digitalnom LawViewer formatu.
+Objava: **Službene novine FBiH 1/2025 (10.01.2025.)** — kompletan tekst zakona dostupan je na ovoj stranici u digitalnom formatu.
 
 [**Otvori tekst zakona →**](#tekst-zakona)
 

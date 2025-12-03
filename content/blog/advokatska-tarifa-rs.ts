@@ -7,7 +7,7 @@ export const advokatskaTarifaRSPort: BlogPost = {
   content: `
 # Advokatska tarifa Republike Srpske – digitalni pregled
 
-Kancelarija Andrić Law pretvorila je kompletnu Advokatsku tarifu Republike Srpske u LawViewer format. Sada možete:
+Kancelarija Andrić Law pretvorila je kompletnu Advokatsku tarifu Republike Srpske u digitalni format. Sada možete:
 
 - klikom otvoriti **svaki tarifni broj** i vidjeti pravila obračuna,
 - koristiti historijat izmjena za napomene i posebne dodatke (putni troškovi, PDV),
