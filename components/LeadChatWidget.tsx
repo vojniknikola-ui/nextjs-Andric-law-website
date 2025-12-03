@@ -54,7 +54,7 @@ function LeadChatWidgetContent() {
   const deriveShort = (id: string) => id.replace(/-/g, '').slice(0, 8);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 10000);
+    const timer = setTimeout(() => setIsVisible(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
