@@ -48,11 +48,8 @@ export async function POST(request: NextRequest) {
     ts: Date.now(),
   };
 
+  // Broadcast samo na resolved session ID da se izbjegnu duplikati
   broadcastToSession(sessionId, payload);
-  broadcastToSession(code, payload);
-  if (short !== code) {
-    broadcastToSession(short, payload);
-  }
 
   return NextResponse.json({ ok: true, delivered: true });
 }
