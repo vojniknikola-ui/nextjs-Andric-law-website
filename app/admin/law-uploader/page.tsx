@@ -528,7 +528,12 @@ function StatLine({ label, value }: { label: string; value: number }) {
   );
 }
 
-function extractMetaFromMarkdown(markdown: string, filename?: string) {
+function extractMetaFromMarkdown(markdown: string, filename?: string): {
+  slug: string;
+  title: string;
+  excerpt: string;
+  tags: string[];
+} {
   const frontMatter = parseFrontMatter(markdown);
   const firstHeading = markdown.split('\n').find((line) => /^#\s+/.test(line))?.replace(/^#\s+/, '').trim();
   const firstParagraph = markdown
@@ -536,9 +541,9 @@ function extractMetaFromMarkdown(markdown: string, filename?: string) {
     .map((block) => block.trim())
     .find((block) => block && !block.startsWith('#'));
 
-  const derivedSlug = frontMatter.slug || (firstHeading ? slugify(firstHeading) : slugifyFilename(filename));
-  const derivedTitle = frontMatter.title || firstHeading || filename?.replace(/\.md$/i, '') || '';
-  const derivedExcerpt = frontMatter.excerpt || frontMatter.description || firstParagraph || '';
+  const derivedSlug = String(frontMatter.slug || (firstHeading ? slugify(firstHeading) : slugifyFilename(filename)));
+  const derivedTitle = String(frontMatter.title || firstHeading || filename?.replace(/\.md$/i, '') || '');
+  const derivedExcerpt = String(frontMatter.excerpt || frontMatter.description || firstParagraph || '');
   const tags = frontMatter.tags
     ? Array.isArray(frontMatter.tags)
       ? frontMatter.tags
