@@ -198,10 +198,10 @@ function LeadChatWidgetContent() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-[80]">
+    <div className="fixed bottom-0 right-0 sm:bottom-5 sm:right-5 z-[80] w-full sm:w-auto">
       {isOpen ? (
-        <div className="w-[320px] sm:w-[360px] rounded-2xl border border-white/10 bg-slate-900/95 shadow-2xl shadow-black/30 backdrop-blur">
-          <div className="flex items-start justify-between px-4 py-3 border-b border-white/10">
+        <div className="w-full sm:w-[360px] h-[100dvh] sm:h-auto sm:max-h-[600px] sm:rounded-2xl border-t sm:border border-white/10 bg-slate-900/95 shadow-2xl shadow-black/30 backdrop-blur flex flex-col">
+          <div className="flex items-start justify-between px-4 py-3 sm:py-3 border-b border-white/10 shrink-0">
             <div>
               <p className="text-xs uppercase tracking-[0.08em] text-slate-400">Andrić Law</p>
               <div className="flex items-center gap-2">
@@ -226,7 +226,7 @@ function LeadChatWidgetContent() {
             </button>
           </div>
 
-          <div className="p-4 space-y-4">
+          <div className="p-4 space-y-4 overflow-y-auto flex-1">
               <form className="space-y-3" onSubmit={handleSubmit}>
                 <div className="flex items-center gap-2 text-[11px] text-slate-300 bg-white/5 border border-white/10 rounded-lg px-3 py-2">
                   <ShieldCheck className="size-4 text-emerald-400" />
@@ -234,7 +234,7 @@ function LeadChatWidgetContent() {
                 </div>
 
                 {messages.length > 0 && (
-                  <div className="rounded-lg border border-white/10 bg-slate-900/60 p-3 text-xs text-slate-100 max-h-44 overflow-y-auto space-y-2" ref={messagesRef}>
+                  <div className="rounded-lg border border-white/10 bg-slate-900/60 p-3 text-xs text-slate-100 max-h-[30vh] sm:max-h-44 overflow-y-auto space-y-2" ref={messagesRef}>
                     {messages.map((msg) => (
                       <div key={msg.id} className="flex flex-col gap-1">
                         <div className="flex items-center justify-between text-[11px] text-slate-400">
@@ -281,9 +281,9 @@ function LeadChatWidgetContent() {
                     value={form.message}
                     onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
                     required
-                    rows={isSubmitted ? 3 : 4}
+                    rows={isSubmitted ? 2 : 3}
                     placeholder={isSubmitted ? 'Napišite poruku...' : 'U kratkim crtama opišite situaciju...'}
-                    className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm text-white placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-cyan-500/60 resize-none"
+                    className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-sm sm:text-sm text-white placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-cyan-500/60 resize-none"
                   />
                 </div>
 
@@ -318,7 +318,7 @@ function LeadChatWidgetContent() {
                 <button
                   type="submit"
                   disabled={isDisabled}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition hover:from-cyan-600 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-3 sm:py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition active:scale-95 hover:from-cyan-600 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {status === 'loading' ? (
                     <>
@@ -336,34 +336,36 @@ function LeadChatWidgetContent() {
                 </button>
 
                 {!isSubmitted && (
-                  <div className="flex items-center gap-2 text-[11px] text-slate-400">
-                    <ShieldCheck className="size-4 text-emerald-400" />
-                    Lead ide direktno u Telegram + e-mail. Bez spama, samo ozbiljni upiti.
-                  </div>
-                )}
+                  <>
+                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                      <ShieldCheck className="size-4 text-emerald-400" />
+                      Lead ide direktno u Telegram + e-mail. Bez spama, samo ozbiljni upiti.
+                    </div>
 
-                <div className="flex flex-wrap items-center gap-2 text-[12px]">
-                  <span className="text-slate-400">Ili brzi ping:</span>
-                  <a
-                    href="https://wa.me/38761000000?text=Pozdrav%2C%20trebam%20brzi%20savjet."
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-[#128C7E] text-white text-xs font-semibold shadow-md hover:bg-[#0f705f] transition"
-                  >
-                    <MessageCircle className="size-3" /> WhatsApp
-                  </a>
-                </div>
+                    <div className="flex flex-wrap items-center gap-2 text-[12px]">
+                      <span className="text-slate-400">Ili brzi ping:</span>
+                      <a
+                        href="https://wa.me/38761000000?text=Pozdrav%2C%20trebam%20brzi%20savjet."
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-[#128C7E] text-white text-xs font-semibold shadow-md active:scale-95 transition"
+                      >
+                        <MessageCircle className="size-3" /> WhatsApp
+                      </a>
+                    </div>
+                  </>
+                )}
 
               </form>
           </div>
         </div>
       ) : (
-        <div className="flex items-end justify-end gap-3">
+        <div className="flex items-end justify-end gap-2 sm:gap-3 p-4 sm:p-0">
           <a
             href="https://wa.me/38761000000?text=Pozdrav%2C%20trebam%20brzi%20savjet."
             target="_blank"
             rel="noreferrer"
-            className="group flex h-12 items-center gap-2 rounded-full bg-[#128C7E] px-4 text-white text-sm font-semibold shadow-lg shadow-[#128C7E]/40 border border-white/10 hover:bg-[#0f705f] transition"
+            className="group flex h-12 sm:h-12 items-center gap-2 rounded-full bg-[#128C7E] px-3 sm:px-4 text-white text-sm font-semibold shadow-lg shadow-[#128C7E]/40 border border-white/10 active:scale-95 transition"
             aria-label="Pošalji WhatsApp poruku"
           >
             <MessageCircle className="size-4" />
@@ -372,10 +374,10 @@ function LeadChatWidgetContent() {
           <button
             type="button"
             onClick={() => setIsOpen(true)}
-            className="group flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-xl shadow-cyan-500/40 border border-white/20 hover:scale-105 transition"
+            className="group flex h-14 w-14 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-xl shadow-cyan-500/40 border border-white/20 active:scale-95 transition"
             aria-label="Otvori chat sa odvjetnikom"
           >
-            <MessageCircle className="size-6 transition group-hover:scale-110" />
+            <MessageCircle className="size-6 transition" />
           </button>
         </div>
       )}
