@@ -131,8 +131,8 @@ function LeadChatWidgetContent() {
     setMessages([
       {
         id: 'system-welcome',
-        from: 'system',
-        text: 'Ovdje će stići odgovor odvjetnika. Ako zatvorite prozor, odgovor i dalje stiže kad ga ponovo otvorite.',
+        from: 'lawyer',
+        text: 'Poštovani,\n\nVaša poruka je zaprimljena u Andrić Law. Pregledat ću je i javiti vam se.\n\nLijep pozdrav,\nAdvokat Nikola Andrić',
         ts: Date.now(),
       },
     ]);
