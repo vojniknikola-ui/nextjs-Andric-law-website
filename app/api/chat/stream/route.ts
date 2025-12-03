@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
 
   const stream = new ReadableStream({
     start(controller) {
-      registerSession(sessionId);
+      const shortCode = registerSession(sessionId);
+      console.log('[stream] Connected:', { sessionId, shortCode });
       const send = (data: unknown) => {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
       };

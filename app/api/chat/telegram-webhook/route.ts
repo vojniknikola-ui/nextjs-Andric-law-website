@@ -53,9 +53,12 @@ export async function POST(request: NextRequest) {
     ts: Date.now(),
   };
 
-  // Broadcast samo na resolved session ID da se izbjegnu duplikati
+  // Broadcast na sve moguće varijante session ID-a
   broadcastToSession(sessionId, payload);
-  console.log('[telegram-webhook] Broadcasted to:', sessionId);
+  if (code !== sessionId) {
+    broadcastToSession(code, payload);
+  }
+  console.log('[telegram-webhook] Broadcasted to:', { sessionId, code });
 
   return NextResponse.json({ ok: true, delivered: true });
 }
