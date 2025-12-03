@@ -125,18 +125,7 @@ function LeadChatWidgetContent() {
     messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
   }, [messages]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    if (messages.length > 0) return;
-    setMessages([
-      {
-        id: 'system-welcome',
-        from: 'lawyer',
-        text: 'Poštovani,\n\nVaša poruka je zaprimljena u Andrić Law. Pregledat ću je i javiti vam se.\n\nLijep pozdrav,\nAdvokat Nikola Andrić',
-        ts: Date.now(),
-      },
-    ]);
-  }, [isOpen, messages.length]);
+
 
   const isDisabled =
     status === 'loading' ||
@@ -176,9 +165,18 @@ function LeadChatWidgetContent() {
         throw new Error(payload?.message ?? payload?.error ?? 'Neuspjelo slanje poruke.');
       }
 
+      const userMessage = { id: `${Date.now()}-you`, from: 'you', text: form.message, ts: Date.now() };
+      const autoReply = {
+        id: `${Date.now()}-auto`,
+        from: 'lawyer' as const,
+        text: 'Poštovani,\n\nVaša poruka je zaprimljena u Andrić Law. Pregledat ću je i javiti vam se.\n\nLijep pozdrav,\nAdvokat Nikola Andrić',
+        ts: Date.now() + 100,
+      };
+      
       setMessages((prev) => [
         ...prev,
-        { id: `${Date.now()}-you`, from: 'you', text: form.message, ts: Date.now() },
+        userMessage,
+        ...(prev.length === 0 ? [autoReply] : []),
       ]);
       if (payload?.sessionShort) {
         const key = 'andric_chat_session_short';
