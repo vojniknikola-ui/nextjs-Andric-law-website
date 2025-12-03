@@ -324,6 +324,10 @@ export async function POST(request: NextRequest) {
   }
 
   const { data } = validation;
+  if (!data) {
+    return NextResponse.json({ message: 'Greška u validaciji podataka.' }, { status: 400 });
+  }
+  
   const workingContext = getWorkingHoursContext();
   const outOfHours = !workingContext.inWorkingHours;
   const sessionShort = registerSession(data.sessionId);
