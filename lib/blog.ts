@@ -1,4 +1,5 @@
 import { BlogPost } from '@/types/blog';
+import { KAZNENI_ZAKON_FBIH_CONTENT } from '@/content/blog/kazneni-zakon-fbih';
 
 // Placeholder slike - zamijeni sa pravim Vercel Blob URL-ovima nakon upload-a
 const BLOG_IMAGES = {
@@ -11,6 +12,21 @@ const BLOG_IMAGES = {
 };
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'kazneni-zakon-federacije-bih-nesluzbeni-tekst',
+    title: 'Neslužbeni pročišćeni tekst Kaznenog zakona Federacije BiH',
+    excerpt:
+      'Kompletan neslužbeni pročišćeni tekst Kaznenog zakona Federacije BiH sa označenim historijskim izmjenama i referencama na Službene novine.',
+    content: KAZNENI_ZAKON_FBIH_CONTENT,
+    date: '2025-08-01',
+    readMinutes: 240,
+    tags: ['Zakoni', 'Kazneno pravo', 'Federacija BiH'],
+    author: {
+      name: 'Andrić Law',
+      role: 'Pravni tim',
+    },
+    image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&h=675&fit=crop',
+  },
   {
     slug: "zakon-o-izmjenama-stvarnih-prava-rs",
     title: "Zakon o izmjenama i dopunama Zakona o stvarnim pravima RS",

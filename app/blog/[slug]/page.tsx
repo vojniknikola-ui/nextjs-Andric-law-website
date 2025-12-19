@@ -2,12 +2,14 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { DetailedHTMLProps, DetailsHTMLAttributes, SummaryHTMLAttributes } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ArrowLeft, Calendar, BookOpen, Tag, Share2 } from 'lucide-react';
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { BlogCard } from '@/components/BlogCard';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -134,6 +136,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Content */}
           <div className="prose prose-invert prose-slate max-w-none mt-10">
             <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
               components={{
                 h1: ({ children }) => (
                   <h1 className="text-3xl font-bold mt-10 mb-4">{children}</h1>
@@ -168,6 +171,36 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     {children}
                   </code>
                 ),
+                details: ({ children, ...props }) => {
+                  const { className, ...rest } =
+                    props as DetailedHTMLProps<DetailsHTMLAttributes<HTMLDetailsElement>, HTMLDetailsElement>;
+                  const merged = [
+                    'amendment-card group overflow-hidden border border-blue-500/30 bg-blue-900/20 rounded-3xl p-4 transition-all',
+                    className,
+                  ]
+                    .filter(Boolean)
+                    .join(' ');
+                  return (
+                    <details {...rest} className={merged}>
+                      {children}
+                    </details>
+                  );
+                },
+                summary: ({ children, ...props }) => {
+                  const { className, ...rest } =
+                    props as DetailedHTMLProps<SummaryHTMLAttributes<HTMLElement>, HTMLElement>;
+                  const merged = [
+                    'flex cursor-pointer items-center justify-between gap-3 rounded-xl bg-blue-500/10 px-4 py-2 text-sm font-semibold text-blue-100 transition hover:bg-blue-500/20',
+                    className,
+                  ]
+                    .filter(Boolean)
+                    .join(' ');
+                  return (
+                    <summary {...rest} className={merged}>
+                      {children}
+                    </summary>
+                  );
+                },
               }}
             >
               {post.content}
