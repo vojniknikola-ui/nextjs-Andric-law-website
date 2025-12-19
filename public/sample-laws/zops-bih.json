@@ -1,0 +1,12 @@
+{
+  "id": "zops-bih",
+  "title": "Zakon o parničnom postupku — BiH (demo)",
+  "entity": "BiH",
+  "officialGazette": "Službeni glasnik BiH 36/04",
+  "features": { "history": false, "caseLaw": false, "amendments": false, "extraInfo": false, "pdfExport": false },
+  "articles": [
+    { "number": 1, "title": "Predmet zakona", "text": "Ovim zakonom uređuje se parnični postupak pred sudovima u Bosni i Hercegovini..." },
+    { "number": 2, "title": "Načelo kontradiktornosti", "text": "Strankama se mora omogućiti da se izjasne o navodima druge strane..." }
+  ]
+}
+

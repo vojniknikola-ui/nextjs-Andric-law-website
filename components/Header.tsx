@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Phone, Menu, X, ChevronDown } from 'lucide-react';
+import { Phone, Menu, X } from 'lucide-react';
 
 interface HeaderProps {
   onContactClick?: () => void;
@@ -22,7 +22,7 @@ export function Header({ onContactClick }: HeaderProps) {
 
   const navigation = [
     { name: 'Usluge', href: '/#usluge' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Zakoni i članci', href: '/zakoni' },
     { name: 'Glosarij', href: '/#glosarij' },
     { name: 'O nama', href: '/#o-nama' },
     { name: 'Kontakt', href: '/#kontakt' },

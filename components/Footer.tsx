@@ -193,6 +193,10 @@ export function Footer() {
               <p className="text-xs">
                 JIB: 4200000000000 • PDV: 200000000000
               </p>
+              <span className="hidden md:inline text-slate-600">|</span>
+              <p className="text-xs">
+                Ažurirano: {new Date().toLocaleDateString('sr-Latn-BA', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
             </div>
             <div className="flex items-center gap-6">
               <Link href="/politika-privatnosti" className="hover:text-zinc-300 transition text-xs">

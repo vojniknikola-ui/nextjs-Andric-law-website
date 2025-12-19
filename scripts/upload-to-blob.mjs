@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
+import https from 'node:https';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { put } from '@vercel/blob';
 
 if (!process.env.BLOB_READ_WRITE_TOKEN) {
   console.error('❌ BLOB_READ_WRITE_TOKEN not found');
@@ -17,6 +19,8 @@ const images = [
   { name: 'otkaz-vodic-2025', url: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1920&h=1080&fit=crop&q=85' },
 ];
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const tmpDir = path.join(__dirname, '../tmp');
 if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
@@ -31,7 +35,6 @@ function downloadImage(url, filename) {
 }
 
 async function uploadToBlob(filename, name) {
-  const { put } = await import('@vercel/blob');
   const fileBuffer = fs.readFileSync(filename);
   const blob = await put(`blog/${name}.jpg`, fileBuffer, {
     access: 'public',
@@ -58,14 +61,15 @@ async function main() {
       console.log(`✅ ${blobUrl}\n`);
       fs.unlinkSync(tmpFile);
     } catch (error) {
-      console.error(`❌ ${img.name}: ${error.message}`);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`❌ ${img.name}: ${message}`);
     }
   }
   
   console.log('\n📋 Update lib/blog.ts:\n');
   results.forEach(({ name, url }) => console.log(`  '${name}': '${url}',`));
   
-  if (fs.existsSync(tmpDir)) fs.rmdirSync(tmpDir, { recursive: true });
+  if (fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true, force: true });
 }
 
 main().catch(console.error);

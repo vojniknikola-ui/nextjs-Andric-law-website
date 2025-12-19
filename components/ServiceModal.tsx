@@ -1,10 +1,21 @@
 'use client';
 
-import { useEffect } from 'react';
-import { X, Check, ArrowRight, Phone, Mail } from 'lucide-react';
+import { useEffect, type ReactNode } from 'react';
+import { X, Check, ArrowRight, Phone } from 'lucide-react';
+
+type Service = {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  items: string[];
+  details: {
+    lead: string;
+    bullets: string[];
+  };
+};
 
 interface ServiceModalProps {
-  service: any;
+  service: Service;
   onClose: () => void;
 }
 
@@ -88,7 +99,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               Šta nudimo
             </h4>
             <ul className="space-y-3">
-              {service.details.bullets.map((bullet: string, index: number) => (
+              {service.details.bullets.map((bullet, index) => (
                 <li
                   key={index}
                   className="flex items-start gap-3 text-slate-300 group/item"
@@ -112,7 +123,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               Ključne usluge
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {service.items.map((item: string) => (
+              {service.items.map((item) => (
                 <div
                   key={item}
                   className="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition-colors"

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { list } = require('@vercel/blob');
+import { list } from '@vercel/blob';
 
 if (!process.env.BLOB_READ_WRITE_TOKEN) {
   console.error('❌ BLOB_READ_WRITE_TOKEN not found');
@@ -10,7 +10,7 @@ if (!process.env.BLOB_READ_WRITE_TOKEN) {
 list({ token: process.env.BLOB_READ_WRITE_TOKEN })
   .then(({ blobs }) => {
     console.log('\n📋 Uploaded blobs:\n');
-    blobs.forEach(blob => {
+    blobs.forEach((blob) => {
       console.log(`${blob.pathname}`);
       console.log(`  URL: ${blob.url}\n`);
     });

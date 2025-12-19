@@ -30,7 +30,7 @@ echo "BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxx" > .env.local
 ### 4. Pokreni migraciju
 ```bash
 source .env.local
-node scripts/upload-to-blob.js
+node scripts/upload-to-blob.mjs
 ```
 
 ### 5. Ažuriraj kod

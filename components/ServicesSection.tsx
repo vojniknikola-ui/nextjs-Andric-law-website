@@ -1,13 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ServiceCard } from './ServiceCard';
 import { ServiceModal } from './ServiceModal';
 import {
   Scale, FileText, Briefcase, ShieldCheck, Handshake, Gavel
 } from 'lucide-react';
 
-const services = [
+type Service = {
+  key: string;
+  icon: ReactNode;
+  title: string;
+  description: string;
+  items: string[];
+  featured?: boolean;
+  details: {
+    lead: string;
+    bullets: string[];
+  };
+};
+
+const services: Service[] = [
   {
     key: "radno",
     icon: <Briefcase className="size-6" />,
@@ -140,9 +153,9 @@ const services = [
 
 export function ServicesSection() {
   const [openModal, setOpenModal] = useState(false);
-  const [activeService, setActiveService] = useState<any>(null);
+  const [activeService, setActiveService] = useState<Service | null>(null);
 
-  const openService = (srv: any) => {
+  const openService = (srv: Service) => {
     setActiveService(srv);
     setOpenModal(true);
   };

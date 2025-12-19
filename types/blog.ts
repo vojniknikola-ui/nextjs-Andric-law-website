@@ -12,6 +12,15 @@ export interface BlogPost {
   };
   featured?: boolean;
   image?: string;
+  isLawDocument?: boolean;
+  canonicalUrl?: string;
+  lawFile?: string | string[];
+  lawSlug?: string;
+  lawMeta?: {
+    citation?: string;
+    publishedAt?: string;
+    status?: 'neslužbeno' | 'službeno' | string;
+  };
 }
 
 export interface BlogCategory {

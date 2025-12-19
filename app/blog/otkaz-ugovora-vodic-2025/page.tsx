@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -88,7 +89,7 @@ export default function BlogPost() {
               <div className="p-6 rounded-2xl border border-blue-500/20 bg-blue-500/5">
                 <h3 className="text-xl font-semibold mb-3 text-blue-300">Federacija BiH</h3>
                 <p className="text-sm text-slate-300 mb-3">
-                  <strong>Zakon o radu</strong> („Sl. novine FBiH" 26/16, 89/18, 23/20 – odluka US, 49/21, 103/21, 44/22 i 39/24)
+                  <strong>Zakon o radu</strong> (&ldquo;Sl. novine FBiH&rdquo; 26/16, 89/18, 23/20 – odluka US, 49/21, 103/21, 44/22 i 39/24)
                 </p>
                 <a href="https://paragraf.ba" target="_blank" rel="noopener" className="text-sm text-blue-400 hover:text-blue-300 underline">
                   Konsolidovana verzija →
@@ -345,7 +346,7 @@ export default function BlogPost() {
                 Ustavni sud BiH (AP-870/22)
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed mb-4">
-                Ustavni sud BiH prihvatio je stav redovnih sudova da se na izvanredni otkaz primjenjuje rok <strong>60 dana/1 godina</strong> iz čl. 100. ZOR FBiH, a ne „15 dana" iz starog propisa.
+                Ustavni sud BiH prihvatio je stav redovnih sudova da se na izvanredni otkaz primjenjuje rok <strong>60 dana/1 godina</strong> iz čl. 100. ZOR FBiH, a ne &ldquo;15 dana&rdquo; iz starog propisa.
               </p>
               <p className="text-sm text-slate-300 leading-relaxed">
                 Potvrđena je i potreba da je radniku omogućeno izjašnjenje u disciplinskom postupku.

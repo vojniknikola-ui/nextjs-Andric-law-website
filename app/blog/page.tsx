@@ -1,11 +1,9 @@
 import { Metadata } from 'next';
-import { getAllPosts, getAllTags } from '@/lib/blog';
-import { BlogCard } from '@/components/BlogCard';
+import { getAllPosts } from '@/lib/blog';
 import { BlogClientWrapper } from './BlogClientWrapper';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Blog | Andrić Law - Pravni savjeti i vodiči',
@@ -23,7 +21,7 @@ export const revalidate = 3600;
 export default async function BlogPage() {
   // SSR - Data fetching on server
   const posts = await getAllPosts();
-  const tags = getAllTags();
+  const tags = Array.from(new Set(posts.flatMap((post) => post.tags))).sort();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100">

@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "updatedAt": "2025-11-07T00:00:00Z",
+  "items": [
+    { "id": "zorfbi-2016", "title": "Zakon o radu Federacije BiH — neslužbeni (demo)", "entity": "FBiH" },
+    { "id": "zops-bih", "title": "Zakon o parničnom postupku — BiH (demo)", "entity": "BiH" }
+  ]
+}
+

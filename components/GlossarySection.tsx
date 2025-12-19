@@ -274,8 +274,8 @@ export function GlossarySection() {
         {filteredEntries.length === 0 && (
           <div className="text-center py-16">
             <p className="text-slate-400 mb-4">
-              Nema rezultata za "{searchQuery}"
-              {selectedCategory && ` u kategoriji "${selectedCategory}"`}.
+              Nema rezultata za &quot;{searchQuery}&quot;
+              {selectedCategory && <> u kategoriji &quot;{selectedCategory}&quot;</>}.
             </p>
             <button
               onClick={() => {
