@@ -3,11 +3,12 @@ import { Sparkles, Search as SearchIcon } from 'lucide-react';
 import SearchFilters from './SearchFilters';
 import { getAllPosts } from '@/lib/blog';
 import {
-  searchBlogPosts,
+  searchBlogPostsWithMeta,
   type BlogSearchResult,
   type HighlightSegment,
   type HighlightSnippet,
 } from '@/lib/search/blog-search';
+import { searchLaws, type LawSearchResult } from '@/lib/search/law-search';
 import { tokenize as tokenizeQuery } from '@/lib/search/text-utils';
 
 type Category = 'zakoni' | 'sudska-praksa' | 'vijesti-clanci' | 'all';
@@ -18,14 +19,15 @@ type SearchResultItem = {
   title: string;
   excerpt?: string;
   content?: string;
-  date: string;
-  readMinutes: number;
+  date?: string;
+  readMinutes?: number;
   tags: string[];
   category: Category;
   similarity?: number;
   matchField?: 'title' | 'excerpt' | 'content' | null;
   titleSegments?: HighlightSegment[];
   snippet: HighlightSnippet | null;
+  snippetText?: string | null;
   isLawDocument?: boolean;
   lawSlug?: string;
 };
@@ -195,6 +197,22 @@ const normalizeBlogResults = (results: BlogSearchResult[]): SearchResultItem[] =
     };
   });
 
+const normalizeLawResults = (results: LawSearchResult[]): SearchResultItem[] =>
+  results.map((result) => ({
+    id: result.id,
+    slug: result.slug,
+    title: result.title,
+    excerpt: result.excerpt,
+    content: result.content,
+    tags: result.tags,
+    category: result.category,
+    similarity: result.similarity,
+    matchField: mapLawMatchedField(result.matchedField),
+    snippet: null,
+    snippetText: result.snippetText ?? null,
+    isLawDocument: true,
+  }));
+
 const renderSegments = (segments: HighlightSegment[] | undefined, fallback: string) => {
   if (!segments || segments.length === 0) {
     return fallback;
@@ -208,6 +226,19 @@ const renderSegments = (segments: HighlightSegment[] | undefined, fallback: stri
       <Fragment key={`${segment.text}-${index}`}>{segment.text}</Fragment>
     ),
   );
+};
+
+const mapLawMatchedField = (field?: string | null): 'title' | 'excerpt' | 'content' | null => {
+  if (!field) {
+    return null;
+  }
+  if (field.includes('title')) {
+    return 'title';
+  }
+  if (field.includes('heading')) {
+    return 'excerpt';
+  }
+  return 'content';
 };
 
 const renderSnippet = (snippet: HighlightSnippet | null, fallback: string | undefined, query: string) => {
@@ -235,6 +266,24 @@ const renderSnippet = (snippet: HighlightSnippet | null, fallback: string | unde
   );
 };
 
+const buildSummary = (text: string | undefined, maxLength = 160) => {
+  if (!text) {
+    return '';
+  }
+  const cleaned = text.replace(/\s+/g, ' ').trim();
+  if (!cleaned) {
+    return '';
+  }
+  if (cleaned.length <= maxLength) {
+    return cleaned;
+  }
+  const punctuationIndex = cleaned.slice(0, maxLength + 1).search(/[.!?]/);
+  if (punctuationIndex >= 60) {
+    return cleaned.slice(0, punctuationIndex + 1);
+  }
+  return `${cleaned.slice(0, maxLength).trimEnd()}…`;
+};
+
 const filterByCategory = (items: SearchResultItem[], filter: Category): SearchResultItem[] => {
   if (filter === 'all') {
     return items;
@@ -242,18 +291,24 @@ const filterByCategory = (items: SearchResultItem[], filter: Category): SearchRe
   return items.filter((item) => item.category === filter);
 };
 
-async function searchContent(query: string, filter: Category): Promise<SearchResultItem[]> {
+async function searchContent(
+  query: string,
+  filter: Category,
+): Promise<{ results: SearchResultItem[]; suggestion?: string | null }> {
   const trimmedQuery = query.trim();
   if (!trimmedQuery) {
-    return [];
+    return { results: [] };
   }
 
   const posts = await getAllPosts();
-  const blogResults = searchBlogPosts(posts, trimmedQuery);
-  const normalized = normalizeBlogResults(blogResults);
-  const filtered = filterByCategory(normalized, filter);
+  const { results: blogResults, suggestion } = searchBlogPostsWithMeta(posts, trimmedQuery);
+  const lawResults = await searchLaws(trimmedQuery, filter);
+  const normalizedBlog = normalizeBlogResults(blogResults);
+  const normalizedLaws = normalizeLawResults(lawResults);
+  const combined = [...normalizedLaws, ...normalizedBlog];
+  const filtered = filterByCategory(combined, filter);
 
-  return filtered.slice(0, 20);
+  return { results: filtered.slice(0, 20), suggestion };
 }
 
 export default async function SearchResults({
@@ -290,7 +345,7 @@ export default async function SearchResults({
   }
 
   const activeFilter = (filter || 'all') as Category;
-  const results = await searchContent(query, activeFilter);
+  const { results, suggestion } = await searchContent(query, activeFilter);
 
   return (
     <>
@@ -312,6 +367,18 @@ export default async function SearchResults({
       </div>
 
       <div className="mt-6">
+        {suggestion && (
+          <div className="mb-6 rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 text-sm text-blue-900">
+            Da li ste mislili:{' '}
+            <a
+              className="font-semibold text-blue-700 underline-offset-4 hover:underline"
+              href={`/search?q=${encodeURIComponent(suggestion)}`}
+            >
+              {suggestion}
+            </a>
+            ?
+          </div>
+        )}
         {results.length === 0 ? (
           <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
             <h3 className="mb-3 text-lg font-semibold text-slate-900">
@@ -332,10 +399,12 @@ export default async function SearchResults({
         ) : (
           <div className="space-y-6">
             {results.map((result) => {
-              const fallbackSource = result.excerpt || result.content || '';
+              const fallbackSource = result.snippetText || result.excerpt || result.content || '';
               const fallback = fallbackSource.length > 260
                 ? `${fallbackSource.slice(0, 260).trimEnd()}…`
                 : fallbackSource;
+              const summary = buildSummary(result.excerpt || result.content || result.title);
+              const showMeta = Boolean(result.date && result.readMinutes && !result.isLawDocument);
 
               return (
                 <a
@@ -348,9 +417,11 @@ export default async function SearchResults({
                       <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getCategoryColor(result.category)}`}>
                         {getCategoryLabel(result.category)}
                       </span>
-                      <span className="text-xs text-slate-500">
-                        {new Date(result.date).toLocaleDateString('bs-BA')} · {result.readMinutes} min
-                      </span>
+                      {showMeta && (
+                        <span className="text-xs text-slate-500">
+                          {new Date(result.date ?? '').toLocaleDateString('bs-BA')} · {result.readMinutes} min
+                        </span>
+                      )}
                     </div>
                     {typeof result.similarity === 'number' && (
                       <span className="text-xs font-medium text-blue-700">
@@ -367,6 +438,15 @@ export default async function SearchResults({
                     <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
                       Digitalni zakon
                     </p>
+                  )}
+
+                  {summary && (
+                    <div className="mb-4 text-sm text-slate-600">
+                      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        Sažetak
+                      </p>
+                      <p>{summary}</p>
+                    </div>
                   )}
 
                   <div className="mb-4 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm leading-relaxed text-blue-900">

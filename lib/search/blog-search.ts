@@ -6,6 +6,12 @@ import {
   normalizeText,
   tokenize,
 } from './text-utils';
+import {
+  buildTokenIndex,
+  expandQueryTokens,
+  suggestQuery,
+  type WeightedQueryToken,
+} from './query-utils';
 
 const DIACRITICS_REGEXP = /[\u0300-\u036f]/g;
 
@@ -48,6 +54,12 @@ export interface BlogSearchResult {
   matchedField: SectionKey | null;
   titleSegments: HighlightSegment[];
   snippet: HighlightSnippet | null;
+}
+
+export interface BlogSearchMeta {
+  results: BlogSearchResult[];
+  suggestion?: string | null;
+  highlightTokens: string[];
 }
 
 const removeDiacritics = (value: string): string =>
@@ -325,8 +337,9 @@ const indexPosts = (posts: BlogPost[]): IndexedPost[] =>
 
 const scorePost = (
   entry: IndexedPost,
-  queryTokens: string[],
+  queryTokens: WeightedQueryToken[],
   normalizedQuery: string,
+  highlightTokens: string[],
 ): BlogSearchResult | null => {
   const sectionTotals: Record<SectionKey, number> = {
     title: 0,
@@ -335,24 +348,25 @@ const scorePost = (
   };
 
   for (const token of queryTokens) {
-    const normalizedToken = normalizeText(token);
+    const normalizedToken = normalizeText(token.token);
+    const weight = token.weight ?? 1;
 
     const titleScore = evaluateSectionMatch(normalizedToken, entry.titleTokens, entry.normalizedTitle);
-    sectionTotals.title += titleScore * SECTION_WEIGHTS.title;
+    sectionTotals.title += titleScore * SECTION_WEIGHTS.title * weight;
 
     const excerptScore = evaluateSectionMatch(
       normalizedToken,
       entry.excerptTokens,
       entry.normalizedExcerpt,
     );
-    sectionTotals.excerpt += excerptScore * SECTION_WEIGHTS.excerpt;
+    sectionTotals.excerpt += excerptScore * SECTION_WEIGHTS.excerpt * weight;
 
     const contentScore = evaluateSectionMatch(
       normalizedToken,
       entry.contentTokens,
       entry.normalizedContent,
     );
-    sectionTotals.content += contentScore * SECTION_WEIGHTS.content;
+    sectionTotals.content += contentScore * SECTION_WEIGHTS.content * weight;
   }
 
   if (
@@ -389,9 +403,9 @@ const scorePost = (
     }
   }
 
+  const totalWeight = queryTokens.reduce((sum, token) => sum + token.weight, 0);
   const theoreticalMax =
-    queryTokens.length *
-      (SECTION_WEIGHTS.title + SECTION_WEIGHTS.excerpt + SECTION_WEIGHTS.content) +
+    totalWeight * (SECTION_WEIGHTS.title + SECTION_WEIGHTS.excerpt + SECTION_WEIGHTS.content) +
     PHRASE_BONUS * 1.25 +
     1;
 
@@ -400,7 +414,7 @@ const scorePost = (
     Math.min(100, Math.round((rawScore / theoreticalMax) * 100)),
   );
 
-  const titleSegments = createHighlightedSegments(entry.post.title || '', queryTokens);
+  const titleSegments = createHighlightedSegments(entry.post.title || '', highlightTokens);
 
   const snippetField =
     matchedField === 'title'
@@ -409,7 +423,7 @@ const scorePost = (
         ? entry.post.excerpt || entry.post.content || ''
         : entry.post.content || entry.post.excerpt || '';
 
-  const snippet = createHighlightedSnippet(snippetField, queryTokens);
+  const snippet = createHighlightedSnippet(snippetField, highlightTokens);
 
   return {
     post: entry.post,
@@ -420,20 +434,37 @@ const scorePost = (
   };
 };
 
-export const searchBlogPosts = (posts: BlogPost[], query: string): BlogSearchResult[] => {
+const collectTokens = (indexed: IndexedPost[]): string[] => {
+  const tokens = new Set<string>();
+  indexed.forEach((entry) => {
+    entry.titleTokens.forEach((token) => tokens.add(token));
+    entry.excerptTokens.forEach((token) => tokens.add(token));
+    entry.contentTokens.forEach((token) => tokens.add(token));
+  });
+  return Array.from(tokens);
+};
+
+export const searchBlogPostsWithMeta = (posts: BlogPost[], query: string): BlogSearchMeta => {
   const normalizedQuery = buildNormalizedCorpus(query);
   const queryTokens = tokenize(query);
 
   if (!normalizedQuery || queryTokens.length === 0) {
-    return [];
+    return { results: [], highlightTokens: [] };
   }
 
   const indexed = indexPosts(posts);
+  const tokenIndex = buildTokenIndex(collectTokens(indexed));
+  const suggestion = suggestQuery(query, tokenIndex);
+  const { weightedTokens, highlightTokens } = expandQueryTokens(queryTokens);
 
   const scored = indexed
-    .map((entry) => scorePost(entry, queryTokens, normalizedQuery))
+    .map((entry) => scorePost(entry, weightedTokens, normalizedQuery, highlightTokens))
     .filter((result): result is BlogSearchResult => result !== null)
     .sort((a, b) => b.similarity - a.similarity);
 
-  return scored.slice(0, 20);
+  return { results: scored.slice(0, 20), suggestion, highlightTokens };
+};
+
+export const searchBlogPosts = (posts: BlogPost[], query: string): BlogSearchResult[] =>
+  searchBlogPostsWithMeta(posts, query).results;
 };
