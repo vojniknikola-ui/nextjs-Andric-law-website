@@ -1,23 +1,25 @@
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Linkedin, Facebook, Instagram, ArrowUpRight } from 'lucide-react';
+import { services } from '@/lib/services';
 
-export function Footer() {
+interface FooterProps {
+  contactHref?: string;
+}
+
+export function Footer({ contactHref }: FooterProps) {
   const currentYear = new Date().getFullYear();
+  const resolvedContactHref = contactHref ?? '/#kontakt';
 
   const footerLinks = {
-    usluge: [
-      { name: 'Radno pravo', href: '/#usluge' },
-      { name: 'Ugovori i IT', href: '/#usluge' },
-      { name: 'Privredno pravo', href: '/#usluge' },
-      { name: 'Sporovi i zastupanje', href: '/#usluge' },
-      { name: 'Compliance i HR', href: '/#usluge' },
-      { name: 'Intelektualno vlasništvo', href: '/#usluge' },
-    ],
+    usluge: services.map((service) => ({
+      name: service.title,
+      href: `/usluge/${service.slug}`,
+    })),
     resursi: [
       { name: 'Blog', href: '/blog' },
       { name: 'Pravni glosarij', href: '/#glosarij' },
       { name: 'O nama', href: '/#o-nama' },
-      { name: 'Kontakt', href: '/#kontakt' },
+      { name: 'Kontakt', href: resolvedContactHref },
     ],
     pravno: [
       { name: 'Politika privatnosti', href: '/politika-privatnosti' },

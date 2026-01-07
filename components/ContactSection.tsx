@@ -3,7 +3,11 @@
 import { Phone, Mail, MapPin, MessageSquare, Clock, Send, Shield } from 'lucide-react';
 import { forwardRef } from 'react';
 
-export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
+type ContactSectionProps = {
+  defaultService?: string;
+};
+
+export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ defaultService }, ref) => {
   return (
     <section id="kontakt" ref={ref} className="py-20 md:py-28 bg-slate-950/40 border-t border-white/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -155,6 +159,7 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
                   <select
                     id="usluga"
                     name="usluga"
+                    defaultValue={defaultService ?? ''}
                     className="w-full h-12 rounded-xl bg-slate-900/60 border border-white/10 px-4 text-slate-100 outline-none focus:ring-2 focus:ring-zinc-400/60 transition"
                   >
                     <option value="">Izaberite uslugu</option>

@@ -1,21 +1,23 @@
 'use client';
 
+import Link from 'next/link';
 import { ReactNode } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 interface ServiceCardProps {
+  href: string;
   icon: ReactNode;
   title: string;
   items: string[];
   description: string;
   featured?: boolean;
-  onClick: () => void;
 }
 
-export function ServiceCard({ icon, title, items, description, featured, onClick }: ServiceCardProps) {
+export function ServiceCard({ href, icon, title, items, description, featured }: ServiceCardProps) {
   return (
-    <button
-      onClick={onClick}
+    <Link
+      href={href}
+      aria-label={`Saznaj više o ${title}`}
       className={`group relative text-left rounded-3xl border transition-all duration-500 overflow-hidden ${
         featured
           ? 'border-zinc-400/30 bg-gradient-to-br from-zinc-400/10 via-white/5 to-transparent hover:border-zinc-400/50 hover:shadow-2xl hover:shadow-zinc-400/10'
@@ -93,6 +95,6 @@ export function ServiceCard({ icon, title, items, description, featured, onClick
       <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
         <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-zinc-400/5 via-transparent to-transparent" />
       </div>
-    </button>
+    </Link>
   );
 }

@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/blog';
+import { services } from '@/lib/services';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://andric.law';
@@ -10,6 +11,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(post.date),
     changeFrequency: 'monthly' as const,
     priority: post.featured ? 0.8 : 0.6,
+  }));
+
+  const serviceUrls = services.map((service) => ({
+    url: `${baseUrl}/usluge/${service.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
   }));
 
   return [
@@ -31,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily' as const,
       priority: 0.85,
     },
+    ...serviceUrls,
     ...blogUrls,
   ];
 }

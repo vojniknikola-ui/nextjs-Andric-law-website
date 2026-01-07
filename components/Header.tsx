@@ -6,11 +6,13 @@ import { Phone, Menu, X } from 'lucide-react';
 
 interface HeaderProps {
   onContactClick?: () => void;
+  contactHref?: string;
 }
 
-export function Header({ onContactClick }: HeaderProps) {
+export function Header({ onContactClick, contactHref }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const resolvedContactHref = contactHref ?? '/#kontakt';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,7 +27,7 @@ export function Header({ onContactClick }: HeaderProps) {
     { name: 'Zakoni i članci', href: '/zakoni' },
     { name: 'Glosarij', href: '/#glosarij' },
     { name: 'O nama', href: '/#o-nama' },
-    { name: 'Kontakt', href: '/#kontakt' },
+    { name: 'Kontakt', href: resolvedContactHref },
   ];
 
   return (
@@ -108,14 +110,25 @@ export function Header({ onContactClick }: HeaderProps) {
 
             {/* CTA Buttons */}
             <div className="flex items-center gap-3">
-              <button
-                onClick={onContactClick}
-                className="hidden lg:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-2.5 transition-all hover:scale-105 shadow-lg shadow-blue-500/30"
-                aria-label="Zakažite besplatne konsultacije"
-              >
-                <Phone className="size-4" />
-                <span>Zakaži konsultacije</span>
-              </button>
+              {onContactClick ? (
+                <button
+                  onClick={onContactClick}
+                  className="hidden lg:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-2.5 transition-all hover:scale-105 shadow-lg shadow-blue-500/30"
+                  aria-label="Zakažite besplatne konsultacije"
+                >
+                  <Phone className="size-4" />
+                  <span>Zakaži konsultacije</span>
+                </button>
+              ) : (
+                <Link
+                  href={resolvedContactHref}
+                  className="hidden lg:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-2.5 transition-all hover:scale-105 shadow-lg shadow-blue-500/30"
+                  aria-label="Zakažite besplatne konsultacije"
+                >
+                  <Phone className="size-4" />
+                  <span>Zakaži konsultacije</span>
+                </Link>
+              )}
 
               {/* Mobile CTA */}
               <a
@@ -157,16 +170,27 @@ export function Header({ onContactClick }: HeaderProps) {
                     {item.name}
                   </Link>
                 ))}
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    onContactClick?.();
-                  }}
-                  className="mt-4 mx-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-3 transition"
-                >
-                  <Phone className="size-4" />
-                  Zakaži konsultacije
-                </button>
+                {onContactClick ? (
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      onContactClick();
+                    }}
+                    className="mt-4 mx-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-3 transition"
+                  >
+                    <Phone className="size-4" />
+                    Zakaži konsultacije
+                  </button>
+                ) : (
+                  <Link
+                    href={resolvedContactHref}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="mt-4 mx-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-3 transition"
+                  >
+                    <Phone className="size-4" />
+                    Zakaži konsultacije
+                  </Link>
+                )}
               </div>
             </div>
           )}
