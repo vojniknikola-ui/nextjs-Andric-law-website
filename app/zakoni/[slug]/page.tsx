@@ -40,8 +40,6 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
   }
 
   const isFallback = !record;
-  const headCount = fallbackRecord.provisions.filter((prov) => /glava/i.test(prov.heading ?? '') || prov.level === 'chapter').length;
-  const quickNavItems = fallbackRecord.provisions.slice(0, 18);
   const allPosts = await getAllPosts();
   const relatedPosts = allPosts
     .filter((post) => !post.isLawDocument && post.lawSlug === fallbackRecord.act.slug)
@@ -51,37 +49,35 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
     <main className="min-h-screen bg-slate-950 text-slate-100 bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.65),_rgba(2,6,23,1))]">
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <section className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/30">
-          <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-slate-400">
-            <span>Andrić Law</span>
-            <span className="rounded-full border border-white/10 px-3 py-1 text-[0.65rem] text-slate-200">Digitalni zakon</span>
+          <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Andrić Law</p>
+          <h1 className="mt-4 text-4xl font-bold text-white lg:text-5xl">{fallbackRecord.act.title}</h1>
+          <div className="mt-4 space-y-2 text-sm text-slate-300">
+            <p>
+              <span className="font-semibold text-slate-200">Službeni glasnik:</span>{' '}
+              {fallbackRecord.act.officialNumber ?? 'n/a'}
+            </p>
+            {fallbackRecord.act.summary && (
+              <p>
+                <span className="font-semibold text-slate-200">Izmjene:</span>{' '}
+                {fallbackRecord.act.summary}
+              </p>
+            )}
             {isFallback && (
-              <span className="rounded-full border border-amber-300/40 bg-amber-400/10 px-3 py-1 text-amber-200">Offline snapshot</span>
+              <p className="text-amber-200">Offline snapshot</p>
             )}
           </div>
-          <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-white lg:text-5xl">{fallbackRecord.act.title}</h1>
-              <p className="mt-3 text-base text-slate-300">
-                {fallbackRecord.act.jurisdiction} · Stanje na dan{' '}
-                <span className="font-semibold text-white">{formatDisplayDate(snapshotDate)}</span>
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3 text-sm text-slate-200">
-              <InfoChip label="Članova" value={fallbackRecord.provisions.length} />
-              <InfoChip label="Glava" value={headCount || '—'} />
-              <InfoChip label="Objava" value={fallbackRecord.act.officialNumber ?? 'n/a'} />
-              <Link
-                href="/zakoni"
-                className="rounded-full border border-white/15 px-4 py-1 text-slate-200 hover:border-white/40"
-              >
-                ← Nazad na zakone
-              </Link>
-            </div>
+          <div className="mt-4">
+            <Link
+              href="/zakoni"
+              className="inline-flex items-center rounded-full border border-white/15 px-4 py-1 text-sm text-slate-200 hover:border-white/40"
+            >
+              ← Nazad na zakone
+            </Link>
           </div>
         </section>
 
-        <section className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr),320px]">
-          <div className="space-y-6">
+        <section className="mt-8 space-y-6">
+          <div>
             {fallbackRecord.provisions.length === 0 ? (
               <p className="rounded-2xl border border-yellow-400/40 bg-yellow-500/10 p-4 text-yellow-100">
                 Još nema uvezenih članova za ovaj zakon. Pokrenite ETL kako biste popunili sadržaj.
@@ -107,24 +103,6 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
                 </article>
               ))
             )}
-          </div>
-          <aside className="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-slate-200 shadow-lg shadow-black/30">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Brza navigacija</p>
-            <div className="mt-4 space-y-2">
-              {quickNavItems.map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.provisionKey}`}
-                  className="block rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-left text-xs uppercase tracking-[0.2em] text-slate-300 hover:border-white/40 hover:text-white"
-                >
-                  {item.heading || item.provisionKey.replace('clan_', 'Član ')}
-                </a>
-              ))}
-            </div>
-            <div className="mt-6 border-t border-white/10 pt-4 text-xs text-slate-400">
-              <p>Možete slobodno podijeliti link ove stranice – sadržaj ostaje vjeran &quot;Službenim novinama&quot;.</p>
-            </div>
-          </aside>
         </section>
 
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 text-xs text-slate-300">
@@ -153,20 +131,11 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
             <a href="mailto:info@andric.law" className="text-white hover:underline">
               info@andric.law
             </a>
-            . Odgovori se spremaju diskretno, bez agresivnih CTA poruka.
+            .
           </p>
         </footer>
       </div>
     </main>
-  );
-}
-
-function InfoChip({ label, value }: { label: string; value: number | string }) {
-  return (
-    <span className="rounded-full border border-white/15 px-3 py-1 text-slate-300">
-      <span className="mr-2 text-xs uppercase tracking-[0.3em] text-slate-500">{label}</span>
-      <span className="text-white">{value}</span>
-    </span>
   );
 }
 

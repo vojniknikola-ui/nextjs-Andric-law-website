@@ -20,3 +20,8 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "Noto Sans",
     "Liberation Sans", sans-serif;
 }
+
+.prose li > p {
+  display: inline;
+  margin: 0;
+}

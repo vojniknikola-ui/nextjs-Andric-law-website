@@ -207,17 +207,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     <p className="text-slate-300 leading-relaxed mb-4">{children}</p>
                   ),
                   ul: ({ children }) => (
-                    <ul className="list-disc list-inside space-y-2 mb-4 text-slate-300">
+                    <ul className="list-disc list-outside pl-6 space-y-2 mb-4 text-slate-300">
                       {children}
                     </ul>
                   ),
                   ol: ({ children }) => (
-                    <ol className="list-decimal list-inside space-y-2 mb-4 text-slate-300">
+                    <ol className="list-decimal list-outside pl-6 space-y-2 mb-4 text-slate-300">
                       {children}
                     </ol>
                   ),
                   li: ({ children }) => (
-                    <li className="ml-4">{children}</li>
+                    <li className="leading-relaxed">{children}</li>
                   ),
                   strong: ({ children }) => (
                     <strong className="font-semibold text-slate-100">{children}</strong>
