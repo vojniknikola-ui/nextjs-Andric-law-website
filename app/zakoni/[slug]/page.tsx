@@ -102,7 +102,7 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
                   )}
                 </article>
               ))
-            )}
+          </div>
         </section>
 
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 text-xs text-slate-300">

@@ -467,4 +467,3 @@ export const searchBlogPostsWithMeta = (posts: BlogPost[], query: string): BlogS
 
 export const searchBlogPosts = (posts: BlogPost[], query: string): BlogSearchResult[] =>
   searchBlogPostsWithMeta(posts, query).results;
-};
