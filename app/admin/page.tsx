@@ -54,20 +54,14 @@ export default async function AdminDashboardPage() {
           href="/admin/law-uploader"
         />
         <QuickActionCard
-          title="Ponovo indeksiraj pretragu"
-          description="Pokreni skriptu za Typesense nakon izmjena."
-          href="https://github.com/vojniknikola-ui/nextjs-Andric-law-website"
-          external
-        />
-        <QuickActionCard
           title="Zakoni i članci"
           description="Pregled javne liste propisa i analiza."
           href="/zakoni"
         />
         <QuickActionCard
-          title="Objavi blog karticu"
-          description="Pripremi hero, excerpt i tagove za digitalni zakon."
-          href="/blog"
+          title="Objavi blog ili analizu"
+          description="Unesi tekst, tagove i metapodatke za novi članak."
+          href="/admin/law-uploader?type=blog"
         />
       </section>
 

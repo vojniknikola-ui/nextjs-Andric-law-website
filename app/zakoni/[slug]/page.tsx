@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { BlogCard } from '@/components/BlogCard';
+import { getAllPosts } from '@/lib/blog';
 import { fetchActSnapshot } from '@/lib/acts';
 import { loadFallbackLaw } from '@/lib/lawFallbacks';
 
@@ -40,6 +42,10 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
   const isFallback = !record;
   const headCount = fallbackRecord.provisions.filter((prov) => /glava/i.test(prov.heading ?? '') || prov.level === 'chapter').length;
   const quickNavItems = fallbackRecord.provisions.slice(0, 18);
+  const allPosts = await getAllPosts();
+  const relatedPosts = allPosts
+    .filter((post) => !post.isLawDocument && post.lawSlug === fallbackRecord.act.slug)
+    .slice(0, 3);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.65),_rgba(2,6,23,1))]">
@@ -124,6 +130,22 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 text-xs text-slate-300">
           Informacije na ovoj stranici služe samo u informativne svrhe i ne predstavljaju pravni savjet. Za zvanično tumačenje provjerite službene izvore ili kontaktirajte Andrić Law.
         </div>
+
+        {relatedPosts.length > 0 && (
+          <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-white">Povezani članci</h2>
+              <Link href="/blog" className="text-sm text-slate-300 hover:text-white">
+                Svi članci →
+              </Link>
+            </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {relatedPosts.map((post) => (
+                <BlogCard key={post.slug} post={post} />
+              ))}
+            </div>
+          </section>
+        )}
 
         <footer className="mt-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 text-sm text-slate-300">
           <p>

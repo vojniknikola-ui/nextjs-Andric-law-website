@@ -27,6 +27,7 @@ type SearchResultItem = {
   titleSegments?: HighlightSegment[];
   snippet: HighlightSnippet | null;
   isLawDocument?: boolean;
+  lawSlug?: string;
 };
 
 type HighlightRange = {
@@ -190,6 +191,7 @@ const normalizeBlogResults = (results: BlogSearchResult[]): SearchResultItem[] =
       titleSegments: result.titleSegments,
       snippet: result.snippet ?? null,
       isLawDocument: result.post.isLawDocument,
+      lawSlug: result.post.lawSlug,
     };
   });
 
@@ -396,7 +398,13 @@ export default async function SearchResults({
   );
 }
 
-function getCategoryLink(result: { slug: string }) {
+function getCategoryLink(result: { slug: string; lawSlug?: string; isLawDocument?: boolean }) {
+  if (result.isLawDocument && result.lawSlug) {
+    return `/zakoni/${result.lawSlug}`;
+  }
+  if (result.slug.startsWith('/')) {
+    return result.slug;
+  }
   return `/blog/${result.slug}`;
 }
 

@@ -8,7 +8,9 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post, featured = false }: BlogCardProps) {
-  const href = `/blog/${post.slug}`;
+  const href = post.isLawDocument && post.lawSlug
+    ? `/zakoni/${post.lawSlug}`
+    : `/blog/${post.slug}`;
   const formattedDate = formatDate(post.date);
 
   return (

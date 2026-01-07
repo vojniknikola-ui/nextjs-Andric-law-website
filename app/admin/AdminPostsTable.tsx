@@ -11,6 +11,7 @@ type PostRow = {
   isLawDocument: boolean | null;
   featured: boolean | null;
   publishedAt: string | null;
+  lawSlug?: string | null;
 };
 
 export default function AdminPostsTable({ posts }: { posts: PostRow[] }) {
@@ -91,7 +92,12 @@ export default function AdminPostsTable({ posts }: { posts: PostRow[] }) {
                 </td>
                 <td className="px-2 py-2 text-xs">{post.isLawDocument ? 'Zakon' : 'Blog'}</td>
                 <td className="px-2 py-2 text-right space-x-3">
-                  <Link href={`/blog/${post.slug}`} className="text-blue-300 hover:underline">Otvori</Link>
+                  <Link
+                    href={post.isLawDocument && post.lawSlug ? `/zakoni/${post.lawSlug}` : `/blog/${post.slug}`}
+                    className="text-blue-300 hover:underline"
+                  >
+                    Otvori
+                  </Link>
                   <Link href={`/admin/law-uploader?slug=${post.slug}`} className="text-cyan-300 hover:underline">Uredi</Link>
                   <button
                     type="button"

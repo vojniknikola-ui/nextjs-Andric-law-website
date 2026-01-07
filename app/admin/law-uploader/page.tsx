@@ -361,6 +361,10 @@ function LawUploaderContent() {
   };
 
   useEffect(() => {
+    const typeParam = searchParams?.get('type');
+    if (typeParam === 'blog' || typeParam === 'law') {
+      setContentType(typeParam);
+    }
     const slugParam = searchParams?.get('slug');
     if (slugParam) {
       setSlug(slugParam);

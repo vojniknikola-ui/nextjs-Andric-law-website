@@ -175,10 +175,11 @@ function LawCard({ post }: { post: BlogPost }) {
   const status = post.lawMeta?.status ?? "Aktivan propis";
   const citation = post.lawMeta?.citation ?? post.tags?.[0] ?? "Propis";
   const publishedAt = post.lawMeta?.publishedAt ?? post.date;
+  const href = post.lawSlug ? `/zakoni/${post.lawSlug}` : `/blog/${post.slug}`;
 
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={href}
       className="group relative block overflow-hidden rounded-3xl border border-cyan-300/25 bg-gradient-to-br from-slate-900/80 via-slate-950 to-slate-950 p-5 shadow-xl shadow-black/30 ring-1 ring-cyan-300/15 transition hover:-translate-y-1 hover:shadow-cyan-400/20"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.22),transparent_40%),radial-gradient(circle_at_80%_10%,rgba(34,211,238,0.18),transparent_35%)] opacity-80" />
