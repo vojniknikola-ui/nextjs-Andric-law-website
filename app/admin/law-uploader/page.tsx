@@ -16,6 +16,7 @@ Svaki član treba biti na zasebnoj liniji.
 `;
 
 const INITIAL_BADGE = 'Andrić Law · Novi zakon';
+const TODAY = new Date().toISOString().slice(0, 10);
 
 function LawUploaderContent() {
   const [lawText, setLawText] = useState<string>(SAMPLE_TEXT);
@@ -23,12 +24,18 @@ function LawUploaderContent() {
   const [title, setTitle] = useState('Novi zakon – radna verzija');
   const [slug, setSlug] = useState('novi-zakon');
   const [slugEdited, setSlugEdited] = useState(false);
-  const [pdfSource, setPdfSource] = useState('/laws/novi-zakon.pdf');
+  const [mediaUrl, setMediaUrl] = useState('/laws/novi-zakon.pdf');
   const [changeNotes, setChangeNotes] = useState('Službeni glasnik – unesite referencu izmjena');
   const [excerpt, setExcerpt] = useState('Kratak podnaslov / opis za blog karticu ili hero.');
   const [tagsInput, setTagsInput] = useState('zakon, digitalni');
   const [contentType, setContentType] = useState<'law' | 'blog'>('law');
   const [blogIsLawDocument, setBlogIsLawDocument] = useState(false);
+  const [lawSlug, setLawSlug] = useState('');
+  const [lawSlugEdited, setLawSlugEdited] = useState(false);
+  const [lawCitation, setLawCitation] = useState('');
+  const [lawStatus, setLawStatus] = useState('radna verzija');
+  const [lawPublishedAt, setLawPublishedAt] = useState(TODAY);
+  const [publishLawCard, setPublishLawCard] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
@@ -171,6 +178,77 @@ function LawUploaderContent() {
     }
   };
 
+  const splitTags = (value: string) =>
+    value
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+  const buildLawMeta = (fallbackCitation?: string) => {
+    const citationValue = lawCitation.trim() || fallbackCitation?.trim();
+    const statusValue = lawStatus.trim();
+    const dateValue = lawPublishedAt.trim();
+    if (!citationValue && !statusValue && !dateValue) {
+      return null;
+    }
+    return {
+      citation: citationValue || undefined,
+      status: statusValue || undefined,
+      publishedAt: dateValue || undefined,
+    };
+  };
+
+  const buildLawCardContent = (actSlug: string) => {
+    const trimmedExcerpt = excerpt.trim();
+    const trimmedNotes = changeNotes.trim();
+    const lines = [`# ${title}`];
+
+    if (trimmedExcerpt) {
+      lines.push('', trimmedExcerpt);
+    } else {
+      lines.push('', 'Digitalni zakon dostupan je u našoj bazi za brzo pretraživanje.');
+    }
+
+    if (trimmedNotes) {
+      lines.push('', `**Napomena:** ${trimmedNotes}`);
+    }
+
+    lines.push('', `[Otvori zakon](/zakoni/${actSlug})`);
+    return lines.join('\n');
+  };
+
+  const publishLawCardForAct = async (actSlug: string) => {
+    const tags = splitTags(tagsInput);
+    const lawMeta = buildLawMeta(badge);
+    const payload = {
+      slug: actSlug,
+      title,
+      excerpt,
+      content: buildLawCardContent(actSlug),
+      tags: tags.length > 0 ? tags : ['Zakoni', 'Digitalni zakon'],
+      featured: isFeatured,
+      isLawDocument: true,
+      lawSlug: actSlug,
+      lawMeta,
+    };
+
+    const res = await fetch('/api/admin/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setStatusMsg(data.error ?? 'Objava blog kartice nije uspjela.');
+      return false;
+    }
+
+    return true;
+  };
+
   const publishToBackend = async () => {
     if (!slug.trim() || !title.trim() || !lawText.trim()) {
       setStatusMsg('Popunite slug, naslov i tekst prije objave.');
@@ -180,18 +258,19 @@ function LawUploaderContent() {
     setStatusMsg(null);
     try {
       if (contentType === 'law') {
-      const res = await fetch('/api/admin/acts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        const res = await fetch('/api/admin/acts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             slug,
             title,
             lawText,
             jurisdiction: 'BiH',
-            publishedAt: new Date().toISOString().slice(0, 10),
+            publishedAt: lawPublishedAt || new Date().toISOString().slice(0, 10),
             officialNumber: badge,
+            officialUrl: mediaUrl || null,
             summary: changeNotes,
           }),
         });
@@ -200,13 +279,24 @@ function LawUploaderContent() {
           setStatusMsg(data.error ?? 'Objava nije uspjela.');
           return;
         }
-        setStatusMsg(`Objavljen zakon (članova: ${data.provisionsInserted ?? 0}).`);
+        const actSlug = data.act?.slug ?? slug;
+        let message = `Objavljen zakon (članova: ${data.provisionsInserted ?? 0}).`;
+
+        if (publishLawCard) {
+          const ok = await publishLawCardForAct(actSlug);
+          message = ok ? `${message} Kreirana blog kartica.` : `${message} Kartica nije kreirana.`;
+        }
+
+        setStatusMsg(message);
       } else {
-      const res = await fetch('/api/admin/posts', {
-        method: isEditing ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        const lawMeta = blogIsLawDocument ? buildLawMeta() : null;
+        const linkedLawSlug = blogIsLawDocument ? (lawSlug.trim() || slug) : null;
+
+        const res = await fetch('/api/admin/posts', {
+          method: isEditing ? 'PUT' : 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             slug,
             title,
@@ -215,8 +305,9 @@ function LawUploaderContent() {
             tags: splitTags(tagsInput),
             featured: isFeatured,
             isLawDocument: blogIsLawDocument,
-            lawSlug: blogIsLawDocument ? slug : null,
-            heroImageUrl: pdfSource || null,
+            lawSlug: linkedLawSlug,
+            lawMeta,
+            heroImageUrl: mediaUrl || null,
           }),
         });
         const data = await res.json().catch(() => ({}));
@@ -234,20 +325,15 @@ function LawUploaderContent() {
     }
   };
 
-  const splitTags = (value: string) =>
-    value
-      .split(',')
-      .map((tag) => tag.trim())
-      .filter(Boolean);
-
-  const loadExisting = async () => {
-    if (!slug.trim()) {
+  const loadExisting = async (overrideSlug?: string) => {
+    const targetSlug = (overrideSlug ?? slug).trim();
+    if (!targetSlug) {
       setStatusMsg('Unesi slug koji želiš učitati.');
       return;
     }
     setStatusMsg('Učitavanje…');
     try {
-      const res = await fetch(`/api/admin/posts?slug=${encodeURIComponent(slug)}`);
+      const res = await fetch(`/api/admin/posts?slug=${encodeURIComponent(targetSlug)}`);
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.item) {
         setStatusMsg(data.error ?? 'Post nije pronađen.');
@@ -258,8 +344,14 @@ function LawUploaderContent() {
       setExcerpt(post.excerpt ?? excerpt);
       setLawText(post.contentMd ?? lawText);
       setTagsInput(Array.isArray(post.tags) ? post.tags.join(', ') : tagsInput);
+      setMediaUrl(post.heroImageUrl ?? '');
       setBlogIsLawDocument(Boolean(post.isLawDocument));
-      setContentType(post.isLawDocument ? 'law' : 'blog');
+      setContentType('blog');
+      setLawSlug(post.lawSlug ?? '');
+      setLawSlugEdited(Boolean(post.lawSlug));
+      setLawCitation(post.lawMeta?.citation ?? '');
+      setLawStatus(post.lawMeta?.status ?? 'radna verzija');
+      setLawPublishedAt(post.lawMeta?.publishedAt ?? TODAY);
       setIsFeatured(Boolean(post.featured));
       setIsEditing(true);
       setStatusMsg('Post učitan. Možeš urediti i sačuvati.');
@@ -272,7 +364,8 @@ function LawUploaderContent() {
     const slugParam = searchParams?.get('slug');
     if (slugParam) {
       setSlug(slugParam);
-      loadExisting();
+      setSlugEdited(true);
+      loadExisting(slugParam);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
@@ -283,18 +376,31 @@ function LawUploaderContent() {
     }
   }, [title, slugEdited]);
 
-  const generationSnippet = useMemo(
-    () => `# Koraci za objavu
-1. Sačuvaj tekst u public/laws/${slug || 'novi-zakon'}.txt
-2. Kreiraj stranicu: app/zakoni/${slug || 'novi-zakon'}/page.tsx
-3. Badge: ${badge}
-4. Hero naslov: ${title}
-5. PDF: ${pdfSource}
-6. Napomena o izmjenama: ${changeNotes}
-7. Dodaj blog unos i ažuriraj lib/blog.ts
-`,
-    [slug, badge, title, pdfSource, changeNotes],
-  );
+  useEffect(() => {
+    if (blogIsLawDocument && !lawSlugEdited && slug.trim()) {
+      setLawSlug(slug);
+    }
+  }, [blogIsLawDocument, lawSlugEdited, slug]);
+
+  const generationSnippet = useMemo(() => {
+    if (contentType === 'law') {
+      return `# Koraci za objavu zakona
+1. Naslov: ${title}
+2. Slug: ${slug || 'novi-zakon'}
+3. Službeni PDF/URL: ${mediaUrl || 'n/a'}
+4. Objavi u bazu klikom na "Objavi u bazu"
+5. ${publishLawCard ? 'Blog kartica će biti kreirana automatski.' : 'Blog karticu kreiraj u modu "Objava bloga".'}
+`;
+    }
+
+    return `# Koraci za objavu bloga
+1. Naslov: ${title}
+2. Slug: ${slug || 'novi-blog'}
+3. Tagovi: ${tagsInput || 'n/a'}
+4. Hero URL: ${mediaUrl || 'n/a'}
+${blogIsLawDocument ? `5. Poveži zakon: ${lawSlug || slug}` : ''}
+`;
+  }, [contentType, title, slug, mediaUrl, publishLawCard, tagsInput, blogIsLawDocument, lawSlug]);
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -422,11 +528,27 @@ function LawUploaderContent() {
               hint="npr. zakon-o-nasljedjivanju ili blog-slug"
             />
             <MetadataField label="Tagovi (comma)" value={tagsInput} onChange={setTagsInput} hint="npr. zakon, digitalni, radno pravo" />
+            <MetadataField
+              label={contentType === 'law' ? 'Službeni PDF/URL' : 'Hero slika (URL)'}
+              value={mediaUrl}
+              onChange={setMediaUrl}
+              hint={contentType === 'law' ? 'Opcionalno: link na službeni dokument.' : 'Opcionalno: URL slike za hero.'}
+            />
             {contentType === 'law' && (
               <>
+                <MetadataField label="Datum objave" value={lawPublishedAt} onChange={setLawPublishedAt} type="date" />
                 <MetadataField label="Badge (hero traka)" value={badge} onChange={setBadge} />
-                <MetadataField label="PDF ili hero URL" value={pdfSource} onChange={setPdfSource} />
                 <MetadataField label="Izmjene / Službeni glasnik" value={changeNotes} onChange={setChangeNotes} />
+                <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+                  <input type="checkbox" checked={publishLawCard} onChange={(e) => setPublishLawCard(e.target.checked)} />
+                  Kreiraj blog karticu za zakon
+                </label>
+              </>
+            )}
+            {contentType === 'law' && publishLawCard && (
+              <>
+                <MetadataField label="Službeni glasnik / citat" value={lawCitation} onChange={setLawCitation} />
+                <MetadataField label="Status propisa" value={lawStatus} onChange={setLawStatus} />
               </>
             )}
             {contentType === 'blog' && (
@@ -440,6 +562,22 @@ function LawUploaderContent() {
                   Ovo je zakon (Digitalni propis)
                 </label>
               </div>
+            )}
+            {contentType === 'blog' && blogIsLawDocument && (
+              <>
+                <MetadataField
+                  label="Slug zakona (link)"
+                  value={lawSlug}
+                  onChange={(value) => {
+                    setLawSlug(value);
+                    setLawSlugEdited(true);
+                  }}
+                  hint="Poveži na /zakoni/<slug> ako postoji u bazi."
+                />
+                <MetadataField label="Službeni glasnik / citat" value={lawCitation} onChange={setLawCitation} />
+                <MetadataField label="Status propisa" value={lawStatus} onChange={setLawStatus} />
+                <MetadataField label="Datum objave propisa" value={lawPublishedAt} onChange={setLawPublishedAt} type="date" />
+              </>
             )}
 
             <label className="block">
@@ -505,16 +643,19 @@ function MetadataField({
   value,
   onChange,
   hint,
+  type = 'text',
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   hint?: string;
+  type?: string;
 }) {
   return (
     <label className="block">
       <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{label}</span>
       <input
+        type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-blue-400 focus:outline-none"
