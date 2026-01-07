@@ -179,7 +179,7 @@ function ResultsSection({
                 Ako ne pronalazite ono što vam treba, pošaljite nam upit – odgovor stiže u roku od jednog radnog dana.
               </p>
               <Link
-                href="/contact"
+                href="/#kontakt"
                 className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/25"
               >
                 Kontakt forma <ArrowRight className="h-4 w-4" />

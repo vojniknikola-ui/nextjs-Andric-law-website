@@ -282,6 +282,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           </div>
 
+          {!post.isLawDocument && post.lawSlug && (
+            <section className="mt-10 rounded-2xl border border-blue-300/30 bg-blue-950/40 p-6 text-sm text-blue-100">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-200">
+                Povezani zakon
+              </p>
+              <p className="mt-3 text-blue-50">
+                Ovaj članak se oslanja na relevantni propis u našoj bazi.
+              </p>
+              <div className="mt-4">
+                <Link
+                  href={`/zakoni/${post.lawSlug}`}
+                  className="inline-flex items-center gap-2 rounded-xl border border-blue-300/40 px-4 py-2 text-sm font-semibold text-blue-50 hover:bg-blue-500/10"
+                >
+                  Otvori zakon
+                </Link>
+              </div>
+            </section>
+          )}
+
           {lawText && (
             <LawTextSection text={lawText} />
           )}
