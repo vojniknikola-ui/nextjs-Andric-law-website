@@ -388,7 +388,7 @@ export default function BlogPost() {
             </p>
             <div className="mt-6">
               <Link
-                href="/#kontakt"
+                href="/kontakt"
                 className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-6 py-3 transition"
               >
                 Zakažite konsultacije

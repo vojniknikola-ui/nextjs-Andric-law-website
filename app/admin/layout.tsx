@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div>
             <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Andrić Law</p>
-            <h1 className="text-xl font-semibold text-white">Admin panel</h1>
+            <h2 className="text-xl font-semibold text-white">Admin panel</h2>
           </div>
           <div className="flex items-center gap-3 text-sm text-slate-300">
             <Link href="/zakoni" className="rounded-full border border-white/15 px-3 py-1 hover:border-white/40">

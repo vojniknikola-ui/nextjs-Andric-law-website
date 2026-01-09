@@ -200,13 +200,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 remarkPlugins={[remarkGfm]}
                 components={{
                   h1: ({ children }) => (
-                    <h1 className="text-4xl font-bold mt-12 mb-6 text-white">{children}</h1>
+                    <h2 className="text-3xl font-bold mt-12 mb-6 text-white">{children}</h2>
                   ),
                   h2: ({ children }) => (
-                    <h2 className="text-3xl font-bold mt-10 mb-5 text-white">{children}</h2>
+                    <h3 className="text-2xl font-bold mt-10 mb-5 text-white">{children}</h3>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="text-2xl font-semibold mt-8 mb-4 text-white">{children}</h3>
+                    <h4 className="text-xl font-semibold mt-8 mb-4 text-white">{children}</h4>
                   ),
                   p: ({ children }) => (
                     <p className="text-slate-300 leading-relaxed my-6">{children}</p>
@@ -357,7 +357,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </p>
             <div className="mt-6">
               <Link
-                href="/#kontakt"
+                href="/kontakt"
                 className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-6 py-3 transition"
               >
                 Zakaži konsultacije

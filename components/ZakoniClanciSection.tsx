@@ -1,14 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Fuse from "fuse.js";
 import Link from "next/link";
 import type { BlogPost } from "@/types/blog";
 import { BlogCard } from "@/components/BlogCard";
 import {
-  Search as SearchIcon,
   ChevronRight,
-  Tag as TagIcon,
   ArrowDownUp,
 } from "lucide-react";
 
@@ -16,187 +13,90 @@ type Tab = "all" | "zakoni" | "clanci";
 type SortKey = "newest" | "oldest" | "az";
 
 export default function ZakoniClanciSection({ posts }: { posts: BlogPost[] }) {
-  const [q, setQ] = useState("");
-  const [lawQuery, setLawQuery] = useState("");
   const [tab, setTab] = useState<Tab>("all");
   const [sort, setSort] = useState<SortKey>("newest");
 
   const lawPosts = useMemo(() => posts.filter((p) => p.isLawDocument), [posts]);
   const articlePosts = useMemo(() => posts.filter((p) => !p.isLawDocument), [posts]);
 
-  const fuseLaws = useMemo(
-    () =>
-      new Fuse(lawPosts, {
-        includeScore: true,
-        threshold: 0.35,
-        keys: ["title", "excerpt", "tags"],
-      }),
+  const filteredLaws = useMemo(
+    () => lawPosts,
     [lawPosts],
   );
-  const fuseArticles = useMemo(
-    () =>
-      new Fuse(articlePosts, {
-        includeScore: true,
-        threshold: 0.35,
-        keys: ["title", "excerpt", "tags"],
-      }),
-    [articlePosts],
-  );
-
-  const lawSearchQuery = lawQuery.trim() || q.trim();
-  const filteredLaws = useMemo(
-    () => (lawSearchQuery ? fuseLaws.search(lawSearchQuery).map((r) => r.item) : lawPosts),
-    [lawSearchQuery, lawPosts, fuseLaws],
-  );
   const filteredArticles = useMemo(
-    () => (q.trim() ? fuseArticles.search(q).map((r) => r.item) : articlePosts),
-    [q, articlePosts, fuseArticles],
+    () => articlePosts,
+    [articlePosts],
   );
 
   const sortedLaws = useMemo(() => sortCollection(filteredLaws, sort), [filteredLaws, sort]);
   const sortedArticles = useMemo(() => sortCollection(filteredArticles, sort), [filteredArticles, sort]);
 
-  const tagCloud = useMemo(() => {
-    const counts = new Map<string, number>();
-    posts.forEach((post) => post.tags?.forEach((tag) => counts.set(tag, (counts.get(tag) ?? 0) + 1)));
-    return Array.from(counts.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8)
-      .map(([tag]) => tag);
-  }, [posts]);
-
-  const activeTab = lawQuery.trim() ? "zakoni" : tab;
+  const activeTab = tab;
   const showLaws = activeTab === "all" || activeTab === "zakoni";
   const showArticles = activeTab === "all" || activeTab === "clanci";
 
   return (
     <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 text-white">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr),260px]">
-        <div className="space-y-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-1">
-              {(["all", "zakoni", "clanci"] as Tab[]).map((value) => (
-                <button
-                  key={value}
-                  onClick={() => {
-                    setTab(value);
-                    if (value !== "zakoni") {
-                      setLawQuery("");
-                    }
-                  }}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    activeTab === value ? "bg-white text-slate-900" : "text-slate-200 hover:text-white"
-                  }`}
-                >
-                  {value === "all" ? "Sve" : value === "zakoni" ? "Zakoni" : "Članci"}
-                </button>
-              ))}
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="relative w-full md:w-72">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  placeholder="Pretraži po naslovu ili tagu…"
-                  className="w-full rounded-2xl border border-white/15 bg-white/5 px-10 py-2 text-sm text-white placeholder:text-slate-400 outline-none focus:border-white/40"
-                />
-                {q && (
-                  <button
-                    type="button"
-                    onClick={() => setQ("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-2 py-0.5 text-xs text-white hover:bg-white/20"
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
-              <div className="flex items-center gap-2 text-xs text-slate-300">
-                <ArrowDownUp className="h-4 w-4" />
-                {(["newest", "oldest", "az"] as SortKey[]).map((value) => (
-                  <button
-                    key={value}
-                    onClick={() => setSort(value)}
-                    className={`rounded-full px-3 py-1 font-semibold ${
-                      sort === value ? "bg-white text-slate-900" : "border border-white/15 text-slate-200"
-                    }`}
-                  >
-                    {value === "newest" ? "Najnovije" : value === "oldest" ? "Najstarije" : "A-Z"}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2 text-sm text-slate-200">
-            {tagCloud.map((tag) => (
+      <div className="space-y-6">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-1">
+            {(["all", "zakoni", "clanci"] as Tab[]).map((value) => (
               <button
-                key={tag}
-                onClick={() => setQ(tag)}
-                className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 hover:border-white/30"
+                key={value}
+                onClick={() => setTab(value)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  activeTab === value ? "bg-white text-slate-900" : "text-slate-200 hover:text-white"
+                }`}
               >
-                <TagIcon className="h-3 w-3" /> #{tag}
+                {value === "all" ? "Sve" : value === "zakoni" ? "Zakoni" : "Članci"}
               </button>
             ))}
           </div>
-
-          {showLaws && (
-            <section id="zakoni" className="space-y-3">
-              <h3 className="text-xl font-semibold text-white">Zakoni i propisi</h3>
-              {filteredLaws.length === 0 ? (
-                <EmptyState message="Nema zakona za zadani pojam." />
-              ) : (
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {sortedLaws.map((law) => (
-                    <LawCard key={law.slug} post={law} />
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
-
-          {showArticles && (
-            <section id="clanci" className="space-y-3">
-              <h3 className="text-xl font-semibold text-white">Članci i analize</h3>
-              {filteredArticles.length === 0 ? (
-                <EmptyState message="Nema članaka za zadani pojam." />
-              ) : (
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {sortedArticles.map((post) => (
-                    <BlogCard key={post.slug} post={post} />
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
+          <div className="flex items-center gap-2 text-xs text-slate-300">
+            <ArrowDownUp className="h-4 w-4" />
+            {(["newest", "oldest", "az"] as SortKey[]).map((value) => (
+              <button
+                key={value}
+                onClick={() => setSort(value)}
+                className={`rounded-full px-3 py-1 font-semibold ${
+                  sort === value ? "bg-white text-slate-900" : "border border-white/15 text-slate-200"
+                }`}
+              >
+                {value === "newest" ? "Najnovije" : value === "oldest" ? "Najstarije" : "A-Z"}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <aside className="order-first lg:order-last">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-black/20">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Pretraga zakona</p>
-            <p className="mt-2 text-sm text-slate-300">
-              Pretražuje isključivo propise u bazi.
-            </p>
-            <div className="relative mt-4">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-              <input
-                value={lawQuery}
-                onChange={(e) => setLawQuery(e.target.value)}
-                placeholder="Npr. PDV, nasljeđivanje…"
-                className="w-full rounded-xl border border-white/15 bg-slate-950/60 px-9 py-2 text-sm text-white placeholder:text-slate-500 outline-none focus:border-white/40"
-              />
-              {lawQuery && (
-                <button
-                  type="button"
-                  onClick={() => setLawQuery("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-2 py-0.5 text-xs text-white hover:bg-white/20"
-                >
-                  ×
-                </button>
-              )}
-            </div>
-          </div>
-        </aside>
+        {showLaws && (
+          <section id="zakoni" className="space-y-3">
+            <h3 className="text-xl font-semibold text-white">Zakoni i propisi</h3>
+            {filteredLaws.length === 0 ? (
+              <EmptyState message="Trenutno nema zakona u bazi." />
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {sortedLaws.map((law) => (
+                  <LawCard key={law.slug} post={law} />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {showArticles && (
+          <section id="clanci" className="space-y-3">
+            <h3 className="text-xl font-semibold text-white">Članci i analize</h3>
+            {filteredArticles.length === 0 ? (
+              <EmptyState message="Trenutno nema članaka u bazi." />
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {sortedArticles.map((post) => (
+                  <BlogCard key={post.slug} post={post} />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </section>
   );

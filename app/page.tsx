@@ -1,27 +1,18 @@
 "use client";
 
-import { useRef } from "react";
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { GlossarySection } from '@/components/GlossarySection';
 import { ServicesSection } from '@/components/ServicesSection';
 import { AboutSection } from '@/components/AboutSection';
-import { ContactSection } from '@/components/ContactSection';
-import SearchBoxLazy from '@/components/SearchBoxLazy';
 import {
   ChevronRight, Clock,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function AndricLawLanding() {
-  const kontaktRef = useRef<HTMLElement>(null);
-
-  const scrollToKontakt = () => {
-    kontaktRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
-      <Header onContactClick={scrollToKontakt} />
+      <Header />
 
       <section id="hero" className="relative overflow-hidden min-h-[600px] flex items-center">
         <div className="absolute inset-0 pointer-events-none">
@@ -38,16 +29,13 @@ export default function AndricLawLanding() {
             <p className="max-w-2xl text-slate-300 text-lg leading-relaxed">
               Specijalizirani za radno pravo, IT ugovore i privredno pravo. Stručno, precizno i brzo — bez agresivnog marketinga, sa fokusom na rezultat.
             </p>
-            <div className="w-full max-w-2xl mb-4">
-              <SearchBoxLazy />
-            </div>
             <div className="flex flex-wrap gap-4 justify-center">
-              <button
-                onClick={scrollToKontakt}
+              <Link
+                href="/kontakt"
                 className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
               >
                 Zakaži konsultacije <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
+              </Link>
               <a
                 href="#usluge"
                 className="inline-flex items-center gap-2 rounded-xl px-6 py-3 border border-white/20 bg-white/5 text-slate-100 font-medium transition-colors hover:bg-white/10 hover:border-white/30"
@@ -63,8 +51,6 @@ export default function AndricLawLanding() {
 
       <AboutSection />
 
-      <GlossarySection />
-
       <section id="faq" className="py-16 md:py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Česta pitanja</h2>
@@ -75,8 +61,6 @@ export default function AndricLawLanding() {
           </div>
         </div>
       </section>
-
-      <ContactSection ref={kontaktRef} />
 
       <Footer />
     </main>

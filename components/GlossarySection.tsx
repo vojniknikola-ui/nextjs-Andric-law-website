@@ -1,149 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Search, ChevronRight, BookOpen } from 'lucide-react';
+import { getGlossaryEntries, getGlossaryCategories, slugifyGlossaryTerm } from '@/lib/glossary';
 
-interface GlossaryEntry {
-  term: string;
-  def: string;
-  category: string;
-  relatedTerms?: string[];
-}
-
-const glossaryEntries: GlossaryEntry[] = [
-  {
-    term: "Aneks ugovora",
-    def: "Pismeni dodatak kojim se mijenjaju ili dopunjuju odredbe postojećeg ugovora. Aneks mora biti potpisan od svih ugovornih strana i postaje sastavni dio osnovnog ugovora.",
-    category: "Ugovori",
-    relatedTerms: ["Ugovor", "Izmjena ugovora"]
-  },
-  {
-    term: "Arbitraža",
-    def: "Vansudsko rješavanje sporova pred arbitražnim tijelom na osnovu arbitražnog sporazuma. Brža i fleksibilnija alternativa redovnom sudskom postupku.",
-    category: "Sporovi",
-    relatedTerms: ["Medijacija", "Mirenje"]
-  },
-  {
-    term: "Disciplinski postupak",
-    def: "Interna procedura utvrđivanja povrede radne obaveze i izricanja disciplinskih mjera. Mora poštovati načela saslušanja i prava na odbranu radnika.",
-    category: "Radno pravo",
-    relatedTerms: ["Otkaz", "Radna obaveza"]
-  },
-  {
-    term: "DPA (Data Processing Agreement)",
-    def: "Ugovor o obradi podataka između kontrolora i procesora ličnih podataka. Obavezan prema GDPR-u kada treća strana obrađuje lične podatke u vaše ime.",
-    category: "GDPR",
-    relatedTerms: ["GDPR", "Lični podaci"]
-  },
-  {
-    term: "GDPR",
-    def: "Opća uredba o zaštiti podataka EU (General Data Protection Regulation) koja reguliše obradu ličnih podataka. Primjenjuje se i na BiH kompanije koje posluju sa EU.",
-    category: "GDPR",
-    relatedTerms: ["DPA", "Lični podaci", "Saglasnost"]
-  },
-  {
-    term: "IP (Intellectual Property)",
-    def: "Intelektualno vlasništvo - prava na nematerijalna dobra kao što su autorska djela, patenti, žigovi i know-how. Zaštićeno zakonom i ugovorima.",
-    category: "IP",
-    relatedTerms: ["Autorsko pravo", "Patent", "Žig"]
-  },
-  {
-    term: "JIB (Jedinstveni identifikacioni broj)",
-    def: "Jedinstveni identifikacioni broj pravnog lica u BiH. Dodjeljuje se pri registraciji i koristi za sve službene evidencije i komunikaciju sa institucijama.",
-    category: "Privredno pravo",
-    relatedTerms: ["Registracija", "d.o.o."]
-  },
-  {
-    term: "MSA (Master Service Agreement)",
-    def: "Okvirni ugovor o pružanju usluga koji definiše opće uslove saradnje. Pojedinačni projekti se regulišu kroz SOW (Statement of Work) dokumente.",
-    category: "Ugovori",
-    relatedTerms: ["SOW", "NDA"]
-  },
-  {
-    term: "NDA (Non-Disclosure Agreement)",
-    def: "Ugovor o povjerljivosti kojim se definiše povjerljiva informacija, obaveze čuvanja tajnosti i posljedice povrede. Ključan za zaštitu poslovnih tajni.",
-    category: "Ugovori",
-    relatedTerms: ["Poslovna tajna", "Povjerljivost"]
-  },
-  {
-    term: "Ništavost ugovora",
-    def: "Posljedica suprotnosti ugovora prinudnim propisima, moralu ili javnom poretku. Ništav ugovor ne proizvodi pravno dejstvo od samog početka.",
-    category: "Ugovori",
-    relatedTerms: ["Rušljivost", "Valjanost ugovora"]
-  },
-  {
-    term: "Otkaz ugovora o radu",
-    def: "Jednostrani raskid radnog odnosa uz poštivanje zakonskih procedura i rokova. Može biti redovan (sa otkaznim rokom) ili vanredan (bez otkaznog roka).",
-    category: "Radno pravo",
-    relatedTerms: ["Otkazni rok", "Disciplinski postupak"]
-  },
-  {
-    term: "PDV (Porez na dodatu vrijednost)",
-    def: "Indirektni porez na promet dobara i usluga. Obavezna registracija za pravna lica sa prometom preko 50.000 KM godišnje u FBiH.",
-    category: "Porezi",
-    relatedTerms: ["Porez", "Faktura"]
-  },
-  {
-    term: "Pravna sredstva",
-    def: "Žalba, prigovor, revizija i druga sredstva za osporavanje odluka u upravnim i sudskim postupcima. Moraju se koristiti u zakonskim rokovima.",
-    category: "Sporovi",
-    relatedTerms: ["Žalba", "Rok"]
-  },
-  {
-    term: "Res judicata",
-    def: "Pravomoćno presuđena stvar – pravni princip po kojem se o istom zahtjevu između istih strana ne može ponovo suditi. Osigurava pravnu sigurnost.",
-    category: "Sporovi",
-    relatedTerms: ["Pravomoćnost", "Presuda"]
-  },
-  {
-    term: "Rok zastare",
-    def: "Vremenski period nakon kojeg se pravo ne može prinudno ostvariti putem suda. Opšti rok je 3 godine, ali postoje i posebni rokovi za određene zahtjeve.",
-    category: "Opšte",
-    relatedTerms: ["Prekluzija", "Rok"]
-  },
-  {
-    term: "SaaS (Software as a Service)",
-    def: "Model licenciranja softvera gdje se aplikacija koristi preko interneta uz pretplatu. Zahtijeva posebne ugovorne klauzule o dostupnosti i podacima.",
-    category: "IT",
-    relatedTerms: ["Licenca", "Cloud"]
-  },
-  {
-    term: "SOW (Statement of Work)",
-    def: "Dokument koji detaljno opisuje opseg rada, deliverables, rokove i cijenu za konkretan projekat. Nadovezuje se na MSA.",
-    category: "Ugovori",
-    relatedTerms: ["MSA", "Deliverables"]
-  },
-  {
-    term: "Ugovorna kazna",
-    def: "Novčani iznos unaprijed dogovoren kao posljedica povrede ugovorne obaveze (npr. kašnjenje). Može se naplatiti bez dokazivanja štete.",
-    category: "Ugovori",
-    relatedTerms: ["Naknada štete", "Povreda ugovora"]
-  },
-  {
-    term: "Work for hire",
-    def: "Princip po kojem poslodavac automatski postaje vlasnik autorskih prava na djela koja radnik kreira u okviru radnog odnosa. Mora biti ugovoreno.",
-    category: "IP",
-    relatedTerms: ["Autorsko pravo", "Radni odnos"]
-  },
-  {
-    term: "Zastupanje",
-    def: "Radnje punomoćnika u ime i za račun stranke u pravnim poslovima ili sudskim postupcima. Zahtijeva punomoć ili zakonsko ovlaštenje.",
-    category: "Opšte",
-    relatedTerms: ["Punomoć", "Advokat"]
-  },
-  {
-    term: "Žig (Trademark)",
-    def: "Zaštićen znak koji razlikuje proizvode ili usluge jednog privrednog subjekta od drugih. Registruje se kod Instituta za intelektualno vlasništvo.",
-    category: "IP",
-    relatedTerms: ["Brend", "Registracija"]
-  }
-];
-
-export function GlossarySection() {
+export function GlossarySection({ headingLevel = 'h2' }: { headingLevel?: 'h1' | 'h2' }) {
+  const HeadingTag = headingLevel;
+  const glossaryEntries = getGlossaryEntries();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const categories = Array.from(new Set(glossaryEntries.map(e => e.category))).sort();
+  const categories = getGlossaryCategories();
 
   const filteredEntries = glossaryEntries.filter((entry) => {
     const matchesSearch = 
@@ -161,7 +29,11 @@ export function GlossarySection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-start justify-between gap-6 mb-8">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Pravni glosarij</h2>
+            <HeadingTag
+              className={`${headingLevel === 'h1' ? 'text-4xl md:text-5xl' : 'text-3xl md:text-4xl'} font-bold tracking-tight`}
+            >
+              Pravni glosarij
+            </HeadingTag>
             <p className="mt-3 max-w-2xl text-slate-300">
               Brza objašnjenja ključnih pravnih termina – razumljivo i bez viška žargona.
             </p>
@@ -250,17 +122,24 @@ export function GlossarySection() {
               </summary>
               <div className="mt-4 pt-4 border-t border-white/10">
                 <p className="text-sm text-slate-300 leading-relaxed">{entry.def}</p>
+                <Link
+                  href={`/glosarij/${entry.slug}`}
+                  className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-300 hover:text-zinc-200"
+                >
+                  Otvori detalje <ChevronRight className="size-4" />
+                </Link>
                 {entry.relatedTerms && entry.relatedTerms.length > 0 && (
                   <div className="mt-4">
                     <p className="text-xs text-slate-400 mb-2">Povezani pojmovi:</p>
                     <div className="flex flex-wrap gap-2">
                       {entry.relatedTerms.map((term) => (
-                        <span
+                        <Link
                           key={term}
-                          className="text-xs px-2 py-1 rounded-full bg-white/5 text-slate-300 border border-white/10"
+                          href={`/glosarij/${slugifyGlossaryTerm(term)}`}
+                          className="text-xs px-2 py-1 rounded-full bg-white/5 text-slate-300 border border-white/10 hover:border-white/30"
                         >
                           {term}
-                        </span>
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -293,9 +172,9 @@ export function GlossarySection() {
         <div className="mt-12 pt-8 border-t border-white/10 text-center">
           <p className="text-slate-400 text-sm">
             Ne možete pronaći pojam koji tražite?{' '}
-            <a href="#kontakt" className="text-zinc-300 hover:text-zinc-200 underline">
+            <Link href="/kontakt" className="text-zinc-300 hover:text-zinc-200 underline">
               Kontaktirajte nas
-            </a>
+            </Link>
           </p>
         </div>
       </div>

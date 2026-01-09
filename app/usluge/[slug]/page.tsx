@@ -92,7 +92,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
-      <Header contactHref="#kontakt" />
+      <Header contactHref="/kontakt" />
 
       <section className="relative overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 pointer-events-none">
@@ -177,7 +177,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
               <div className="mt-6 flex flex-col gap-3">
                 <a
-                  href="#kontakt"
+                href="/kontakt"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-3 transition-all hover:scale-105 shadow-lg shadow-blue-500/30"
                 >
                   Zatraži ponudu
@@ -351,7 +351,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
       <ContactSection defaultService={service.key} />
 
-      <Footer contactHref="#kontakt" />
+      <Footer contactHref="/kontakt" />
     </main>
   );
 }

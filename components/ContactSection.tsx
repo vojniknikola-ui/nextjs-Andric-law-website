@@ -2,6 +2,7 @@
 
 import { Phone, Mail, MapPin, MessageSquare, Clock, Send, Shield } from 'lucide-react';
 import { forwardRef } from 'react';
+import { contactInfo } from '@/lib/contactInfo';
 
 type ContactSectionProps = {
   defaultService?: string;
@@ -29,7 +30,7 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ de
             {/* Contact Methods */}
             <div className="space-y-4 mb-8">
               <a 
-                href="tel:+38761000000"
+                href={contactInfo.phoneHref}
                 className="group flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all"
               >
                 <div className="size-12 rounded-xl bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -37,12 +38,12 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ de
                 </div>
                 <div className="flex-1">
                   <p className="text-xs text-slate-400 mb-1">Telefon</p>
-                  <p className="font-semibold text-slate-200">+387 61 000 000</p>
+                  <p className="font-semibold text-slate-200">{contactInfo.phoneDisplay}</p>
                 </div>
               </a>
 
               <a 
-                href="mailto:office@andric.law"
+                href={`mailto:${contactInfo.email}`}
                 className="group flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all"
               >
                 <div className="size-12 rounded-xl bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -50,7 +51,7 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ de
                 </div>
                 <div className="flex-1">
                   <p className="text-xs text-slate-400 mb-1">Email</p>
-                  <p className="font-semibold text-slate-200">office@andric.law</p>
+                  <p className="font-semibold text-slate-200">{contactInfo.email}</p>
                 </div>
               </a>
 
@@ -75,7 +76,7 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ de
                 </div>
                 <div className="flex-1">
                   <p className="text-xs text-slate-400 mb-1">Lokacija</p>
-                  <p className="font-semibold text-slate-200">Sarajevo, BiH</p>
+                  <p className="font-semibold text-slate-200">{contactInfo.addressLine}</p>
                 </div>
               </div>
             </div>

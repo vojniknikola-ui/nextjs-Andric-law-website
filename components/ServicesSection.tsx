@@ -49,7 +49,7 @@ export function ServicesSection() {
             Niste sigurni koja usluga vam je potrebna?
           </p>
           <a
-            href="#kontakt"
+            href="/kontakt"
             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-8 py-4 transition-all hover:scale-105 shadow-lg shadow-blue-500/30"
           >
             Zakažite besplatne konsultacije

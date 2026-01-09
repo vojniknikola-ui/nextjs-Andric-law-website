@@ -4,6 +4,7 @@ import { BlogCard } from '@/components/BlogCard';
 import { getAllPosts } from '@/lib/blog';
 import { fetchActSnapshot } from '@/lib/acts';
 import { loadFallbackLaw } from '@/lib/lawFallbacks';
+import { contactInfo } from '@/lib/contactInfo';
 import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
@@ -90,33 +91,54 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
     .filter((post) => !post.isLawDocument && post.lawSlug === fallbackRecord.act.slug)
     .slice(0, 3);
 
+  const bibliographyItems = buildBibliography(fallbackRecord.act);
+
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.65),_rgba(2,6,23,1))]">
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-        <section className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/30">
-          <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Andrić Law</p>
-          <h1 className="mt-4 text-4xl font-bold text-white lg:text-5xl">{fallbackRecord.act.title}</h1>
-          <div className="mt-4 space-y-2 text-sm text-slate-300">
-            <p>
-              <span className="font-semibold text-slate-200">Službeni glasnik:</span>{' '}
-              {fallbackRecord.act.officialNumber ?? 'n/a'}
-            </p>
-            {fallbackRecord.act.summary && (
-              <p>
-                <span className="font-semibold text-slate-200">Izmjene:</span>{' '}
-                {fallbackRecord.act.summary}
-              </p>
-            )}
-            {isFallback && (
-              <p className="text-amber-200">Offline snapshot</p>
-            )}
-          </div>
-          <div className="mt-4">
+        <section className="rounded-3xl border border-slate-700/50 bg-gradient-to-br from-slate-800/40 to-slate-900/50 p-8 shadow-2xl shadow-black/40">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium uppercase tracking-widest text-cyan-400">Digitalni Zakon</p>
+              <h1 className="mt-4 text-4xl font-bold text-white lg:text-5xl">{fallbackRecord.act.title}</h1>
+              <div className="mt-6 space-y-3 text-slate-300">
+                <div className="rounded-2xl border border-slate-700/60 bg-slate-900/40 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                    Bibliografski izvor
+                  </p>
+                  <dl className="mt-4 space-y-2 text-sm text-slate-200">
+                    {bibliographyItems.map((item) => (
+                      <div key={item.label} className="flex flex-wrap gap-2">
+                        <dt className="font-semibold text-slate-100">{item.label}:</dt>
+                        <dd className="text-slate-300">
+                          {item.href ? (
+                            <a href={item.href} className="text-cyan-300 hover:text-cyan-200 underline">
+                              {item.value}
+                            </a>
+                          ) : (
+                            item.value
+                          )}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+                {fallbackRecord.act.summary && (
+                  <p>
+                    <span className="font-semibold text-slate-100">Izmjene:</span>{' '}
+                    {fallbackRecord.act.summary}
+                  </p>
+                )}
+                {isFallback && (
+                  <p className="font-medium text-amber-300">Prikazuje se offline snapshot.</p>
+                )}
+              </div>
+            </div>
             <Link
               href="/zakoni"
-              className="inline-flex items-center rounded-full border border-white/15 px-4 py-1 text-sm text-slate-200 hover:border-white/40"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-800/60 hover:border-slate-500"
             >
-              ← Nazad na zakone
+              &larr; Svi zakoni
             </Link>
           </div>
         </section>
@@ -132,18 +154,18 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
                 <article
                   key={item.id}
                   id={item.provisionKey}
-                  className="scroll-mt-28 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/40"
+                  className="scroll-mt-28 rounded-3xl border border-slate-700/50 bg-slate-800/30 p-6 shadow-lg transition-all duration-300 hover:bg-slate-800/50 hover:border-slate-600"
                 >
-                  <div className="flex items-center justify-between gap-3 text-[0.65rem] uppercase tracking-[0.35em] text-slate-400">
+                  <div className="flex items-center justify-between gap-3 text-xs uppercase tracking-wider text-slate-400">
                     <span>{item.provisionKey.replace('clan_', 'Član ')}</span>
-                    <span>{item.validFrom}</span>
+                    <span className="font-mono text-xs">{formatDisplayDate(item.validFrom)}</span>
                   </div>
-                  <h2 className="mt-2 text-2xl font-semibold text-white">{item.heading || `Član ${item.orderIndex + 1}`}</h2>
-                  <p className="mt-4 whitespace-pre-wrap text-slate-100/90 leading-relaxed">{item.content}</p>
-                  {item.validTo ? (
-                    <p className="mt-3 text-xs text-slate-400">Prestaje važiti {item.validTo}</p>
-                  ) : (
-                    <p className="mt-3 text-xs text-slate-400">Važi od {item.validFrom}</p>
+                  <h2 className="mt-3 text-2xl font-semibold text-white">{item.heading || `Član ${item.orderIndex + 1}`}</h2>
+                  <div className="prose prose-invert prose-slate mt-4 max-w-none text-slate-300">
+                    <p className="whitespace-pre-wrap leading-relaxed">{item.content}</p>
+                  </div>
+                  {item.validTo && (
+                    <p className="mt-4 text-xs text-amber-300">Prestaje da važi {formatDisplayDate(item.validTo)}</p>
                   )}
                 </article>
               ))
@@ -174,8 +196,8 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
         <footer className="mt-6 rounded-3xl border border-white/10 bg-slate-900/60 p-6 text-sm text-slate-300">
           <p>
             Treba vam stručno tumačenje ili analiza izmjena? Pišite nam nenametljivo na{' '}
-            <a href="mailto:info@andric.law" className="text-white hover:underline">
-              info@andric.law
+            <a href={`mailto:${contactInfo.email}`} className="text-white hover:underline">
+              {contactInfo.email}
             </a>
             .
           </p>
@@ -191,4 +213,19 @@ function formatDisplayDate(value: string) {
   } catch {
     return value;
   }
+}
+
+function buildBibliography(act: { title: string; officialNumber?: string | null; officialUrl?: string | null; publishedAt?: string | null; jurisdiction?: string | null }) {
+  const publishedAt = act.publishedAt ? formatDisplayDate(act.publishedAt) : 'Nije uneseno';
+  return [
+    { label: 'Naziv propisa', value: act.title },
+    { label: 'Službeni glasnik', value: act.officialNumber ?? 'Nije uneseno' },
+    { label: 'Datum objave', value: publishedAt },
+    { label: 'Nadležnost', value: act.jurisdiction ?? 'BiH' },
+    {
+      label: 'Službeni izvor',
+      value: act.officialUrl ? 'Pogledaj dokument' : 'Nije dostupno',
+      href: act.officialUrl ?? undefined,
+    },
+  ];
 }

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Linkedin, Facebook, Instagram, ArrowUpRight } from 'lucide-react';
 import { services } from '@/lib/services';
+import { contactInfo } from '@/lib/contactInfo';
 
 interface FooterProps {
   contactHref?: string;
@@ -8,7 +9,7 @@ interface FooterProps {
 
 export function Footer({ contactHref }: FooterProps) {
   const currentYear = new Date().getFullYear();
-  const resolvedContactHref = contactHref ?? '/#kontakt';
+  const resolvedContactHref = contactHref ?? '/kontakt';
 
   const footerLinks = {
     usluge: services.map((service) => ({
@@ -17,7 +18,7 @@ export function Footer({ contactHref }: FooterProps) {
     })),
     resursi: [
       { name: 'Blog', href: '/blog' },
-      { name: 'Pravni glosarij', href: '/#glosarij' },
+      { name: 'Pravni glosarij', href: '/glosarij' },
       { name: 'O nama', href: '/#o-nama' },
       { name: 'Kontakt', href: resolvedContactHref },
     ],
@@ -56,28 +57,28 @@ export function Footer({ contactHref }: FooterProps) {
             {/* Contact Info */}
             <div className="space-y-3 mb-6">
               <a 
-                href="tel:+38761000000" 
+                href={contactInfo.phoneHref}
                 className="flex items-center gap-3 text-sm text-slate-300 hover:text-zinc-300 transition group"
               >
                 <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition">
                   <Phone className="size-4" />
                 </div>
-                <span>+387 61 000 000</span>
+                <span>{contactInfo.phoneDisplay}</span>
               </a>
               <a 
-                href="mailto:office@andric.law" 
+                href={`mailto:${contactInfo.email}`} 
                 className="flex items-center gap-3 text-sm text-slate-300 hover:text-zinc-300 transition group"
               >
                 <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition">
                   <Mail className="size-4" />
                 </div>
-                <span>office@andric.law</span>
+                <span>{contactInfo.email}</span>
               </a>
               <div className="flex items-center gap-3 text-sm text-slate-400">
                 <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
                   <MapPin className="size-4" />
                 </div>
-                <span>Sarajevo, Bosna i Hercegovina</span>
+                <span>{contactInfo.addressLine}</span>
               </div>
             </div>
 
@@ -230,17 +231,17 @@ export function Footer({ contactHref }: FooterProps) {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "LegalService",
-            "name": "Andrić Law",
+            "name": contactInfo.name,
             "description": "Advokatski ured specijaliziran za radno pravo, IT ugovore i privredno pravo u BiH",
             "url": "https://andric.law",
             "logo": "https://andric.law/logo.png",
             "image": "https://andric.law/og-image.jpg",
-            "telephone": "+38761000000",
-            "email": "office@andric.law",
+            "telephone": contactInfo.phoneDisplay.replace(/\s+/g, ''),
+            "email": contactInfo.email,
             "address": {
               "@type": "PostalAddress",
-              "addressLocality": "Sarajevo",
-              "addressCountry": "BA"
+              "addressLocality": contactInfo.address.city,
+              "addressCountry": contactInfo.address.country
             },
             "areaServed": [
               "Federacija Bosne i Hercegovine",
