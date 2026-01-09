@@ -19,6 +19,7 @@ Objavili smo neslužbeni konsolidovani tekst Zakona o PDV-u u digitalnom prikazu
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
+    image: '/fallbacks/author-placeholder.jpg',
   },
   featured: true,
   image: 'https://images.unsplash.com/photo-1554224155-3a589877462f?w=1200&h=675&fit=crop',

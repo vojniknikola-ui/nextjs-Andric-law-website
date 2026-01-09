@@ -23,7 +23,8 @@ Naziv propisa i službene izmjene su istaknuti ovdje; puni tekst slijedi odmah i
   tags: ['Kazneno pravo', 'Zakoni', 'Federacija BiH', 'Pročišćeni tekst'],
   author: {
     name: 'Andrić Law',
-    role: 'Advokatski ured'
+    role: 'Advokatski ured',
+    image: '/fallbacks/author-placeholder.jpg',
   },
   featured: true,
   image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop',

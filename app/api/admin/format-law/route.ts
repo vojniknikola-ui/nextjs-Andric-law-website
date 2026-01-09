@@ -9,8 +9,8 @@ export async function POST(request: Request) {
     }
 
     const autoFormatted = autoFormatContent(text);
-    const sections = parseSmartLaw(autoFormatted);
     const finalText = instruction ? applyInstruction(autoFormatted, instruction) : autoFormatted;
+    const sections = parseSmartLaw(finalText);
     return NextResponse.json({ 
       formattedText: finalText, 
       articleCount: sections.filter(s => s.type === 'article').length,

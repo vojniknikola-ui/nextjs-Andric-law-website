@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { asc, eq } from 'drizzle-orm';
 import { getDb, acts, provisions } from '@/db';
 import { parseSmartLaw, generateSlug, autoFormatContent } from '@/lib/smartParsers';
 
@@ -14,6 +15,51 @@ function getErrorMessage(error: unknown, fallback: string) {
     if (typeof message === 'string' && message) return message;
   }
   return fallback;
+}
+
+export async function GET(request: Request) {
+  if (!process.env.DATABASE_URL) {
+    return NextResponse.json({ error: 'DATABASE_URL nije postavljen.' }, { status: 503 });
+  }
+
+  const url = new URL(request.url);
+  const slug = url.searchParams.get('slug')?.trim();
+  if (!slug) {
+    return NextResponse.json({ error: 'slug je obavezan.' }, { status: 400 });
+  }
+
+  const db = getDb();
+  const [act] = await db.select().from(acts).where(eq(acts.slug, slug));
+  if (!act) {
+    return NextResponse.json({ error: 'Zakon nije pronađen.' }, { status: 404 });
+  }
+
+  const provisionsRows = await db
+    .select({
+      heading: provisions.heading,
+      content: provisions.content,
+      orderIndex: provisions.orderIndex,
+    })
+    .from(provisions)
+    .where(eq(provisions.actId, act.id))
+    .orderBy(asc(provisions.orderIndex));
+
+  const lawText = provisionsRows
+    .map((row) => {
+      const heading = row.heading?.trim();
+      const content = row.content?.trim();
+      if (heading && content) return `${heading}\n${content}`;
+      if (heading) return heading;
+      return content ?? '';
+    })
+    .filter(Boolean)
+    .join('\n\n');
+
+  return NextResponse.json({
+    act,
+    lawText,
+    provisionCount: provisionsRows.length,
+  });
 }
 
 export async function POST(request: Request) {

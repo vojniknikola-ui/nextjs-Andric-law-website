@@ -33,19 +33,25 @@ export default function AndricLawLanding() {
               <Clock className="size-3" /> Odgovor u 24h · Pisano mišljenje u 72h
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-              Pravni partner za <span className="text-zinc-300">biznis u BiH</span>
+              Pravni partner za <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 to-zinc-400">biznis u BiH</span>
             </h1>
-            <p className="max-w-2xl text-slate-300 text-lg">
+            <p className="max-w-2xl text-slate-300 text-lg leading-relaxed">
               Specijalizirani za radno pravo, IT ugovore i privredno pravo. Stručno, precizno i brzo — bez agresivnog marketinga, sa fokusom na rezultat.
             </p>
             <div className="w-full max-w-2xl mb-4">
               <SearchBoxLazy />
             </div>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <button onClick={scrollToKontakt} className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-5 py-3 transition">
-                Zakaži konsultacije <ChevronRight className="size-4 transition group-hover:translate-x-0.5" />
+            <div className="flex flex-wrap gap-4 justify-center">
+              <button
+                onClick={scrollToKontakt}
+                className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
+              >
+                Zakaži konsultacije <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
-              <a href="#usluge" className="inline-flex items-center gap-2 rounded-xl px-5 py-3 border border-white/10 hover:border-white/20 hover:bg-white/5 transition">
+              <a
+                href="#usluge"
+                className="inline-flex items-center gap-2 rounded-xl px-6 py-3 border border-white/20 bg-white/5 text-slate-100 font-medium transition-colors hover:bg-white/10 hover:border-white/30"
+              >
                 Pogledaj usluge
               </a>
             </div>
@@ -79,14 +85,12 @@ export default function AndricLawLanding() {
 
 function Faq({ q, a }: { q: string; a: string }) {
   return (
-    <details className="group rounded-2xl border border-white/10 bg-white/5 p-5 open:bg-white/10 transition">
-      <summary className="cursor-pointer list-none">
-        <div className="flex items-center justify-between gap-6">
-          <h3 className="font-semibold">{q}</h3>
-          <ChevronRight className="size-4 shrink-0 transition group-open:rotate-90 text-zinc-300" />
-        </div>
+    <details className="group rounded-2xl border border-slate-700/50 bg-slate-800/30 p-6 transition-all duration-300 ease-in-out hover:bg-slate-800/50 open:bg-slate-800/60 open:border-slate-600">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-6">
+        <h3 className="font-semibold text-slate-100">{q}</h3>
+        <ChevronRight className="size-5 shrink-0 text-slate-400 transition-transform duration-300 group-open:rotate-90" />
       </summary>
-      <p className="mt-3 text-sm text-slate-300">{a}</p>
+      <p className="mt-4 text-slate-300 leading-relaxed">{a}</p>
     </details>
   );
 }

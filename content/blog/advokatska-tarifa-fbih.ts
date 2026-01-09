@@ -23,6 +23,7 @@ Digitalizirali smo važeću advokatsku tarifu Federacije BiH kako biste brzo pro
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
+    image: '/fallbacks/author-placeholder.jpg',
   },
   featured: false,
   image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=675&fit=crop',

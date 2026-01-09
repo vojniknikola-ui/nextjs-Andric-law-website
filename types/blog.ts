@@ -9,6 +9,7 @@ export interface BlogPost {
   author: {
     name: string;
     role: string;
+    image?: string;
   };
   featured?: boolean;
   image?: string;

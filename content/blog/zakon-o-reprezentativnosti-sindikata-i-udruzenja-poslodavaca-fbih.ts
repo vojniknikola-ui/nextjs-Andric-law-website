@@ -19,6 +19,7 @@ Digitalni prikaz omogućava brzo pretraživanje kriterija i postupka utvrđivanj
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
+    image: '/fallbacks/author-placeholder.jpg',
   },
   featured: true,
   image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1200&h=675&fit=crop',

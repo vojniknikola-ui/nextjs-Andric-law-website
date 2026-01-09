@@ -4,6 +4,7 @@ import { BlogCard } from '@/components/BlogCard';
 import { getAllPosts } from '@/lib/blog';
 import { fetchActSnapshot } from '@/lib/acts';
 import { loadFallbackLaw } from '@/lib/lawFallbacks';
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // 1h snapshot cache
@@ -12,6 +13,50 @@ interface Params {
   params: Promise<{ slug: string }>;
   searchParams?: Promise<{ at?: string }>;
 }
+
+const FALLBACK_OG_IMAGE = 'https://andric.law/fallbacks/andric-law.jpg';
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+	const { slug } = await params;
+	const record = process.env.DATABASE_URL
+		? await fetchActSnapshot(slug, new Date().toISOString().slice(0, 10)).catch(() => null)
+		: null;
+
+	const fallbackRecord = record ?? (await loadFallbackLaw(slug));
+
+	if (!fallbackRecord) {
+		return {
+			title: 'Zakon nije pronađen',
+		};
+	}
+
+	const act = fallbackRecord.act;
+	const canonicalUrl = `https://andric.law/zakoni/${act.slug}`;
+	const description = act.summary || `Pregled zakona ${act.title} sa svim članovima i izmjenama.`;
+
+	return {
+		title: `${act.title} | Andrić Law`,
+		description: description,
+		keywords: [act.title.split(' '), 'zakon', 'propis', 'Bosna i Hercegovina'].flat(),
+		alternates: {
+			canonical: canonicalUrl,
+		},
+		openGraph: {
+			title: act.title,
+			description: description,
+			type: 'article',
+			url: canonicalUrl,
+			images: [{ url: FALLBACK_OG_IMAGE }],
+		},
+		twitter: {
+			card: "summary_large_image",
+			title: `${act.title} | Andrić Law`,
+			description: description,
+			images: [FALLBACK_OG_IMAGE],
+		},
+	};
+}
+
 
 export default async function ActViewerPage({ params, searchParams }: Params) {
   const { slug } = await params;
@@ -102,6 +147,7 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
                   )}
                 </article>
               ))
+            )}
           </div>
         </section>
 

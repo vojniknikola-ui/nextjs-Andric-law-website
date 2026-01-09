@@ -151,7 +151,8 @@ Za konkretne slučajeve i pravne savjete, preporučujemo konsultacije sa advokat
     tags: ["Zakoni", "Stvarna prava", "RS", "Svojina"],
     author: {
       name: "Andrić Law",
-      role: "Advokatski ured"
+      role: "Advokatski ured",
+      image: "/fallbacks/author-placeholder.jpg"
     },
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
   },
@@ -200,7 +201,8 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     tags: ["Zakoni", "BiH", "Državni simboli"],
     author: {
       name: "Andrić Law",
-      role: "Advokatski ured"
+      role: "Advokatski ured",
+      image: "/fallbacks/author-placeholder.jpg"
     },
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
   },
@@ -411,7 +413,8 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     tags: ["Zakoni", "Pravosuđe", "BiH"],
     author: {
       name: "Andrić Law",
-      role: "Advokatski ured"
+      role: "Advokatski ured",
+      image: "/fallbacks/author-placeholder.jpg"
     },
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
   },
@@ -425,7 +428,8 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     tags: ["Radno pravo", "FBiH", "RS", "Vodič 2025"],
     author: {
       name: "Andrić Law",
-      role: "Advokatski ured"
+      role: "Advokatski ured",
+      image: "/fallbacks/author-placeholder.jpg"
     },
     featured: true,
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=675&fit=crop'
@@ -441,6 +445,7 @@ Ovaj zakon stupa na snagu osmog dana od dana objavljivanja u "Službenom glasnik
     author: {
       name: 'Andrić Law',
       role: 'Advokatski ured',
+      image: "/fallbacks/author-placeholder.jpg"
     },
     featured: true,
     image: BLOG_IMAGES['otkaz-ugovora-o-radu-fbih'],

@@ -28,6 +28,7 @@ Kancelarija Andrić Law pretvorila je kompletnu Advokatsku tarifu Republike Srps
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
+    image: '/fallbacks/author-placeholder.jpg',
   },
   featured: true,
   image: 'https://images.unsplash.com/photo-1473186505569-9c61870c11f9?w=1200&h=675&fit=crop',

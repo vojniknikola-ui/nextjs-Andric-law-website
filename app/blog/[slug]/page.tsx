@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title: `${post.title} | Andrić Law Blog`,
     description: post.excerpt,
+    keywords: post.tags,
     alternates: {
       canonical: canonicalUrl,
     },
@@ -56,13 +57,13 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       authors: [post.author.name],
       tags: post.tags,
       url: canonicalUrl,
-      images: [{ url: FALLBACK_OG_IMAGE }],
+      images: [{ url: post.image || FALLBACK_OG_IMAGE }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${post.title} | Andrić Law Blog`,
       description: post.excerpt,
-      images: [FALLBACK_OG_IMAGE],
+      images: [post.image || FALLBACK_OG_IMAGE],
     },
   };
 }
@@ -93,42 +94,46 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Hero Image */}
       <article className="py-16 md:py-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {post.tags.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300"
-              >
-                <Tag className="size-3" /> {tag}
-              </span>
-            ))}
-          </div>
+          <div className="space-y-6">
+            <div className="flex flex-wrap items-center gap-3">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-700/80 bg-slate-800/50 px-3 py-1 text-xs font-medium text-slate-300"
+                >
+                  <Tag className="size-3.5" /> {tag}
+                </span>
+              ))}
+            </div>
 
-          {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
-            {post.title}
-          </h1>
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+              {post.title}
+            </h1>
 
-          {/* Meta */}
-          <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-slate-400 pb-8 border-b border-white/10">
-            <div className="flex items-center gap-2">
-              <div className="size-10 rounded-full bg-zinc-400/10 border border-zinc-300/20 flex items-center justify-center text-zinc-300 font-semibold">
-                AL
+            <div className="flex items-center gap-4 border-y border-slate-800 py-4">
+              <div className="flex items-center gap-3">
+                <img
+                  src={post.author.image || '/fallbacks/author-placeholder.jpg'}
+                  alt={post.author.name}
+                  className="size-12 rounded-full bg-slate-700 object-cover ring-2 ring-slate-700/50"
+                />
+                <div>
+                  <p className="font-semibold text-slate-100">{post.author.name}</p>
+                  <p className="text-sm text-slate-400">{post.author.role}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-slate-200 font-medium">{post.author.name}</p>
-                <p className="text-xs">{post.author.role}</p>
+              <div className="h-8 border-l border-slate-700"></div>
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <Calendar className="size-5" />
+                <span>
+                  {new Date(post.date).toLocaleDateString('bs-BA', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </span>
               </div>
             </div>
-            <span className="inline-flex items-center gap-2">
-              <Calendar className="size-4" />
-              {new Date(post.date).toLocaleDateString('bs-BA', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </span>
           </div>
 
           {post.isLawDocument && (
@@ -195,50 +200,55 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 remarkPlugins={[remarkGfm]}
                 components={{
                   h1: ({ children }) => (
-                    <h1 className="text-3xl font-bold mt-10 mb-4">{children}</h1>
+                    <h1 className="text-4xl font-bold mt-12 mb-6 text-white">{children}</h1>
                   ),
                   h2: ({ children }) => (
-                    <h2 className="text-2xl font-bold mt-8 mb-4">{children}</h2>
+                    <h2 className="text-3xl font-bold mt-10 mb-5 text-white">{children}</h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="text-xl font-semibold mt-6 mb-3">{children}</h3>
+                    <h3 className="text-2xl font-semibold mt-8 mb-4 text-white">{children}</h3>
                   ),
                   p: ({ children }) => (
-                    <p className="text-slate-300 leading-relaxed mb-4">{children}</p>
+                    <p className="text-slate-300 leading-relaxed my-6">{children}</p>
+                  ),
+                  a: ({ href, children }) => (
+                    <a href={href} className="text-blue-400 hover:underline hover:text-blue-300 transition-colors">
+                      {children}
+                    </a>
                   ),
                   ul: ({ children }) => (
-                    <ul className="list-disc list-outside pl-6 space-y-2 mb-4 text-slate-300">
+                    <ul className="list-disc list-outside pl-6 space-y-3 my-6 text-slate-300">
                       {children}
                     </ul>
                   ),
                   ol: ({ children }) => (
-                    <ol className="list-decimal list-outside pl-6 space-y-2 mb-4 text-slate-300">
+                    <ol className="list-decimal list-outside pl-6 space-y-3 my-6 text-slate-300">
                       {children}
                     </ol>
                   ),
                   li: ({ children }) => (
-                    <li className="leading-relaxed">{children}</li>
+                    <li className="leading-relaxed pl-2">{children}</li>
                   ),
                   strong: ({ children }) => (
                     <strong className="font-semibold text-slate-100">{children}</strong>
                   ),
                   code: ({ children }) => (
-                    <code className="bg-white/10 px-1.5 py-0.5 rounded text-sm text-zinc-300">
+                    <code className="bg-slate-800/70 px-2 py-1 rounded-md text-sm text-cyan-300 font-mono">
                       {children}
                     </code>
                   ),
                   pre: ({ children }) => (
-                    <pre className="overflow-x-auto rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-slate-100 shadow-inner">
+                    <pre className="overflow-x-auto rounded-2xl border border-slate-700/80 bg-slate-900/70 p-4 text-sm text-slate-100 shadow-inner my-6">
                       {children}
                     </pre>
                   ),
                   blockquote: ({ children }) => (
-                    <blockquote className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-slate-200">
+                    <blockquote className="border-l-4 border-slate-600 bg-slate-800/30 px-6 py-4 my-6 text-slate-200 italic">
                       {children}
                     </blockquote>
                   ),
                   hr: () => (
-                    <hr className="my-10 border-white/10" />
+                    <hr className="my-12 border-slate-700" />
                   ),
                   details: ({ node, ...props }) => {
                     void node;
@@ -250,7 +260,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     return (
                       <details
                         {...rest}
-                        className={`group rounded-2xl border border-blue-200/60 bg-blue-50/70 p-4 text-blue-900 shadow-sm transition-all [&[open]]:border-blue-400/80 [&[open]]:bg-blue-50/90 ${className}`}
+                        className={`group rounded-2xl border border-blue-400/30 bg-blue-900/20 p-4 my-6 text-blue-100 shadow-sm transition-all open:bg-blue-900/30 open:border-blue-400/50 ${className}`}
                       >
                         {children}
                       </details>
@@ -266,7 +276,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     return (
                       <summary
                         {...rest}
-                        className={`flex cursor-pointer select-none items-center justify-between gap-3 text-sm font-semibold text-blue-800 [&::-webkit-details-marker]:hidden ${className}`}
+                        className={`flex cursor-pointer select-none items-center justify-between gap-3 text-sm font-semibold text-blue-100 [&::-webkit-details-marker]:hidden ${className}`}
                       >
                         {children}
                       </summary>
@@ -305,14 +315,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <LawTextSection text={lawText} />
           )}
 
-          {/* Share */}
-          <div className="mt-12 pt-8 border-t border-white/10">
+          <div className="mt-12 pt-8 border-t border-slate-800">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-400">Podijelite članak:</p>
-              <button className="inline-flex items-center gap-2 rounded-xl px-4 py-2 border border-white/10 hover:bg-white/5 transition text-sm">
-                <Share2 className="size-4" />
-                Podijeli
-              </button>
+              <p className="text-sm font-medium text-slate-300">Podijelite ovaj članak</p>
+              <div className="flex gap-2">
+                <button className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 border border-slate-700/80 hover:bg-slate-800/50 transition text-sm font-medium">
+                  <Share2 className="size-4" />
+                  <span>Podijeli</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

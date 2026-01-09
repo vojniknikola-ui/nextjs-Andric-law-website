@@ -19,6 +19,7 @@ Objava: **Službene novine FBiH 1/2025 (10.01.2025.)** — kompletan tekst zakon
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
+    image: '/fallbacks/author-placeholder.jpg',
   },
   featured: false,
   image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1200&h=675&fit=crop',

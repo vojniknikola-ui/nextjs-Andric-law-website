@@ -6,7 +6,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://andric.law';
   const posts = await getAllPosts();
 
-  const blogUrls = posts.map((post) => ({
+  const lawPosts = posts.filter((p) => p.isLawDocument);
+  const blogPosts = posts.filter((p) => !p.isLawDocument);
+
+  const lawUrls = lawPosts.map((post) => ({
+    url: `${baseUrl}/zakoni/${post.lawSlug ?? post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  const blogUrls = blogPosts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: 'monthly' as const,
@@ -41,5 +51,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...serviceUrls,
     ...blogUrls,
+    ...lawUrls,
   ];
 }

@@ -23,6 +23,7 @@ Objavili smo digitalnu verziju zakona koji zabranjuje raspolaganje državnom imo
   author: {
     name: 'Andrić Law',
     role: 'Advokatski ured',
+    image: '/fallbacks/author-placeholder.jpg',
   },
   featured: true,
   image: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1200&h=675&fit=crop',

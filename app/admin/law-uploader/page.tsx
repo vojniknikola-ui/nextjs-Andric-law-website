@@ -1,8 +1,13 @@
 'use client';
 
-import { useCallback, useMemo, useState, useEffect, Suspense } from 'react';
+import { useCallback, useMemo, useState, useEffect, Suspense, type CSSProperties } from 'react';
 import { useSearchParams } from 'next/navigation';
 import LawViewer from '@/components/LawViewer';
+import { generateSlug } from '@/lib/smartParsers';
+import { Space_Grotesk, Newsreader } from 'next/font/google';
+
+const uiFont = Space_Grotesk({ subsets: ['latin'], variable: '--font-ui' });
+const readingFont = Newsreader({ subsets: ['latin'], variable: '--font-reading' });
 
 const SAMPLE_TEXT = `# Primjer zakona
 
@@ -17,6 +22,16 @@ Svaki član treba biti na zasebnoj liniji.
 
 const INITIAL_BADGE = 'Andrić Law · Novi zakon';
 const TODAY = new Date().toISOString().slice(0, 10);
+const THEME_VARS = {
+  '--canvas': '#f6f4ef',
+  '--panel': '#ffffff',
+  '--ink': '#0f172a',
+  '--muted': '#5b6474',
+  '--accent': '#0ea5e9',
+  '--accent-strong': '#0369a1',
+  '--accent-soft': '#e0f2fe',
+  '--border': 'rgba(15, 23, 42, 0.1)',
+} as CSSProperties;
 
 function LawUploaderContent() {
   const [lawText, setLawText] = useState<string>(SAMPLE_TEXT);
@@ -80,7 +95,7 @@ function LawUploaderContent() {
     if (!lawText) {
       return { articles: 0, heads: 0, words: 0 };
     }
-    const articleMatches = lawText.match(/Član(?:ak)?\s+[A-Z0-9.\-]+/gi) ?? [];
+    const articleMatches = lawText.match(/(?:Član(?:ak)?|Clan(?:ak)?|Čl\.|Cl\.)\s+[A-Z0-9.\-]+/gi) ?? [];
     const headMatches = lawText.match(/GLAVA\s+[IVXLC0-9.\-]+/gi) ?? [];
     const words = lawText.trim().split(/\s+/).length;
     return {
@@ -196,6 +211,16 @@ function LawUploaderContent() {
       status: statusValue || undefined,
       publishedAt: dateValue || undefined,
     };
+  };
+
+  const normalizeDateInput = (value: unknown) => {
+    if (typeof value === 'string' && value.trim()) {
+      return value.trim().slice(0, 10);
+    }
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+      return value.toISOString().slice(0, 10);
+    }
+    return TODAY;
   };
 
   const buildLawCardContent = (actSlug: string) => {
@@ -325,43 +350,108 @@ function LawUploaderContent() {
     }
   };
 
-  const loadExisting = async (overrideSlug?: string) => {
+  const loadExisting = async (
+    overrideSlug?: string,
+    mode: 'law' | 'blog' | 'auto' = 'auto',
+  ) => {
     const targetSlug = (overrideSlug ?? slug).trim();
     if (!targetSlug) {
       setStatusMsg('Unesi slug koji želiš učitati.');
       return;
     }
-    setStatusMsg('Učitavanje…');
-    try {
-      const res = await fetch(`/api/admin/posts?slug=${encodeURIComponent(targetSlug)}`);
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.item) {
-        setStatusMsg(data.error ?? 'Post nije pronađen.');
-        return;
+
+    const loadBlog = async (silentNotFound = false) => {
+      if (!silentNotFound) {
+        setStatusMsg('Učitavanje blog objave…');
       }
-      const post = data.item;
-      setTitle(post.title ?? title);
-      setExcerpt(post.excerpt ?? excerpt);
-      setLawText(post.contentMd ?? lawText);
-      setTagsInput(Array.isArray(post.tags) ? post.tags.join(', ') : tagsInput);
-      setMediaUrl(post.heroImageUrl ?? '');
-      setBlogIsLawDocument(Boolean(post.isLawDocument));
-      setContentType('blog');
-      setLawSlug(post.lawSlug ?? '');
-      setLawSlugEdited(Boolean(post.lawSlug));
-      setLawCitation(post.lawMeta?.citation ?? '');
-      setLawStatus(post.lawMeta?.status ?? 'radna verzija');
-      setLawPublishedAt(post.lawMeta?.publishedAt ?? TODAY);
-      setIsFeatured(Boolean(post.featured));
-      setIsEditing(true);
-      setStatusMsg('Post učitan. Možeš urediti i sačuvati.');
-    } catch {
-      setStatusMsg('Neuspjelo učitavanje posta.');
+      try {
+        const res = await fetch(`/api/admin/posts?slug=${encodeURIComponent(targetSlug)}`);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.item) {
+          if (!silentNotFound) {
+            setStatusMsg(data.error ?? 'Post nije pronađen.');
+          }
+          return false;
+        }
+        const post = data.item;
+        setTitle(post.title ?? title);
+        setSlug(post.slug ?? targetSlug);
+        setSlugEdited(true);
+        setExcerpt(post.excerpt ?? excerpt);
+        setLawText(post.contentMd ?? lawText);
+        setTagsInput(Array.isArray(post.tags) ? post.tags.join(', ') : tagsInput);
+        setMediaUrl(post.heroImageUrl ?? '');
+        setBlogIsLawDocument(Boolean(post.isLawDocument));
+        setContentType('blog');
+        setLawSlug(post.lawSlug ?? '');
+        setLawSlugEdited(Boolean(post.lawSlug));
+        setLawCitation(post.lawMeta?.citation ?? '');
+        setLawStatus(post.lawMeta?.status ?? 'radna verzija');
+        setLawPublishedAt(normalizeDateInput(post.lawMeta?.publishedAt));
+        setIsFeatured(Boolean(post.featured));
+        setIsEditing(true);
+        setStatusMsg('Post učitan. Možeš urediti i sačuvati.');
+        return true;
+      } catch {
+        if (!silentNotFound) {
+          setStatusMsg('Neuspjelo učitavanje posta.');
+        }
+        return false;
+      }
+    };
+
+    const loadLaw = async (silentNotFound = false) => {
+      if (!silentNotFound) {
+        setStatusMsg('Učitavanje zakona…');
+      }
+      try {
+        const res = await fetch(`/api/admin/acts?slug=${encodeURIComponent(targetSlug)}`);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.act) {
+          if (!silentNotFound) {
+            setStatusMsg(data.error ?? 'Zakon nije pronađen.');
+          }
+          return false;
+        }
+        const act = data.act;
+        setTitle(act.title ?? title);
+        setSlug(act.slug ?? targetSlug);
+        setSlugEdited(true);
+        setLawText(data.lawText ?? lawText);
+        setMediaUrl(act.officialUrl ?? '');
+        setBadge(act.officialNumber ?? badge);
+        setChangeNotes(act.summary ?? changeNotes);
+        setLawPublishedAt(normalizeDateInput(act.publishedAt));
+        setContentType('law');
+        setIsEditing(false);
+        setStatusMsg('Zakon učitan. Možeš nastaviti uređivanje.');
+        return true;
+      } catch {
+        if (!silentNotFound) {
+          setStatusMsg('Neuspjelo učitavanje zakona.');
+        }
+        return false;
+      }
+    };
+
+    if (mode === 'blog') {
+      await loadBlog();
+      return;
+    }
+    if (mode === 'law') {
+      await loadLaw();
+      return;
+    }
+
+    const blogLoaded = await loadBlog(true);
+    if (!blogLoaded) {
+      await loadLaw();
     }
   };
 
   useEffect(() => {
     const typeParam = searchParams?.get('type');
+    const modeParam = typeParam === 'blog' || typeParam === 'law' ? typeParam : 'auto';
     if (typeParam === 'blog' || typeParam === 'law') {
       setContentType(typeParam);
     }
@@ -369,7 +459,7 @@ function LawUploaderContent() {
     if (slugParam) {
       setSlug(slugParam);
       setSlugEdited(true);
-      loadExisting(slugParam);
+      loadExisting(slugParam, modeParam);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
@@ -406,239 +496,325 @@ ${blogIsLawDocument ? `5. Poveži zakon: ${lawSlug || slug}` : ''}
 `;
   }, [contentType, title, slug, mediaUrl, publishLawCard, tagsInput, blogIsLawDocument, lawSlug]);
 
+  const statusTone = useMemo(() => {
+    if (!statusMsg) return 'info';
+    const text = statusMsg.toLowerCase();
+    if (/(nije|neusp|grešk|gresk|error|fail)/.test(text)) return 'error';
+    if (/(objavljen|učitan|kreirana|primijenjena|formatiran|kopiran|ažuriran)/.test(text)) return 'success';
+    return 'info';
+  }, [statusMsg]);
+
+  const statusStyles =
+    statusTone === 'error'
+      ? 'border-rose-200 bg-rose-50 text-rose-900'
+      : statusTone === 'success'
+        ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+        : 'border-slate-200 bg-slate-50 text-slate-800';
+
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="mx-auto max-w-6xl px-6 py-12 space-y-10">
-        <header className="flex flex-col gap-3">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-600">
-            Andrić Law · Admin alat
-          </span>
-          <h1 className="text-4xl font-bold text-slate-950">Objava zakona ili bloga</h1>
-          <p className="text-base text-slate-600">
-            Unesi tekst, naslov i podnaslov; izaberi da li objavljuješ zakon (sa člancima) ili blog karticu. Jednim klikom ide u bazu.
-          </p>
+    <div
+      style={THEME_VARS}
+      className={`${uiFont.variable} ${readingFont.variable} font-[var(--font-ui)] relative overflow-hidden rounded-[32px] border border-[var(--border)] bg-[var(--canvas)] px-6 py-10 text-[var(--ink)] shadow-[0_40px_120px_-90px_rgba(15,23,42,0.45)] sm:px-10`}
+    >
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-20 right-16 h-64 w-64 rounded-full bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.2),transparent_70%)]" />
+        <div className="absolute bottom-0 left-0 h-72 w-72 -translate-x-1/2 translate-y-1/3 rounded-full bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.16),transparent_70%)]" />
+      </div>
+
+      <div className="relative space-y-10">
+        <header className="space-y-5">
+          <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-[var(--muted)]">
+            <span className="rounded-full border border-[var(--border)] bg-white/70 px-3 py-1 font-semibold">
+              Andrić Law · Admin alat
+            </span>
+            <span className="text-[10px]">Workflow za zakon i blog</span>
+          </div>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-3">
+              <h1 className="text-4xl font-semibold tracking-tight text-[var(--ink)]">
+                Objavi zakon ili blog bez lutanja kroz korake.
+              </h1>
+              <p className="max-w-2xl text-base text-[var(--muted)]">
+                Sve što ti treba je u jednoj radnoj površini: unos teksta, pametno formatiranje, metapodaci i objava u bazu.
+              </p>
+            </div>
+            <div className="grid min-w-[260px] grid-cols-2 gap-3">
+              {(['law', 'blog'] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setContentType(type)}
+                  className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${
+                    contentType === type
+                      ? 'border-sky-300 bg-sky-50 text-sky-900 shadow-sm'
+                      : 'border-[var(--border)] bg-white/80 text-[var(--muted)] hover:border-slate-300'
+                  }`}
+                >
+                  <span className="block text-sm font-semibold">
+                    {type === 'law' ? 'Objava zakona' : 'Objava bloga'}
+                  </span>
+                  <span className="text-xs">
+                    {type === 'law' ? 'Zakon + članci + kartica.' : 'Analiza, vodič ili objava.'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </header>
-        <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-1 text-sm font-semibold text-slate-700 shadow-sm">
-          {(['law', 'blog'] as const).map((type) => (
-            <button
-              key={type}
-              onClick={() => setContentType(type)}
-              className={`rounded-xl px-4 py-2 transition ${contentType === type ? 'bg-blue-600 text-white shadow-md' : 'hover:bg-slate-100'}`}
-            >
-              {type === 'law' ? 'Objava zakona' : 'Objava bloga'}
-            </button>
-          ))}
-        </div>
 
         {statusMsg && (
-          <p className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-2 text-sm text-blue-900">
+          <p className={`rounded-2xl border px-4 py-3 text-sm ${statusStyles}`}>
             {statusMsg}
           </p>
         )}
 
-        <section className="grid gap-6 lg:grid-cols-[3fr,2fr]">
-          <div className="space-y-5">
-            <label
-              onDragOver={(event) => event.preventDefault()}
-              onDrop={onDrop}
-              className="flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-white p-8 text-center transition hover:border-blue-300"
-            >
-              <input
-                type="file"
-                accept=".txt,.md,.doc,.docx"
-                className="hidden"
-                onChange={(event) => handleFiles(event.target.files)}
+        <section className="grid gap-8 xl:grid-cols-[minmax(0,2.2fr)_minmax(0,1fr)]">
+          <div className="space-y-6">
+            <section className="rounded-3xl border border-[var(--border)] bg-[var(--panel)] p-6 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Izvor teksta</p>
+                  <h2 className="text-xl font-semibold text-[var(--ink)]">Tekst koji ide u bazu</h2>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs text-[var(--muted)]">
+                  <span>Članovi: {stats.articles}</span>
+                  <span>•</span>
+                  <span>Glave: {stats.heads}</span>
+                  <span>•</span>
+                  <span>Riječi: {stats.words}</span>
+                </div>
+              </div>
+
+              <label
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={onDrop}
+                className="mt-5 flex cursor-pointer flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-slate-50/70 p-8 text-center transition hover:border-slate-300"
+              >
+                <input
+                  type="file"
+                  accept=".txt,.md,.doc,.docx"
+                  className="hidden"
+                  onChange={(event) => handleFiles(event.target.files)}
+                />
+                <p className="text-lg font-semibold text-slate-900">Drag & drop ili klikni za upload</p>
+                <p className="mt-2 text-sm text-[var(--muted)]">
+                  Prihvatamo TXT/MD (najbolje) ili DOCX (pokušaćemo izvući tekst).
+                </p>
+              </label>
+
+              <textarea
+                value={lawText}
+                onChange={(event) => setLawText(event.target.value)}
+                rows={15}
+                className="mt-5 w-full rounded-2xl border border-slate-200 bg-white p-4 font-mono text-sm text-slate-800 shadow-sm focus:border-slate-300 focus:outline-none"
+                placeholder={contentType === 'law' ? '# Ovdje ide tekst zakona sa GLAVA i Član oznakama' : '# Ovdje ide tekst bloga/analize'}
               />
-              <p className="text-lg font-semibold text-slate-900">Drag & drop ili klikni za upload</p>
-              <p className="text-sm text-slate-500 mt-2">
-                Prihvatamo TXT/MD (najbolje) ili DOCX (pokušaćemo izvući tekst).
-              </p>
-            </label>
 
-            <textarea
-              value={lawText}
-              onChange={(event) => setLawText(event.target.value)}
-              rows={14}
-              className="w-full rounded-2xl border border-slate-200 bg-white p-4 font-mono text-sm text-slate-800 shadow-sm focus:border-blue-400 focus:outline-none"
-              placeholder={contentType === 'law' ? '# Ovdje ide tekst zakona sa GLAVA i Član oznakama' : '# Ovdje ide tekst bloga/analize'}
-            />
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={copyToClipboard}
+                  className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                  Kopiraj tekst
+                </button>
+                <button
+                  type="button"
+                  onClick={downloadTxt}
+                  className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                  Preuzmi .txt
+                </button>
+              </div>
+            </section>
 
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={copyToClipboard}
-                className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
-              >
-                Kopiraj tekst
-              </button>
-              <button
-                type="button"
-                onClick={downloadTxt}
-                className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
-              >
-                Preuzmi .txt
-              </button>
-              <button
-                type="button"
-                onClick={cleanText}
-                className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
-              >
-                Očisti tekst
-              </button>
-              <button
-                type="button"
-                onClick={() => loadExisting()}
-                className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-800 hover:bg-blue-100"
-              >
-                Učitaj iz baze
-              </button>
-              <button
-                type="button"
-                onClick={autoFormat}
-                disabled={isFormatting}
-                className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-800 hover:bg-blue-100 disabled:opacity-60"
-              >
-                {isFormatting ? 'Formatiranje…' : 'Auto formatiraj (Član)'}
-              </button>
+            <section className="rounded-3xl border border-[var(--border)] bg-[var(--panel)] p-6 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Pametni alati</p>
+                  <h2 className="text-xl font-semibold text-[var(--ink)]">Formatiranje i čišćenje teksta</h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={cleanText}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                  Očisti tekst
+                </button>
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={autoFormat}
+                  disabled={isFormatting}
+                  className="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-800 hover:bg-sky-100 disabled:opacity-60"
+                >
+                  {isFormatting ? 'Formatiranje…' : 'Auto formatiraj (Član)'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => loadExisting(undefined, contentType)}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                  {contentType === 'law' ? 'Učitaj zakon' : 'Učitaj blog'}
+                </button>
+              </div>
+
+              <label className="mt-5 block">
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">
+                  AI instrukcija
+                </span>
+                <textarea
+                  value={aiInstruction}
+                  onChange={(event) => setAiInstruction(event.target.value)}
+                  rows={3}
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm focus:border-slate-300 focus:outline-none"
+                  placeholder={`Primjeri:
+remove=Ovim se Zakonom
+replace=oupotreba=>upotreba
+uppercase=glava`}
+                />
+                <span className="mt-2 block text-xs text-[var(--muted)]">
+                  Podržana pravila: <code>remove=tekst</code>, <code>replace=staro=&gt;novo</code>,{' '}
+                  <code>uppercase=ključna riječ</code>.
+                </span>
+              </label>
               <button
                 type="button"
                 onClick={() => applyInstruction(aiInstruction)}
                 disabled={isApplyingInstruction}
-                className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-100 disabled:opacity-60"
+                className="mt-4 inline-flex items-center justify-center rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-100 disabled:opacity-60"
               >
                 {isApplyingInstruction ? 'Primjena…' : 'Primijeni instrukciju'}
               </button>
-              <button
-                type="button"
-                onClick={publishToBackend}
-                disabled={isPublishing}
-                className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-100 disabled:opacity-60"
-              >
-                {isPublishing ? 'Objavljivanje…' : 'Objavi u bazu'}
-              </button>
-            </div>
+            </section>
           </div>
 
-          <div className="space-y-4">
-            <MetadataField label="Naslov" value={title} onChange={setTitle} />
-            <MetadataField label="Podnaslov / excerpt" value={excerpt} onChange={setExcerpt} hint="Kratak opis za kartice i hero." />
-            <MetadataField
-              label="Slug"
-              value={slug}
-              onChange={(value) => {
-                setSlug(value);
-                setSlugEdited(true);
-              }}
-              hint="npr. zakon-o-nasljedjivanju ili blog-slug"
-            />
-            <MetadataField label="Tagovi (comma)" value={tagsInput} onChange={setTagsInput} hint="npr. zakon, digitalni, radno pravo" />
-            <MetadataField
-              label={contentType === 'law' ? 'Službeni PDF/URL' : 'Hero slika (URL)'}
-              value={mediaUrl}
-              onChange={setMediaUrl}
-              hint={contentType === 'law' ? 'Opcionalno: link na službeni dokument.' : 'Opcionalno: URL slike za hero.'}
-            />
-            {contentType === 'law' && (
-              <>
-                <MetadataField label="Datum objave" value={lawPublishedAt} onChange={setLawPublishedAt} type="date" />
-                <MetadataField label="Badge (hero traka)" value={badge} onChange={setBadge} />
-                <MetadataField label="Izmjene / Službeni glasnik" value={changeNotes} onChange={setChangeNotes} />
-                <label className="inline-flex items-center gap-2 text-sm text-slate-700">
-                  <input type="checkbox" checked={publishLawCard} onChange={(e) => setPublishLawCard(e.target.checked)} />
-                  Kreiraj blog karticu za zakon
-                </label>
-              </>
-            )}
-            {contentType === 'law' && publishLawCard && (
-              <>
-                <MetadataField label="Službeni glasnik / citat" value={lawCitation} onChange={setLawCitation} />
-                <MetadataField label="Status propisa" value={lawStatus} onChange={setLawStatus} />
-              </>
-            )}
-            {contentType === 'blog' && (
-              <div className="flex flex-wrap gap-3">
-                <label className="inline-flex items-center gap-2 text-sm text-slate-700">
-                  <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} />
-                  Istakni (featured)
-                </label>
-                <label className="inline-flex items-center gap-2 text-sm text-slate-700">
-                  <input type="checkbox" checked={blogIsLawDocument} onChange={(e) => setBlogIsLawDocument(e.target.checked)} />
-                  Ovo je zakon (Digitalni propis)
-                </label>
+          <div className="space-y-6">
+            <section className="rounded-3xl border border-[var(--border)] bg-[var(--panel)] p-6 shadow-sm">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Metapodaci</p>
+                <h2 className="text-xl font-semibold text-[var(--ink)]">Detalji objave</h2>
               </div>
-            )}
-            {contentType === 'blog' && blogIsLawDocument && (
-              <>
+
+              <div className="mt-5 space-y-4">
+                <MetadataField label="Naslov" value={title} onChange={setTitle} />
+                <MetadataField label="Podnaslov / excerpt" value={excerpt} onChange={setExcerpt} hint="Kratak opis za kartice i hero." />
                 <MetadataField
-                  label="Slug zakona (link)"
-                  value={lawSlug}
+                  label="Slug"
+                  value={slug}
                   onChange={(value) => {
-                    setLawSlug(value);
-                    setLawSlugEdited(true);
+                    setSlug(value);
+                    setSlugEdited(true);
                   }}
-                  hint="Poveži na /zakoni/<slug> ako postoji u bazi."
+                  hint="npr. zakon-o-nasljedjivanju ili blog-slug"
                 />
-                <MetadataField label="Službeni glasnik / citat" value={lawCitation} onChange={setLawCitation} />
-                <MetadataField label="Status propisa" value={lawStatus} onChange={setLawStatus} />
-                <MetadataField label="Datum objave propisa" value={lawPublishedAt} onChange={setLawPublishedAt} type="date" />
-              </>
-            )}
+                <MetadataField label="Tagovi (comma)" value={tagsInput} onChange={setTagsInput} hint="npr. zakon, digitalni, radno pravo" />
+                <MetadataField
+                  label={contentType === 'law' ? 'Službeni PDF/URL' : 'Hero slika (URL)'}
+                  value={mediaUrl}
+                  onChange={setMediaUrl}
+                  hint={contentType === 'law' ? 'Opcionalno: link na službeni dokument.' : 'Opcionalno: URL slike za hero.'}
+                />
+              </div>
 
-            <label className="block">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                AI instrukcija
-              </span>
-              <textarea
-                value={aiInstruction}
-                onChange={(event) => setAiInstruction(event.target.value)}
-                rows={3}
-                className="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-blue-400 focus:outline-none"
-                placeholder={`Primjeri:
-remove=Ovim se Zakonom
-replace=oupotreba=>upotreba
-uppercase=glava`}
-              />
-              <span className="mt-1 block text-xs text-slate-400">
-                Podržana pravila: <code>remove=tekst</code>, <code>replace=staro=&gt;novo</code>,{' '}
-                <code>uppercase=ključna riječ</code>.
-              </span>
-            </label>
+              {contentType === 'law' && (
+                <div className="mt-5 space-y-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+                  <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Podaci o propisu</p>
+                  <MetadataField label="Datum objave" value={lawPublishedAt} onChange={setLawPublishedAt} type="date" />
+                  <MetadataField label="Badge (hero traka)" value={badge} onChange={setBadge} />
+                  <MetadataField label="Izmjene / Službeni glasnik" value={changeNotes} onChange={setChangeNotes} />
+                  <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+                    <input type="checkbox" checked={publishLawCard} onChange={(e) => setPublishLawCard(e.target.checked)} />
+                    Kreiraj blog karticu za zakon
+                  </label>
+                </div>
+              )}
+              {contentType === 'law' && publishLawCard && (
+                <div className="mt-4 space-y-4">
+                  <MetadataField label="Službeni glasnik / citat" value={lawCitation} onChange={setLawCitation} />
+                  <MetadataField label="Status propisa" value={lawStatus} onChange={setLawStatus} />
+                </div>
+              )}
+              {contentType === 'blog' && (
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+                    <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} />
+                    Istakni (featured)
+                  </label>
+                  <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+                    <input type="checkbox" checked={blogIsLawDocument} onChange={(e) => setBlogIsLawDocument(e.target.checked)} />
+                    Ovo je zakon (Digitalni propis)
+                  </label>
+                </div>
+              )}
+              {contentType === 'blog' && blogIsLawDocument && (
+                <div className="mt-4 space-y-4">
+                  <MetadataField
+                    label="Slug zakona (link)"
+                    value={lawSlug}
+                    onChange={(value) => {
+                      setLawSlug(value);
+                      setLawSlugEdited(true);
+                    }}
+                    hint="Poveži na /zakoni/<slug> ako postoji u bazi."
+                  />
+                  <MetadataField label="Službeni glasnik / citat" value={lawCitation} onChange={setLawCitation} />
+                  <MetadataField label="Status propisa" value={lawStatus} onChange={setLawStatus} />
+                  <MetadataField label="Datum objave propisa" value={lawPublishedAt} onChange={setLawPublishedAt} type="date" />
+                </div>
+              )}
+            </section>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-                Brza statistika
+            <section className="rounded-3xl border border-[var(--border)] bg-[var(--panel)] p-6 shadow-sm">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Objava</p>
+                <h2 className="text-xl font-semibold text-[var(--ink)]">Pošalji u bazu</h2>
+              </div>
+              <p className="mt-3 text-sm text-[var(--muted)]">
+                Koristi slug iznad za učitavanje posta ili objavu nove verzije.
               </p>
-              <dl className="mt-3 space-y-2 text-sm text-slate-700">
-                <StatLine label="Članovi" value={stats.articles} />
-                <StatLine label="GLAVA sekcije" value={stats.heads} />
-                <StatLine label="Broj riječi" value={stats.words} />
-              </dl>
-            </div>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => loadExisting(undefined, contentType)}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                  {contentType === 'law' ? 'Učitaj zakon' : 'Učitaj blog'}
+                </button>
+                <button
+                  type="button"
+                  onClick={publishToBackend}
+                  disabled={isPublishing}
+                  className="rounded-2xl border border-sky-200 bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 disabled:opacity-60"
+                >
+                  {isPublishing ? 'Objavljivanje…' : 'Objavi u bazu'}
+                </button>
+              </div>
+            </section>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-                Checklista za objavu
-              </p>
+            <section className="rounded-3xl border border-[var(--border)] bg-[var(--panel)] p-6 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--muted)]">Checklista</p>
               <pre className="mt-3 whitespace-pre-wrap text-sm text-slate-800">{generationSnippet}</pre>
-            </div>
+            </section>
           </div>
         </section>
 
         <section className="space-y-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--muted)]">
               Live preview
             </p>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-[var(--muted)]">
               Ovako će zakon izgledati u javnom prikazu (koristi trenutni tekst iz editora).
             </p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white shadow-lg p-6">
+          <div className={`${readingFont.className} rounded-3xl border border-[var(--border)] bg-[var(--panel)] p-6 shadow-lg`}>
             <LawViewer lawContent={lawText} />
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -657,14 +833,14 @@ function MetadataField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">{label}</span>
       <input
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-blue-400 focus:outline-none"
+        className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-slate-300 focus:outline-none"
       />
-      {hint && <span className="mt-1 block text-xs text-slate-400">{hint}</span>}
+      {hint && <span className="mt-2 block text-xs text-[var(--muted)]">{hint}</span>}
     </label>
   );
 }
@@ -672,8 +848,8 @@ function MetadataField({
 function StatLine({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-slate-500">{label}</span>
-      <span className="font-semibold text-slate-900">{value}</span>
+      <span className="text-[var(--muted)]">{label}</span>
+      <span className="font-semibold text-[var(--ink)]">{value}</span>
     </div>
   );
 }
@@ -726,17 +902,12 @@ function parseFrontMatter(markdown: string): Record<string, unknown> {
 }
 
 function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
+  return generateSlug(value);
 }
 
 function slugifyFilename(filename?: string) {
   if (!filename) return '';
-  return slugify(filename.replace(/\.[^.]+$/, ''));
+  return generateSlug(filename.replace(/\.[^.]+$/, ''));
 }
 
 export default function LawUploaderPage() {

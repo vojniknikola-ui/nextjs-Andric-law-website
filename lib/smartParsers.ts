@@ -37,7 +37,7 @@ export function parseSmartLaw(content: string): ParsedLawSection[] {
 
   // Patterns for different legal structures
   const patterns = {
-    article: /^(Član(?:ak)?|Čl\.|Art\.?)\s*([0-9]+[a-zA-Z]?)\s*[\.\-\s]*/i,
+    article: /^(Član(?:ak)?|Clan(?:ak)?|Čl\.|Cl\.|Art\.?)\s*([0-9]+[a-zA-Z]?)\s*[\.\-\s]*/i,
     chapter: /^(Glava|Poglavlje|Dio|Deo)\s*([IVXLCD]+|[0-9]+)\s*[\.\-\s]*/i,
     section: /^(Odjel(?:ak|jek)?|Odeljak|Sekcija)\s*([0-9]+)\s*[\.\-\s]*/i,
     paragraph: /^(\([0-9]+\)|\d+\))\s*/,
@@ -290,8 +290,10 @@ function analyzeContent(content: string) {
 export function generateSlug(title: string): string {
   return title
     .toLowerCase()
-    .replace(/[čćž]/g, 'c')
-    .replace(/[šđ]/g, 's')
+    .replace(/[čć]/g, 'c')
+    .replace(/ž/g, 'z')
+    .replace(/š/g, 's')
+    .replace(/đ/g, 'd')
     .replace(/[^a-z0-9\s-]/g, '')
     .trim()
     .replace(/\s+/g, '-')

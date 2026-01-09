@@ -2,14 +2,42 @@
 > andric-law@0.1.0 dev
 > next dev --port 3000 --hostname 0.0.0.0
 
- ⨯ Failed to start server
-Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
-    at <unknown> (Error: listen EADDRINUSE: address already in use 0.0.0.0:3000) {
-  code: 'EADDRINUSE',
-  errno: -48,
-  syscall: 'listen',
-  address: '0.0.0.0',
-  port: 3000
-}
-[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-[?25h
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://0.0.0.0:3000
+   - Experiments (use with caution):
+     ⨯ useLightningcss
+
+ ✓ Starting...
+ ✓ Ready in 1705ms
+ GET / 200 in 2.2s (compile: 2.0s, render: 207ms)
+ GET / 200 in 186ms (compile: 63ms, render: 123ms)
+ GET /icon.svg 404 in 681ms (compile: 654ms, render: 28ms)
+ GET /admin%20panel 404 in 72ms (compile: 25ms, render: 48ms)
+ GET /icon.svg 404 in 37ms (compile: 5ms, render: 32ms)
+ GET / 200 in 34ms (compile: 8ms, render: 26ms)
+ GET /booking 200 in 424ms (compile: 372ms, render: 52ms)
+[db] DATABASE_URL is not set. Database access is disabled until it is provided.
+The `fetchConnectionCache` option is deprecated (now always `true`)
+ GET /zakoni 200 in 397ms (compile: 344ms, render: 53ms)
+[db] DATABASE_URL is not set. Database access is disabled until it is provided.
+The `fetchConnectionCache` option is deprecated (now always `true`)
+ GET /zakoni/zakon-o-advokaturi 200 in 685ms (compile: 627ms, render: 58ms)
+ GET /zakoni 200 in 42ms (compile: 6ms, render: 36ms)
+ GET /booking 200 in 53ms (compile: 11ms, render: 42ms)
+ POST /api/booking 200 in 242ms (compile: 231ms, render: 11ms)
+ GET /zakoni 200 in 209ms (compile: 84ms, render: 125ms)
+ ✓ Compiled in 344ms
+ ✓ Compiled in 175ms
+ ✓ Compiled in 204ms
+ ✓ Compiled in 20ms
+ ✓ Compiled in 12ms
+ ✓ Compiled in 39ms
+ ✓ Compiled in 55ms
+ ✓ Compiled in 265ms
+ ✓ Compiled in 128ms
+ ✓ Compiled in 32ms
+ ✓ Compiled in 45ms
+ ✓ Compiled in 82ms
+ ✓ Compiled in 56ms
+ ✓ Compiled in 86ms

@@ -93,7 +93,7 @@ export default function AdminPostsTable({ posts }: { posts: PostRow[] }) {
                 <td className="px-2 py-2 text-xs">{post.isLawDocument ? 'Zakon' : 'Blog'}</td>
                 <td className="px-2 py-2 text-right space-x-3">
                   <Link
-                    href={post.isLawDocument && post.lawSlug ? `/zakoni/${post.lawSlug}` : `/blog/${post.slug}`}
+                    href={post.isLawDocument ? `/zakoni/${post.lawSlug ?? post.slug}` : `/blog/${post.slug}`}
                     className="text-blue-300 hover:underline"
                   >
                     Otvori
