@@ -19,84 +19,142 @@ export default function ZakoniClanciSection({ posts }: { posts: BlogPost[] }) {
   const lawPosts = useMemo(() => posts.filter((p) => p.isLawDocument), [posts]);
   const articlePosts = useMemo(() => posts.filter((p) => !p.isLawDocument), [posts]);
 
-  const filteredLaws = useMemo(
-    () => lawPosts,
-    [lawPosts],
-  );
-  const filteredArticles = useMemo(
-    () => articlePosts,
-    [articlePosts],
-  );
+  const sortedLaws = useMemo(() => sortCollection(lawPosts, sort), [lawPosts, sort]);
+  const sortedArticles = useMemo(() => sortCollection(articlePosts, sort), [articlePosts, sort]);
 
-  const sortedLaws = useMemo(() => sortCollection(filteredLaws, sort), [filteredLaws, sort]);
-  const sortedArticles = useMemo(() => sortCollection(filteredArticles, sort), [filteredArticles, sort]);
+  const lawCount = lawPosts.length;
+  const articleCount = articlePosts.length;
+  const totalCount = lawCount + articleCount;
+
+  const tabOptions: { value: Tab; label: string; count: number }[] = [
+    { value: "all", label: "Sve", count: totalCount },
+    { value: "zakoni", label: "Zakoni", count: lawCount },
+    { value: "clanci", label: "Članci", count: articleCount },
+  ];
+  const sortOptions: { value: SortKey; label: string }[] = [
+    { value: "newest", label: "Najnovije" },
+    { value: "oldest", label: "Najstarije" },
+    { value: "az", label: "A-Z" },
+  ];
 
   const activeTab = tab;
   const showLaws = activeTab === "all" || activeTab === "zakoni";
   const showArticles = activeTab === "all" || activeTab === "clanci";
+  const activeCount = activeTab === "zakoni" ? lawCount : activeTab === "clanci" ? articleCount : totalCount;
+  const activeLabel = tabOptions.find((option) => option.value === activeTab)?.label ?? "Sve";
 
   return (
-    <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 text-white">
-      <div className="space-y-6">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-1">
-            {(["all", "zakoni", "clanci"] as Tab[]).map((value) => (
-              <button
-                key={value}
-                onClick={() => setTab(value)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  activeTab === value ? "bg-white text-slate-900" : "text-slate-200 hover:text-white"
-                }`}
-              >
-                {value === "all" ? "Sve" : value === "zakoni" ? "Zakoni" : "Članci"}
-              </button>
-            ))}
+    <section className="relative py-16 md:py-20 text-white">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-24 right-[15%] h-72 w-72 rounded-full bg-white/5 blur-3xl" />
+      </div>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 md:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Filter i pregled</p>
+              <h2 className="mt-3 text-2xl font-semibold text-white md:text-3xl">
+                Pronađite sadržaj po tipu
+              </h2>
+              <p className="mt-2 text-sm text-slate-300">
+                Odaberite zakone ili članke i prilagodite sortiranje za brzu, fokusiranu pretragu.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {tabOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setTab(option.value)}
+                  aria-pressed={activeTab === option.value}
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                    activeTab === option.value
+                      ? "bg-gradient-to-r from-zinc-200 to-zinc-400 text-slate-950 shadow-lg shadow-white/10"
+                      : "border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  <span>{option.label}</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                      activeTab === option.value ? "bg-slate-950/20 text-slate-900" : "bg-white/10 text-slate-300"
+                    }`}
+                  >
+                    {option.count}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-slate-300">
-            <ArrowDownUp className="h-4 w-4" />
-            {(["newest", "oldest", "az"] as SortKey[]).map((value) => (
-              <button
-                key={value}
-                onClick={() => setSort(value)}
-                className={`rounded-full px-3 py-1 font-semibold ${
-                  sort === value ? "bg-white text-slate-900" : "border border-white/15 text-slate-200"
-                }`}
-              >
-                {value === "newest" ? "Najnovije" : value === "oldest" ? "Najstarije" : "A-Z"}
-              </button>
-            ))}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
+            <p className="text-sm text-slate-400">
+              Prikazujem {activeCount} rezultata · {activeLabel}
+            </p>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+              <ArrowDownUp className="h-4 w-4" />
+              {sortOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setSort(option.value)}
+                  aria-pressed={sort === option.value}
+                  className={`rounded-full px-3 py-1 font-semibold transition ${
+                    sort === option.value ? "bg-white text-slate-900" : "border border-white/15 text-slate-200 hover:bg-white/10"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {showLaws && (
-          <section id="zakoni" className="space-y-3">
-            <h3 className="text-xl font-semibold text-white">Zakoni i propisi</h3>
-            {filteredLaws.length === 0 ? (
-              <EmptyState message="Trenutno nema zakona u bazi." />
-            ) : (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                {sortedLaws.map((law) => (
-                  <LawCard key={law.slug} post={law} />
-                ))}
+        <div className="mt-10 space-y-12">
+          {showLaws && (
+            <section id="zakoni" className="space-y-4 scroll-mt-28">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Zakoni i propisi</h3>
+                  <p className="text-sm text-slate-400">
+                    Digitalni propisi sa sažecima i osnovnim metapodacima.
+                  </p>
+                </div>
+                <span className="text-sm text-slate-400">{lawCount} dokumenata</span>
               </div>
-            )}
-          </section>
-        )}
+              {lawCount === 0 ? (
+                <EmptyState message="Trenutno nema zakona u bazi." />
+              ) : (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {sortedLaws.map((law) => (
+                    <LawCard key={law.slug} post={law} />
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
 
-        {showArticles && (
-          <section id="clanci" className="space-y-3">
-            <h3 className="text-xl font-semibold text-white">Članci i analize</h3>
-            {filteredArticles.length === 0 ? (
-              <EmptyState message="Trenutno nema članaka u bazi." />
-            ) : (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                {sortedArticles.map((post) => (
-                  <BlogCard key={post.slug} post={post} />
-                ))}
+          {showArticles && (
+            <section id="clanci" className="space-y-4 scroll-mt-28">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Članci i analize</h3>
+                  <p className="text-sm text-slate-400">
+                    Stručni tekstovi koji prate praktične poslovne situacije.
+                  </p>
+                </div>
+                <span className="text-sm text-slate-400">{articleCount} članaka</span>
               </div>
-            )}
-          </section>
-        )}
+              {articleCount === 0 ? (
+                <EmptyState message="Trenutno nema članaka u bazi." />
+              ) : (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {sortedArticles.map((post) => (
+                    <BlogCard key={post.slug} post={post} />
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -104,7 +162,7 @@ export default function ZakoniClanciSection({ posts }: { posts: BlogPost[] }) {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-10 text-center text-sm text-slate-300">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-sm text-slate-300">
       {message}
     </div>
   );
@@ -117,32 +175,32 @@ function LawCard({ post }: { post: BlogPost }) {
   const href = post.lawSlug ? `/zakoni/${post.lawSlug}` : `/blog/${post.slug}`;
 
   return (
-    <Link
-      href={href}
-      className="group relative block overflow-hidden rounded-3xl border border-cyan-300/25 bg-gradient-to-br from-slate-900/80 via-slate-950 to-slate-950 p-5 shadow-xl shadow-black/30 ring-1 ring-cyan-300/15 transition hover:-translate-y-1 hover:shadow-cyan-400/20"
-    >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.22),transparent_40%),radial-gradient(circle_at_80%_10%,rgba(34,211,238,0.18),transparent_35%)] opacity-80" />
-      <div className="relative flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-cyan-100/80">
-        <span className="inline-flex items-center gap-1 rounded-full border border-cyan-300/40 bg-cyan-500/20 px-2 py-1 text-[10px] font-semibold">
-          Digitalni zakon
-        </span>
-        <span className="text-cyan-50/80">{status}</span>
-      </div>
-      <p className="relative mt-4 text-lg font-semibold leading-snug text-white group-hover:text-cyan-50">
-        {post.title}
-      </p>
-      <p className="relative mt-2 text-sm text-slate-200 line-clamp-2">{post.excerpt}</p>
-      <div className="relative mt-4 flex items-center justify-between text-sm text-slate-200">
-        <div className="flex flex-col gap-1 text-[12px] text-cyan-100/80">
-          <span className="font-semibold uppercase tracking-[0.16em]">{citation}</span>
-          <span className="text-slate-300">{formatDate(publishedAt)}</span>
+    <article className="group rounded-2xl border border-white/10 bg-white/5 transition hover:bg-white/10">
+      <Link href={href} className="block p-6">
+        <div className="flex items-center justify-between text-xs text-slate-400">
+          <span className="inline-flex items-center gap-2 rounded-full border border-blue-300/30 bg-blue-900/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-blue-100">
+            Digitalni zakon
+          </span>
+          <span className="text-[11px] uppercase tracking-[0.2em] text-slate-400">{status}</span>
         </div>
-        <span className="inline-flex items-center gap-1 text-sm text-cyan-50">
-          Otvori
-          <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1" />
-        </span>
-      </div>
-    </Link>
+        <h3 className="mt-4 text-lg font-semibold text-white transition group-hover:text-zinc-200">
+          {post.title}
+        </h3>
+        <p className="mt-2 text-sm text-slate-300 line-clamp-2">{post.excerpt}</p>
+        <div className="mt-4 flex items-center justify-between text-sm text-slate-400">
+          <div className="flex flex-col gap-1">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+              {citation}
+            </span>
+            <span className="text-xs text-slate-500">{formatDate(publishedAt)}</span>
+          </div>
+          <span className="inline-flex items-center gap-1 text-sm text-zinc-300 transition-all group-hover:gap-2">
+            Otvori
+            <ChevronRight className="h-4 w-4" />
+          </span>
+        </div>
+      </Link>
+    </article>
   );
 }
 
