@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
@@ -113,10 +114,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             <div className="flex items-center gap-4 border-y border-slate-800 py-4">
               <div className="flex items-center gap-3">
-                <img
+                <Image
                   src={post.author.image || '/fallbacks/author-placeholder.jpg'}
                   alt={post.author.name}
+                  width={48}
+                  height={48}
                   className="size-12 rounded-full bg-slate-700 object-cover ring-2 ring-slate-700/50"
+                  sizes="48px"
                 />
                 <div>
                   <p className="font-semibold text-slate-100">{post.author.name}</p>

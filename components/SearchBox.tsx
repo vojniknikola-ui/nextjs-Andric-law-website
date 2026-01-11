@@ -146,6 +146,8 @@ export default function SearchBox({
     }
   };
 
+  const activeOptionId = activeIndex >= 0 ? `${suggestionsId}-item-${activeIndex}` : undefined;
+
   return (
     <form onSubmit={handleSubmit} className={formClassName}>
       <div className="relative">
@@ -164,9 +166,12 @@ export default function SearchBox({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={inputClasses}
+          role="combobox"
           aria-autocomplete="list"
           aria-expanded={isOpen}
           aria-controls={suggestionsId}
+          aria-haspopup="listbox"
+          aria-activedescendant={activeOptionId}
         />
         <button
           type="submit"
@@ -189,6 +194,7 @@ export default function SearchBox({
               {suggestions.map((suggestion, index) => (
                 <li key={suggestion.id}>
                   <button
+                    id={`${suggestionsId}-item-${index}`}
                     type="button"
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={() => handleSuggestionClick(suggestion)}

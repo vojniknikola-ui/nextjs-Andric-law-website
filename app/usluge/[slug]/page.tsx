@@ -102,7 +102,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <nav className="flex items-center gap-2 text-sm text-slate-400 mb-6">
-            <Link href="/#usluge" className="hover:text-zinc-300 transition">
+            <Link href="/usluge" className="hover:text-zinc-300 transition">
               Usluge
             </Link>
             <ChevronRight className="size-4" />
@@ -308,7 +308,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
               </h2>
             </div>
             <Link
-              href="/#usluge"
+              href="/usluge"
               className="inline-flex items-center gap-2 text-sm text-zinc-300 hover:text-zinc-200 transition"
             >
               Sve usluge

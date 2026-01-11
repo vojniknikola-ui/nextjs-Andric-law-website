@@ -194,15 +194,18 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ de
                     defaultValue={defaultService ?? ''}
                     className="w-full h-12 rounded-xl bg-slate-900/60 border border-white/10 px-4 text-slate-100 outline-none focus:ring-2 focus:ring-zinc-400/60 transition"
                   >
-                    <option value="">Izaberite uslugu</option>
-                    <option value="radno">Radno pravo</option>
-                    <option value="ugovori">Ugovori i IT</option>
-                    <option value="privreda">Privredno pravo</option>
-                    <option value="sporovi">Sporovi i zastupanje</option>
-                    <option value="compliance">Compliance i HR</option>
-                    <option value="ip">Intelektualno vlasništvo</option>
-                    <option value="ostalo">Ostalo</option>
-                  </select>
+                <option value="">Izaberite uslugu</option>
+                <option value="radno">Radno pravo</option>
+                <option value="porodica">Porodično pravo</option>
+                <option value="imovina">Imovinsko i nekretnine</option>
+                <option value="nasljedje">Nasljedno pravo</option>
+                <option value="privreda">Privredno pravo</option>
+                <option value="porezi">Porezno pravo</option>
+                <option value="bankarstvo">Bankarsko i finansijsko pravo</option>
+                <option value="it-telekom">IT i telekom pravo</option>
+                <option value="energetika">Energetsko i infrastrukturno pravo</option>
+                <option value="ostalo">Ostalo</option>
+              </select>
                 </div>
 
                 <div className="md:col-span-2 space-y-2">

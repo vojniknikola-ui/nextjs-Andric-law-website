@@ -48,12 +48,12 @@ export default function AndricLawLanding() {
                 >
                   Zakaži konsultacije <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
-                <a
-                  href="#usluge"
+                <Link
+                  href="/usluge"
                   className="inline-flex items-center gap-2 rounded-xl px-6 py-3 border border-white/20 bg-white/5 text-slate-100 font-medium transition-colors hover:bg-white/10 hover:border-white/30"
                 >
                   Pogledaj usluge
-                </a>
+                </Link>
               </div>
             </div>
 

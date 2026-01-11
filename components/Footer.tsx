@@ -18,7 +18,7 @@ export function Footer({ contactHref }: FooterProps) {
     })),
     resursi: [
       { name: 'Blog', href: '/blog' },
-      { name: 'O nama', href: '/#o-nama' },
+      { name: 'O nama', href: '/o-nama' },
       { name: 'Kontakt', href: resolvedContactHref },
     ],
     pravno: [

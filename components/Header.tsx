@@ -16,10 +16,10 @@ export function Header({ onContactClick, contactHref }: HeaderProps) {
   const resolvedContactHref = contactHref ?? '/kontakt';
 
   const navigation = [
-    { name: 'Usluge', href: '/#usluge' },
+    { name: 'Usluge', href: '/usluge' },
     { name: 'Zakoni i članci', href: '/zakoni' },
     { name: 'Zakažite konsultacije', href: resolvedContactHref },
-    { name: 'O nama', href: '/#o-nama' },
+    { name: 'O nama', href: '/o-nama' },
   ];
 
   useEffect(() => {

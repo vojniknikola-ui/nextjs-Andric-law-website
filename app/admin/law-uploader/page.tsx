@@ -845,15 +845,6 @@ function MetadataField({
   );
 }
 
-function StatLine({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-[var(--muted)]">{label}</span>
-      <span className="font-semibold text-[var(--ink)]">{value}</span>
-    </div>
-  );
-}
-
 function extractMetaFromMarkdown(markdown: string, filename?: string): {
   slug: string;
   title: string;
