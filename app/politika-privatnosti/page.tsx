@@ -28,26 +28,27 @@ export default function PrivacyPolicyPage() {
 
             <h2>Koje podatke prikupljamo</h2>
             <ul>
-              <li>Kontakt podaci (ime, email, telefon) kada popunite formu ili nas kontaktirate.</li>
-              <li>Podaci o predmetu koje nam dobrovoljno dostavite radi procjene slučaja.</li>
-              <li>Tehnički podaci (IP, tip uređaja, osnovna analitika posjeta).</li>
+              <li>Ime i prezime te email adresu iz kontakt forme (obavezna polja).</li>
+              <li>Telefon, odabranu uslugu/temu i sadržaj poruke (ako ih unesete).</li>
             </ul>
 
             <h2>Svrha obrade</h2>
             <ul>
-              <li>Odgovor na upite i dogovor konsultacija.</li>
-              <li>Priprema ponude i pružanje pravnih usluga.</li>
-              <li>Unapređenje sigurnosti i kvaliteta web stranice.</li>
+              <li>Odgovor na upite i zakazivanje konsultacija.</li>
+              <li>Procjena predmeta i priprema ponude/usluge.</li>
             </ul>
 
             <h2>Pravna osnova</h2>
             <p>Podatke obrađujemo na osnovu vašeg pristanka, ugovorne potrebe ili legitimnog interesa.</p>
 
+            <h2>Obrada i hosting (Vercel)</h2>
+            <p>Web stranica je hostovana na Vercel infrastrukturi. Podaci koje pošaljete putem forme mogu biti procesuirani na Vercel serverima. Vercel djeluje kao obrađivač i usklađen je sa GDPR standardima.</p>
+
             <h2>Dijeljenje podataka</h2>
-            <p>Vaše podatke ne prodajemo. Mogu biti dostupni našim ovlaštenim saradnicima isključivo radi pružanja usluga.</p>
+            <p>Vaše podatke ne prodajemo. Pristup imaju samo ovlaštene osobe i pružaoci usluga hostinga/obrade kada je to nužno za isporuku usluge.</p>
 
             <h2>Rokovi čuvanja</h2>
-            <p>Podatke čuvamo onoliko dugo koliko je potrebno za svrhu obrade ili zakonske obaveze.</p>
+            <p>Podatke iz kontakt forme čuvamo do 12 mjeseci od posljednje komunikacije. Ako postanete klijent ili zakon propisuje duži rok, podatke čuvamo tokom saradnje i onoliko dugo koliko je potrebno radi zakonskih obaveza.</p>
 
             <h2>Vaša prava</h2>
             <p>Imate pravo na pristup, ispravku, brisanje i ograničenje obrade vaših podataka.</p>

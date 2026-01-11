@@ -8,9 +8,14 @@ export const metadata: Metadata = {
     default: 'Andrić Law | Advokatski ured - Radno pravo, IT ugovori, Privredno pravo',
     template: '%s | Andrić Law'
   },
-  description: 'Specijalizirani advokatski ured za radno pravo, IT ugovore i privredno pravo u BiH. Stručna pravna pomoć za kompanije i osnivače. Odgovor u 24h.',
+  description: 'Specijalizirani advokat u Sarajevu za radno pravo, imovinsko-pravne odnose, IT ugovore i privredno pravo u BiH. Stručna pravna pomoć za kompanije i osnivače. Odgovor u 24h.',
   keywords: [
+    'advokat',
     'advokat Sarajevo',
+    'advokat za radno pravo',
+    'advokat za imovinsko-pravne odnose',
+    'advokat za imovinsko pravne odnose',
+    'imovinsko-pravni odnosi',
     'advokatski ured BiH',
     'radno pravo BiH',
     'IT ugovori',
@@ -38,7 +43,7 @@ export const metadata: Metadata = {
     url: 'https://andric.law',
     siteName: 'Andrić Law',
     title: 'Andrić Law | Advokatski ured - Radno pravo, IT ugovori, Privredno pravo',
-    description: 'Specijalizirani advokatski ured za radno pravo, IT ugovore i privredno pravo u BiH.',
+    description: 'Advokat Sarajevo za radno pravo, imovinsko-pravne odnose, IT ugovore i privredno pravo u BiH.',
     images: [
       {
         url: '/og-image.jpg',
@@ -51,7 +56,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Andrić Law | Advokatski ured',
-    description: 'Specijalizirani za radno pravo, IT ugovore i privredno pravo u BiH.',
+    description: 'Advokat Sarajevo za radno pravo, imovinsko-pravne odnose, IT ugovore i privredno pravo u BiH.',
     images: ['/og-image.jpg'],
   },
   robots: {

@@ -236,12 +236,27 @@ export function Footer({ contactHref }: FooterProps) {
             "@context": "https://schema.org",
             "@type": "LegalService",
             "name": contactInfo.name,
-            "description": "Advokatski ured specijaliziran za radno pravo, IT ugovore i privredno pravo u BiH",
+            "description": "Advokat u Sarajevu specijaliziran za radno pravo, imovinsko-pravne odnose, IT ugovore i privredno pravo u BiH",
             "url": "https://andric.law",
             "logo": "https://andric.law/logo.png",
             "image": "https://andric.law/og-image.jpg",
             "telephone": contactInfo.phoneDisplay.replace(/\s+/g, ''),
             "email": contactInfo.email,
+            "serviceType": [
+              "Radno pravo",
+              "Imovinsko-pravni odnosi",
+              "Privredno pravo",
+              "IT ugovori"
+            ],
+            "keywords": [
+              "advokat",
+              "advokat Sarajevo",
+              "advokat za radno pravo",
+              "advokat za imovinsko-pravne odnose",
+              "imovinsko-pravni odnosi",
+              "privredno pravo",
+              "IT ugovori"
+            ],
             "address": {
               "@type": "PostalAddress",
               "addressLocality": contactInfo.address.city,
@@ -253,6 +268,7 @@ export function Footer({ contactHref }: FooterProps) {
               contactInfo.maps.bing
             ],
             "areaServed": [
+              "Sarajevo",
               "Federacija Bosne i Hercegovine",
               "Republika Srpska",
               "Brčko Distrikt"

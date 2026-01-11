@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { contactInfo } from '@/lib/contactInfo';
 
 export const metadata: Metadata = {
   title: 'Impresum | Andrić Law',
@@ -23,20 +24,26 @@ export default function ImprintPage() {
           </div>
 
           <div className="prose prose-invert prose-slate max-w-none">
-            <h2>Naziv</h2>
-            <p>Andrić Law – advokatski ured</p>
+            <h2>Pun naziv firme</h2>
+            <p>Advokatski ured Andrić Law</p>
 
-            <h2>Adresa</h2>
-            <p>Sarajevo, Bosna i Hercegovina</p>
+            <h2>Sjedište i adresa</h2>
+            <p>{contactInfo.addressLine}</p>
 
             <h2>Kontakt</h2>
             <ul>
-              <li>Email: office@andric.law</li>
-              <li>Telefon: +387 61 000 000</li>
+              <li>Email: {contactInfo.email}</li>
+              <li>Telefon: {contactInfo.phoneDisplay}</li>
             </ul>
 
-            <h2>Registracija</h2>
+            <h2>Identifikacioni brojevi</h2>
             <p>JIB: 4200000000000 • PDV: 200000000000</p>
+
+            <h2>Nadležna advokatska komora</h2>
+            <p>Advokatska komora Federacije Bosne i Hercegovine</p>
+
+            <h2>Odgovorna osoba</h2>
+            <p>Nikola Andrić</p>
 
             <h2>Odgovornost za sadržaj</h2>
             <p>Ulažemo napore da informacije budu tačne i ažurne, ali ne garantujemo potpunost.</p>
