@@ -9,6 +9,8 @@ type ContactSectionProps = {
 };
 
 export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ defaultService }, ref) => {
+  const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contactInfo.addressLine)}`;
+
   return (
     <section id="kontakt" ref={ref} className="py-20 md:py-28 bg-slate-950/40 border-t border-white/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -70,15 +72,20 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ de
                 </div>
               </a>
 
-              <div className="flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5">
-                <div className="size-12 rounded-xl bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center">
+              <a
+                href={mapHref}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all"
+              >
+                <div className="size-12 rounded-xl bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <MapPin className="size-5 text-zinc-300" />
                 </div>
                 <div className="flex-1">
                   <p className="text-xs text-slate-400 mb-1">Lokacija</p>
                   <p className="font-semibold text-slate-200">{contactInfo.addressLine}</p>
                 </div>
-              </div>
+              </a>
             </div>
 
             {/* Working Hours */}

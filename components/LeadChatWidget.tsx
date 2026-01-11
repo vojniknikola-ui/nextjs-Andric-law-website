@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { Clock4, Loader2, Mail, MessageCircle, Send, ShieldCheck, X } from 'lucide-react';
+import { Clock4, Loader2, Mail, MessageCircle, Phone, Send, ShieldCheck, X } from 'lucide-react';
+import { contactInfo } from '@/lib/contactInfo';
 
 type LeadCategory = 'radno_pravo' | 'ugovori' | 'it_startup' | 'ostalo';
 type ClientType = 'fizicko' | 'firma';
@@ -317,26 +318,51 @@ function LeadChatWidgetContent() {
           </div>
         </div>
       ) : (
-        <div className="flex items-end justify-end gap-2 sm:gap-3 p-4 sm:p-0">
-          <a
-            href="https://wa.me/38761000000?text=Pozdrav%2C%20trebam%20brzi%20savjet."
-            target="_blank"
-            rel="noreferrer"
-            className="group flex h-12 sm:h-12 items-center gap-2 rounded-full bg-[#128C7E] px-3 sm:px-4 text-white text-sm font-semibold shadow-lg shadow-[#128C7E]/40 border border-white/10 active:scale-95 transition"
-            aria-label="Pošalji WhatsApp poruku"
-          >
-            <MessageCircle className="size-4" />
-            <span className="hidden sm:inline">WhatsApp</span>
-          </a>
-          <button
-            type="button"
-            onClick={() => setIsOpen(true)}
-            className="group flex h-14 w-14 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-xl shadow-cyan-500/40 border border-white/20 active:scale-95 transition"
-            aria-label="Otvori chat sa odvjetnikom"
-          >
-            <MessageCircle className="size-6 transition" />
-          </button>
-        </div>
+        <>
+          <div className="hidden sm:flex items-end justify-end gap-2 sm:gap-3 p-4 sm:p-0">
+            <a
+              href="https://wa.me/38761000000?text=Pozdrav%2C%20trebam%20brzi%20savjet."
+              target="_blank"
+              rel="noreferrer"
+              className="group flex h-12 sm:h-12 items-center gap-2 rounded-full bg-[#128C7E] px-3 sm:px-4 text-white text-sm font-semibold shadow-lg shadow-[#128C7E]/40 border border-white/10 active:scale-95 transition"
+              aria-label="Pošalji WhatsApp poruku"
+            >
+              <MessageCircle className="size-4" />
+              <span className="hidden sm:inline">WhatsApp</span>
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsOpen(true)}
+              className="group flex h-14 w-14 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-xl shadow-cyan-500/40 border border-white/20 active:scale-95 transition"
+              aria-label="Otvori chat sa odvjetnikom"
+            >
+              <MessageCircle className="size-6 transition" />
+            </button>
+          </div>
+          <div className="sm:hidden w-full border-t border-white/10 bg-slate-950/95 backdrop-blur">
+            <div className="mx-auto max-w-7xl px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+12px)]">
+              <div className="flex gap-3">
+                <a
+                  href={contactInfo.phoneHref}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold h-12 shadow-lg shadow-cyan-500/30 active:scale-95 transition"
+                  aria-label="Pozovi Andrić Law"
+                >
+                  <Phone className="size-4" />
+                  Pozovi
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(true)}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 text-slate-100 font-semibold h-12 active:scale-95 transition"
+                  aria-label="Pošalji upit"
+                >
+                  <MessageCircle className="size-4" />
+                  Upit
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

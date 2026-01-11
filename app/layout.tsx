@@ -100,7 +100,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0f172a" />
         <meta name="color-scheme" content="dark" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased pb-20 sm:pb-0">
         {children}
         <LeadChatWidget />
       </body>
