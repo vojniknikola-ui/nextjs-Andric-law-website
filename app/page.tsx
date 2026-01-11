@@ -57,41 +57,48 @@ export default function AndricLawLanding() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative">
+            <div className="lg:col-span-5 relative lg:pl-6">
               <div className="relative">
-                <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-slate-950/60">
+                <div
+                  className="pointer-events-none absolute -inset-10 sm:-inset-12 rounded-[32px] bg-gradient-to-br from-cyan-400/12 via-white/6 to-transparent blur-3xl"
+                  aria-hidden="true"
+                />
+                <div className="relative aspect-[4/5] rounded-[30px] overflow-hidden border border-white/12 bg-gradient-to-b from-slate-900/70 to-slate-950/70 shadow-2xl shadow-slate-950/70">
                   <Image
                     src={HERO_IMAGE_URL}
                     alt="Advokatski ured u modernom poslovnom okruženju"
                     fill
                     className="object-cover"
                     priority
-                    sizes="(min-width: 1024px) 40vw, 90vw"
+                    sizes="(min-width: 1024px) 42vw, 92vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent" />
+                  <div className="absolute inset-0 ring-1 ring-white/10" aria-hidden="true" />
                 </div>
 
-                <div className="hidden sm:block absolute -bottom-10 -left-8 w-40 sm:w-48 aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-xl shadow-slate-950/50">
+                <div className="hidden sm:block absolute -left-12 bottom-10 w-44 sm:w-52 lg:w-56 aspect-[5/6] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80">
                   <Image
                     src={GALLERY_IMAGE_ONE_URL}
                     alt="Detalj iz kancelarije Andrić Law"
                     fill
                     className="object-cover"
-                    sizes="(min-width: 1024px) 12vw, 36vw"
+                    sizes="(min-width: 1024px) 15vw, 38vw"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
                 </div>
 
-                <div className="hidden sm:block absolute -top-8 right-6 w-36 sm:w-44 aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-xl shadow-slate-950/50">
+                <div className="hidden sm:block absolute -top-10 right-4 w-36 sm:w-44 lg:w-48 aspect-[3/4] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80">
                   <Image
                     src={GALLERY_IMAGE_TWO_URL}
                     alt="Kancelarija Andrić Law"
                     fill
                     className="object-cover"
-                    sizes="(min-width: 1024px) 10vw, 34vw"
+                    sizes="(min-width: 1024px) 13vw, 34vw"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
                 </div>
 
-                <div className="absolute -bottom-6 right-4 rounded-2xl border border-white/10 bg-slate-900/90 px-4 py-3 text-xs text-slate-200 shadow-lg shadow-slate-950/60">
+                <div className="absolute -bottom-6 right-2 sm:right-4 rounded-2xl border border-white/12 bg-slate-900/90 px-4 py-3 text-xs text-slate-200 shadow-lg shadow-slate-950/70 backdrop-blur">
                   Diskretno. Precizno. Fokusirano na rezultat.
                 </div>
               </div>
