@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Linkedin, Facebook, Twitter, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Linkedin, Facebook, X as XLogo, ArrowUpRight } from 'lucide-react';
 import { services } from '@/lib/services';
 import { contactInfo } from '@/lib/contactInfo';
 
@@ -113,7 +113,7 @@ export function Footer({ contactHref }: FooterProps) {
                 className="size-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition"
                 aria-label="X (Twitter)"
               >
-                <Twitter className="size-4" />
+                <XLogo className="size-4" strokeWidth={2.4} />
               </a>
             </div>
           </div>
