@@ -80,6 +80,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const lawText = await loadLawText(post.lawFile);
+  const content = stripDuplicateTitle(post.content, post.title);
 
   // Get related posts (same tags)
   const allPosts = await getAllPosts();
@@ -284,7 +285,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   },
                 }}
               >
-                {post.content}
+                {content}
               </ReactMarkdown>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-slate-300">
@@ -402,4 +403,25 @@ function LawTextSection({ text }: { text: string }) {
 function resolveLawFile(lawFile?: string | string[] | null) {
   if (!lawFile) return null;
   return Array.isArray(lawFile) ? lawFile[0] : lawFile;
+}
+
+function stripDuplicateTitle(content: string, title: string) {
+  if (!content || !title) return content;
+
+  const match = content.match(/^\s*#\s+(.+?)\s*(?:\r?\n|\r)(?:\s*\r?\n)*/);
+  if (!match) return content;
+
+  const heading = match[1];
+  const normalize = (value: string) =>
+    value
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+  if (normalize(heading) !== normalize(title)) {
+    return content;
+  }
+
+  return content.slice(match[0].length).replace(/^\s+/, '');
 }

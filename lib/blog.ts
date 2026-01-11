@@ -22,6 +22,12 @@ const BLOG_IMAGES = {
   'intelektualno-vlasnistvo-software': 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200&h=675&fit=crop',
 };
 
+const DEFAULT_AUTHOR = {
+  name: 'Advokat Nikola Andrić',
+  role: 'Advokat',
+  image: '/fallbacks/author-placeholder.jpg',
+} as const;
+
 const fallbackPosts: BlogPost[] = [
   advokatskaTarifaFBiHPost,
   advokatskaTarifaRSPort,
@@ -481,7 +487,7 @@ async function getMergedPosts(): Promise<BlogPost[]> {
       merged.set(post.slug, post);
     }
   });
-  return Array.from(merged.values());
+  return Array.from(merged.values()).map((post) => normalizeAuthor(post));
 }
 
 async function getDbPosts(): Promise<BlogPost[]> {
@@ -529,4 +535,33 @@ function stripMarkdown(value: string | null | undefined) {
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/\*(.+?)\*/g, '$1')
     .trim();
+}
+
+function normalizeAuthor(post: BlogPost): BlogPost {
+  if (!post.author) {
+    return {
+      ...post,
+      author: DEFAULT_AUTHOR,
+    };
+  }
+
+  const name = post.author.name?.trim();
+  const role = post.author.role?.trim();
+  const nameLower = name?.toLowerCase() ?? '';
+  const roleLower = role?.toLowerCase() ?? '';
+  const shouldDefaultName = !name || nameLower === 'andrić law' || nameLower === 'andric law';
+  const shouldDefaultRole = !role || roleLower === 'advokatski ured';
+
+  if (!shouldDefaultName && !shouldDefaultRole && post.author.image) {
+    return post;
+  }
+
+  return {
+    ...post,
+    author: {
+      name: shouldDefaultName ? DEFAULT_AUTHOR.name : post.author.name,
+      role: shouldDefaultRole ? DEFAULT_AUTHOR.role : post.author.role,
+      image: post.author.image ?? DEFAULT_AUTHOR.image,
+    },
+  };
 }

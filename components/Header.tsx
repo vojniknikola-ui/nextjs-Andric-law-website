@@ -16,7 +16,7 @@ export function Header({ onContactClick, contactHref }: HeaderProps) {
   const navigation = [
     { name: 'Usluge', href: '/#usluge' },
     { name: 'Zakoni i članci', href: '/zakoni' },
-    { name: 'Zakaži termin', href: '/booking' },
+    { name: 'Zakaži termin', href: resolvedContactHref },
     { name: 'O nama', href: '/#o-nama' },
   ];
 

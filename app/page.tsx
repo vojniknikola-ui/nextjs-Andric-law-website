@@ -17,6 +17,12 @@ export default function AndricLawLanding() {
       <section id="hero" className="relative overflow-hidden min-h-[600px] flex items-center">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[120vw] h-[120vw] rounded-full bg-zinc-500/5 blur-3xl" />
+          <div className="hero-kinetic" aria-hidden="true">
+            <span className="hero-kinetic__orbit hero-kinetic__orbit--one" />
+            <span className="hero-kinetic__orbit hero-kinetic__orbit--two" />
+            <span className="hero-kinetic__orbit hero-kinetic__orbit--three" />
+            <span className="hero-kinetic__core" />
+          </div>
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
           <div className="flex flex-col items-center text-center gap-8">

@@ -21,6 +21,127 @@ body {
     "Liberation Sans", sans-serif;
 }
 
+/* Hero kinetic animation */
+.hero-kinetic {
+  position: absolute;
+  right: clamp(-140px, -12vw, -60px);
+  top: 50%;
+  width: clamp(240px, 42vw, 520px);
+  height: clamp(240px, 42vw, 520px);
+  transform: translateY(-50%);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.hero-kinetic::after {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  animation: hero-pulse 6s ease-out infinite;
+}
+
+.hero-kinetic__orbit {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  animation: hero-orbit 26s linear infinite;
+}
+
+.hero-kinetic__orbit::before {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(125, 211, 252, 0.9), rgba(56, 189, 248, 0.15));
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.7);
+}
+
+.hero-kinetic__orbit--one {
+  animation-duration: 28s;
+}
+
+.hero-kinetic__orbit--two {
+  inset: 18%;
+  animation-duration: 22s;
+  animation-direction: reverse;
+  border-color: rgba(148, 163, 184, 0.14);
+}
+
+.hero-kinetic__orbit--two::before {
+  width: 10px;
+  height: 10px;
+  top: -5px;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.6);
+}
+
+.hero-kinetic__orbit--three {
+  inset: 36%;
+  animation-duration: 18s;
+  border-color: rgba(148, 163, 184, 0.12);
+}
+
+.hero-kinetic__core {
+  position: absolute;
+  inset: 38%;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.4), rgba(30, 41, 59, 0) 70%);
+  box-shadow: 0 0 50px rgba(56, 189, 248, 0.35);
+  animation: hero-core 5.5s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .hero-kinetic {
+    right: auto;
+    left: 50%;
+    top: 18%;
+    transform: translateX(-50%);
+    opacity: 0.45;
+  }
+}
+
+@keyframes hero-orbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hero-core {
+  0%,
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes hero-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.65;
+  }
+  80% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
 .skip-link {
   position: absolute;
   left: 1rem;

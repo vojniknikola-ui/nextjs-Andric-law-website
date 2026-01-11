@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Linkedin, Facebook, Instagram, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Linkedin, Facebook, Twitter, ArrowUpRight } from 'lucide-react';
 import { services } from '@/lib/services';
 import { contactInfo } from '@/lib/contactInfo';
 
@@ -107,13 +107,13 @@ export function Footer({ contactHref }: FooterProps) {
                 <Facebook className="size-4" />
               </a>
               <a 
-                href="https://instagram.com" 
+                href="https://x.com/andriclaw" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="size-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition"
-                aria-label="Instagram"
+                aria-label="X (Twitter)"
               >
-                <Instagram className="size-4" />
+                <Twitter className="size-4" />
               </a>
             </div>
           </div>
@@ -278,7 +278,7 @@ export function Footer({ contactHref }: FooterProps) {
             "sameAs": [
               "https://linkedin.com/company/andric-law",
               "https://facebook.com/andriclaw",
-              "https://instagram.com/andriclaw"
+              "https://x.com/andriclaw"
             ]
           })
         }}
