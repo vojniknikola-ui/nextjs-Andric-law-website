@@ -31,17 +31,17 @@ export default function AndricLawLanding() {
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 flex flex-col items-center text-center lg:items-start lg:text-left gap-8">
+            <div className="lg:col-span-7 flex flex-col items-center text-center lg:items-start lg:text-left gap-6 lg:gap-8 max-w-3xl">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
                 <Clock className="size-3" /> Odgovor u 24h · Pisano mišljenje u 72h
               </span>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
                 Pravni partner za <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 to-zinc-400">biznis u BiH</span>
               </h1>
-              <p className="max-w-2xl text-slate-300 text-lg leading-relaxed">
-                Specijalizirani za radno pravo, IT ugovore i privredno pravo. Stručno, precizno i brzo — bez agresivnog marketinga, sa fokusom na rezultat.
+              <p className="text-slate-200 text-lg leading-relaxed">
+                Specijalizirani za radno pravo, IT ugovore i privredno pravo. Stručno, precizno i brzo — bez agresivnog marketinga, sa fokusom na rezultat. Tekst i elementi su skraćeni radi lakšeg čitanja na mobilnim uređajima.
               </p>
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                 <Link
                   href="/kontakt"
                   className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
@@ -54,6 +54,17 @@ export default function AndricLawLanding() {
                 >
                   Pogledaj usluge
                 </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+                {[
+                  '9 premium specijalizacija',
+                  'FBiH · RS · Brčko · cross-border',
+                  'Jasni rokovi i povjerljivost',
+                ].map((item) => (
+                  <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
+                    {item}
+                  </div>
+                ))}
               </div>
             </div>
 
