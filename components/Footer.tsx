@@ -58,28 +58,33 @@ export function Footer({ contactHref }: FooterProps) {
             <div className="space-y-3 mb-6">
               <a 
                 href={contactInfo.phoneHref}
-                className="flex items-center gap-3 text-sm text-slate-300 hover:text-zinc-300 transition group"
+                className="flex items-center gap-3 text-sm text-slate-300 hover:text-zinc-300 transition group py-1"
               >
-                <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition">
+                <div className="size-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition">
                   <Phone className="size-4" />
                 </div>
                 <span>{contactInfo.phoneDisplay}</span>
               </a>
               <a 
                 href={`mailto:${contactInfo.email}`} 
-                className="flex items-center gap-3 text-sm text-slate-300 hover:text-zinc-300 transition group"
+                className="flex items-center gap-3 text-sm text-slate-300 hover:text-zinc-300 transition group py-1"
               >
-                <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition">
+                <div className="size-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition">
                   <Mail className="size-4" />
                 </div>
                 <span>{contactInfo.email}</span>
               </a>
-              <div className="flex items-center gap-3 text-sm text-slate-400">
-                <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+              <a
+                href={contactInfo.maps.google}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-3 text-sm text-slate-400 py-1 hover:text-zinc-300 transition group"
+              >
+                <div className="size-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition">
                   <MapPin className="size-4" />
                 </div>
                 <span>{contactInfo.addressLine}</span>
-              </div>
+              </a>
             </div>
 
             {/* Social Links */}
@@ -88,7 +93,7 @@ export function Footer({ contactHref }: FooterProps) {
                 href="https://linkedin.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition"
+                className="size-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="size-4" />
@@ -97,7 +102,7 @@ export function Footer({ contactHref }: FooterProps) {
                 href="https://facebook.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition"
+                className="size-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition"
                 aria-label="Facebook"
               >
                 <Facebook className="size-4" />
@@ -106,7 +111,7 @@ export function Footer({ contactHref }: FooterProps) {
                 href="https://instagram.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition"
+                className="size-11 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition"
                 aria-label="Instagram"
               >
                 <Instagram className="size-4" />
@@ -124,7 +129,7 @@ export function Footer({ contactHref }: FooterProps) {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-zinc-300 transition inline-flex items-center gap-1 group"
+                    className="text-sm text-slate-400 hover:text-zinc-300 transition inline-flex items-center gap-1 group py-1"
                   >
                     <span>{link.name}</span>
                     <ArrowUpRight className="size-3 opacity-0 group-hover:opacity-100 transition" />
@@ -143,7 +148,7 @@ export function Footer({ contactHref }: FooterProps) {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-zinc-300 transition inline-flex items-center gap-1 group"
+                    className="text-sm text-slate-400 hover:text-zinc-300 transition inline-flex items-center gap-1 group py-1"
                   >
                     <span>{link.name}</span>
                     <ArrowUpRight className="size-3 opacity-0 group-hover:opacity-100 transition" />
@@ -162,7 +167,7 @@ export function Footer({ contactHref }: FooterProps) {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-zinc-300 transition inline-flex items-center gap-1 group"
+                    className="text-sm text-slate-400 hover:text-zinc-300 transition inline-flex items-center gap-1 group py-1"
                   >
                     <span>{link.name}</span>
                     <ArrowUpRight className="size-3 opacity-0 group-hover:opacity-100 transition" />
@@ -202,13 +207,13 @@ export function Footer({ contactHref }: FooterProps) {
               </p>
             </div>
             <div className="flex items-center gap-6">
-              <Link href="/politika-privatnosti" className="hover:text-zinc-300 transition text-xs">
+              <Link href="/politika-privatnosti" className="hover:text-zinc-300 transition text-xs py-1">
                 Privatnost
               </Link>
-              <Link href="/uslovi-koristenja" className="hover:text-zinc-300 transition text-xs">
+              <Link href="/uslovi-koristenja" className="hover:text-zinc-300 transition text-xs py-1">
                 Uslovi
               </Link>
-              <Link href="/sitemap.xml" className="hover:text-zinc-300 transition text-xs">
+              <Link href="/sitemap.xml" className="hover:text-zinc-300 transition text-xs py-1">
                 Sitemap
               </Link>
             </div>
@@ -243,6 +248,11 @@ export function Footer({ contactHref }: FooterProps) {
               "addressLocality": contactInfo.address.city,
               "addressCountry": contactInfo.address.country
             },
+            "hasMap": [
+              contactInfo.maps.google,
+              contactInfo.maps.apple,
+              contactInfo.maps.bing
+            ],
             "areaServed": [
               "Federacija Bosne i Hercegovine",
               "Republika Srpska",

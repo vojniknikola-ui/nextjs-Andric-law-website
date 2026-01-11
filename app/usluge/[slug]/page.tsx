@@ -91,7 +91,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
       <Header contactHref="/kontakt" />
 
       <section className="relative overflow-hidden border-b border-white/10">

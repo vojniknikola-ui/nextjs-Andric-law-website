@@ -51,7 +51,7 @@ export function Header({ onContactClick, contactHref }: HeaderProps) {
             {onContactClick ? (
               <button
                 onClick={onContactClick}
-                className="hidden lg:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-5 py-2.5 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
+                className="hidden lg:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-5 py-2.5 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
                 aria-label="Zakažite besplatne konsultacije"
               >
                 <Phone className="size-4" />
@@ -60,7 +60,7 @@ export function Header({ onContactClick, contactHref }: HeaderProps) {
             ) : (
               <Link
                 href={resolvedContactHref}
-                className="hidden lg:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-5 py-2.5 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
+                className="hidden lg:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-5 py-2.5 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
                 aria-label="Zakažite besplatne konsultacije"
               >
                 <Phone className="size-4" />
@@ -69,7 +69,7 @@ export function Header({ onContactClick, contactHref }: HeaderProps) {
             )}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-slate-800/60 transition"
+              className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-lg hover:bg-slate-800/60 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
               aria-label="Otvori meni"
               aria-expanded={isMobileMenuOpen}
             >
@@ -98,7 +98,7 @@ export function Header({ onContactClick, contactHref }: HeaderProps) {
               <Link
                 href={resolvedContactHref}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="mt-4 mx-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-5 py-3 transition-all"
+                className="mt-4 mx-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-5 py-3 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
               >
                 <Phone className="size-4" />
                 <span>Kontakt</span>

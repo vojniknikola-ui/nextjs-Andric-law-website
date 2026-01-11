@@ -71,7 +71,7 @@ export function BookingForm() {
                 formData.type === 'online'
                   ? 'border-blue-500 bg-blue-500/10 text-blue-100'
                   : 'border-white/20 hover:border-white/30'
-              }`}
+              } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400`}
             >
               <Video className="size-6 mx-auto mb-2" />
               <div className="font-medium">Online</div>
@@ -84,7 +84,7 @@ export function BookingForm() {
                 formData.type === 'office'
                   ? 'border-blue-500 bg-blue-500/10 text-blue-100'
                   : 'border-white/20 hover:border-white/30'
-              }`}
+              } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400`}
             >
               <MapPin className="size-6 mx-auto mb-2" />
               <div className="font-medium">U kancelariji</div>
@@ -102,7 +102,7 @@ export function BookingForm() {
               required
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:ring-offset-2 focus:ring-offset-slate-950/50"
             />
           </div>
           <div>
@@ -112,7 +112,7 @@ export function BookingForm() {
               required
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:ring-offset-2 focus:ring-offset-slate-950/50"
             />
           </div>
         </div>
@@ -123,7 +123,7 @@ export function BookingForm() {
             type="tel"
             value={formData.phone}
             onChange={(e) => setFormData({...formData, phone: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:ring-offset-2 focus:ring-offset-slate-950/50"
           />
         </div>
 
@@ -140,7 +140,7 @@ export function BookingForm() {
               value={formData.date}
               onChange={(e) => setFormData({...formData, date: e.target.value})}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:ring-offset-2 focus:ring-offset-slate-950/50"
             />
           </div>
           <div>
@@ -152,7 +152,7 @@ export function BookingForm() {
               required
               value={formData.time}
               onChange={(e) => setFormData({...formData, time: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:ring-offset-2 focus:ring-offset-slate-950/50"
             >
               <option value="">Izaberite vreme</option>
               <option value="09:00">09:00</option>
@@ -174,7 +174,7 @@ export function BookingForm() {
             rows={4}
             value={formData.message}
             onChange={(e) => setFormData({...formData, message: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none resize-none"
+            className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:ring-offset-2 focus:ring-offset-slate-950/50 resize-none"
             placeholder="Opišite pravno pitanje ili situaciju..."
           />
         </div>
@@ -182,7 +182,7 @@ export function BookingForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 text-white font-semibold px-6 py-3 rounded-xl transition"
+          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 text-white font-semibold px-6 py-3 rounded-xl transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
         >
           {isSubmitting ? 'Šalje se...' : 'Zakaži konsultacije'}
         </button>

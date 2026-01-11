@@ -39,7 +39,7 @@ export default async function GlossaryEntryPage({ params }: GlossaryEntryPagePro
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-slate-950 text-slate-100">
       <Header />
 
       <section className="py-16 md:py-20">

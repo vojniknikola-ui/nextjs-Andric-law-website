@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 flex items-center justify-center">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 flex items-center justify-center">
       <div className="text-center px-4">
         <h1 className="text-6xl font-bold text-zinc-300">404</h1>
         <h2 className="mt-4 text-2xl font-semibold">Članak nije pronađen</h2>

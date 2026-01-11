@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-slate-950 text-slate-100">
       <Header />
 
       <section className="border-b border-white/10 bg-slate-900/60 py-12">

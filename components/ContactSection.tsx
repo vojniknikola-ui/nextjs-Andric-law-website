@@ -9,8 +9,6 @@ type ContactSectionProps = {
 };
 
 export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ defaultService }, ref) => {
-  const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contactInfo.addressLine)}`;
-
   return (
     <section id="kontakt" ref={ref} className="py-20 md:py-28 bg-slate-950/40 border-t border-white/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -73,7 +71,7 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ de
               </a>
 
               <a
-                href={mapHref}
+                href={contactInfo.maps.google}
                 target="_blank"
                 rel="noreferrer"
                 className="group flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all"
@@ -86,6 +84,32 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(({ de
                   <p className="font-semibold text-slate-200">{contactInfo.addressLine}</p>
                 </div>
               </a>
+              <div className="flex flex-wrap gap-2 pl-1">
+                <a
+                  href={contactInfo.maps.google}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 text-xs font-semibold text-slate-200 transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+                >
+                  Google Maps
+                </a>
+                <a
+                  href={contactInfo.maps.apple}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 text-xs font-semibold text-slate-200 transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+                >
+                  Apple Maps
+                </a>
+                <a
+                  href={contactInfo.maps.bing}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 text-xs font-semibold text-slate-200 transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+                >
+                  Bing Maps
+                </a>
+              </div>
             </div>
 
             {/* Working Hours */}

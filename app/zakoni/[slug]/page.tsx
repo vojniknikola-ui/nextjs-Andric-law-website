@@ -73,7 +73,7 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
   if (!fallbackRecord) {
     if (!process.env.DATABASE_URL) {
       return (
-        <main className="mx-auto max-w-4xl px-6 py-16">
+        <main id="main-content" tabIndex={-1} className="mx-auto max-w-4xl px-6 py-16">
           <h1 className="text-3xl font-semibold text-white">Zakon nije pronađen</h1>
           <p className="mt-4 text-slate-300">
             Dodajte <code className="rounded bg-white/10 px-1 py-0.5">DATABASE_URL</code> ili registrujte zakon među
@@ -94,7 +94,7 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
   const bibliographyItems = buildBibliography(fallbackRecord.act);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.65),_rgba(2,6,23,1))]">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-slate-950 text-slate-100 bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.65),_rgba(2,6,23,1))]">
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <section className="rounded-3xl border border-slate-700/50 bg-gradient-to-br from-slate-800/40 to-slate-900/50 p-8 shadow-2xl shadow-black/40">
           <div className="flex justify-between items-start">

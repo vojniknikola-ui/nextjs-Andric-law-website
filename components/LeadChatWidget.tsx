@@ -180,7 +180,7 @@ function LeadChatWidgetContent() {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="text-slate-400 hover:text-white transition"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-slate-400 hover:text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
               aria-label="Zatvori chat prozor"
             >
               <X className="size-4" />
@@ -276,7 +276,7 @@ function LeadChatWidgetContent() {
                 <button
                   type="submit"
                   disabled={isDisabled}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-3 sm:py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition active:scale-95 hover:from-cyan-600 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-3 sm:py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/30 transition active:scale-95 hover:from-cyan-600 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
                 >
                   {status === 'loading' ? (
                     <>
@@ -306,7 +306,7 @@ function LeadChatWidgetContent() {
                         href="https://wa.me/38761000000?text=Pozdrav%2C%20trebam%20brzi%20savjet."
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-[#128C7E] text-white text-xs font-semibold shadow-md active:scale-95 transition"
+                        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-[#128C7E] text-white text-xs font-semibold shadow-md active:scale-95 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
                       >
                         <MessageCircle className="size-3" /> WhatsApp
                       </a>
@@ -324,7 +324,7 @@ function LeadChatWidgetContent() {
               href="https://wa.me/38761000000?text=Pozdrav%2C%20trebam%20brzi%20savjet."
               target="_blank"
               rel="noreferrer"
-              className="group flex h-12 sm:h-12 items-center gap-2 rounded-full bg-[#128C7E] px-3 sm:px-4 text-white text-sm font-semibold shadow-lg shadow-[#128C7E]/40 border border-white/10 active:scale-95 transition"
+              className="group flex h-12 sm:h-12 items-center gap-2 rounded-full bg-[#128C7E] px-3 sm:px-4 text-white text-sm font-semibold shadow-lg shadow-[#128C7E]/40 border border-white/10 active:scale-95 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
               aria-label="Pošalji WhatsApp poruku"
             >
               <MessageCircle className="size-4" />
@@ -333,7 +333,7 @@ function LeadChatWidgetContent() {
             <button
               type="button"
               onClick={() => setIsOpen(true)}
-              className="group flex h-14 w-14 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-xl shadow-cyan-500/40 border border-white/20 active:scale-95 transition"
+              className="group flex h-14 w-14 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-xl shadow-cyan-500/40 border border-white/20 active:scale-95 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
               aria-label="Otvori chat sa odvjetnikom"
             >
               <MessageCircle className="size-6 transition" />
@@ -344,7 +344,7 @@ function LeadChatWidgetContent() {
               <div className="flex gap-3">
                 <a
                   href={contactInfo.phoneHref}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold h-12 shadow-lg shadow-cyan-500/30 active:scale-95 transition"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold h-12 shadow-lg shadow-cyan-500/30 active:scale-95 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
                   aria-label="Pozovi Andrić Law"
                 >
                   <Phone className="size-4" />
@@ -353,7 +353,7 @@ function LeadChatWidgetContent() {
                 <button
                   type="button"
                   onClick={() => setIsOpen(true)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 text-slate-100 font-semibold h-12 active:scale-95 transition"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 text-slate-100 font-semibold h-12 active:scale-95 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
                   aria-label="Pošalji upit"
                 >
                   <MessageCircle className="size-4" />

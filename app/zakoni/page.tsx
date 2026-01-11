@@ -22,7 +22,7 @@ export default async function ZakoniClanciPage() {
   const articleCount = posts.length - lawCount;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100">
       <Header />
 
       <section className="relative overflow-hidden border-b border-white/10">

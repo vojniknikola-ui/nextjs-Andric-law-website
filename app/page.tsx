@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function AndricLawLanding() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
       <Header />
 
       <section id="hero" className="relative overflow-hidden min-h-[600px] flex items-center">

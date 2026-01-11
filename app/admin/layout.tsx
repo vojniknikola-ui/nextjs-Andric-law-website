@@ -22,7 +22,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </div>
-      <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">{children}</main>
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 }

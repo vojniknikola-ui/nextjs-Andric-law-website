@@ -68,6 +68,9 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-verification-code',
     // yandex: 'your-yandex-verification-code',
+    other: {
+      'msvalidate.01': 'your-bing-verification-code',
+    },
   },
   alternates: {
     canonical: 'https://andric.law',
@@ -101,6 +104,9 @@ export default function RootLayout({
         <meta name="color-scheme" content="dark" />
       </head>
       <body className="antialiased pb-20 sm:pb-0">
+        <a href="#main-content" className="skip-link">
+          Preskoči na sadržaj
+        </a>
         {children}
         <LeadChatWidget />
       </body>
