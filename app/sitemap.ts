@@ -1,7 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/blog';
 import { services } from '@/lib/services';
-import { getGlossaryEntries } from '@/lib/glossary';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://andric.law';
@@ -31,14 +30,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  const glossaryEntries = getGlossaryEntries();
-  const glossaryUrls = glossaryEntries.map((entry) => ({
-    url: `${baseUrl}/glosarij/${entry.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'yearly' as const,
-    priority: 0.4,
-  }));
-
   const staticUrls = [
     {
       url: baseUrl,
@@ -57,12 +48,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/glosarij`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
     },
     {
       url: `${baseUrl}/kontakt`,
@@ -105,7 +90,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticUrls,
     ...serviceUrls,
-    ...glossaryUrls,
     ...blogUrls,
     ...lawUrls,
   ];

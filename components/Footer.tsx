@@ -18,7 +18,6 @@ export function Footer({ contactHref }: FooterProps) {
     })),
     resursi: [
       { name: 'Blog', href: '/blog' },
-      { name: 'Pravni glosarij', href: '/glosarij' },
       { name: 'O nama', href: '/#o-nama' },
       { name: 'Kontakt', href: resolvedContactHref },
     ],

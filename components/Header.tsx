@@ -17,7 +17,6 @@ export function Header({ onContactClick, contactHref }: HeaderProps) {
     { name: 'Usluge', href: '/#usluge' },
     { name: 'Zakoni i članci', href: '/zakoni' },
     { name: 'Zakaži termin', href: '/booking' },
-    { name: 'Glosarij', href: '/glosarij' },
     { name: 'O nama', href: '/#o-nama' },
   ];
 
