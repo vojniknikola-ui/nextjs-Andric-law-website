@@ -6,9 +6,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { put } from '@vercel/blob';
 
-if (!process.env.BLOB_READ_WRITE_TOKEN) {
-  console.error('❌ BLOB_READ_WRITE_TOKEN not found');
-  console.error('Add to .env.local: BLOB_READ_WRITE_TOKEN=your_token');
+const blobToken = process.env.BLOB_READ_WRITE_TOKEN ?? process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
+
+if (!blobToken) {
+  console.error('❌ BLOB_READ_WRITE_TOKEN or VERCEL_BLOB_READ_WRITE_TOKEN not found');
+  console.error('Add to .env.local: VERCEL_BLOB_READ_WRITE_TOKEN=your_token');
   process.exit(1);
 }
 
@@ -38,7 +40,7 @@ async function uploadToBlob(filename, name) {
   const fileBuffer = fs.readFileSync(filename);
   const blob = await put(`blog/${name}.jpg`, fileBuffer, {
     access: 'public',
-    token: process.env.BLOB_READ_WRITE_TOKEN,
+    token: blobToken,
     addRandomSuffix: true,
     cacheControlMaxAge: 31536000,
   });

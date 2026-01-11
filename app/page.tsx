@@ -8,6 +8,11 @@ import {
   ChevronRight, Clock,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+
+const HERO_IMAGE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/hero-lawyer-office-7gAa7FO4H3gsBx4ym2BFeuXY1nWq0o.jpg';
+const GALLERY_IMAGE_ONE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/andric-law-office-YzE8kiDlZyAQvDy5IyKTNcddi0lqLU.jpg';
+const GALLERY_IMAGE_TWO_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/andric-law-office-alt-y7U1pIT9mru1GYj8FrQNlKxKiectag.jpg';
 
 export default function AndricLawLanding() {
   return (
@@ -25,29 +30,71 @@ export default function AndricLawLanding() {
           </div>
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
-          <div className="flex flex-col items-center text-center gap-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-              <Clock className="size-3" /> Odgovor u 24h · Pisano mišljenje u 72h
-            </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-              Pravni partner za <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 to-zinc-400">biznis u BiH</span>
-            </h1>
-            <p className="max-w-2xl text-slate-300 text-lg leading-relaxed">
-              Specijalizirani za radno pravo, IT ugovore i privredno pravo. Stručno, precizno i brzo — bez agresivnog marketinga, sa fokusom na rezultat.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link
-                href="/kontakt"
-                className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
-              >
-                Zakaži konsultacije <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-              <a
-                href="#usluge"
-                className="inline-flex items-center gap-2 rounded-xl px-6 py-3 border border-white/20 bg-white/5 text-slate-100 font-medium transition-colors hover:bg-white/10 hover:border-white/30"
-              >
-                Pogledaj usluge
-              </a>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7 flex flex-col items-center text-center lg:items-start lg:text-left gap-8">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
+                <Clock className="size-3" /> Odgovor u 24h · Pisano mišljenje u 72h
+              </span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+                Pravni partner za <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 to-zinc-400">biznis u BiH</span>
+              </h1>
+              <p className="max-w-2xl text-slate-300 text-lg leading-relaxed">
+                Specijalizirani za radno pravo, IT ugovore i privredno pravo. Stručno, precizno i brzo — bez agresivnog marketinga, sa fokusom na rezultat.
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                <Link
+                  href="/kontakt"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
+                >
+                  Zakaži konsultacije <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+                <a
+                  href="#usluge"
+                  className="inline-flex items-center gap-2 rounded-xl px-6 py-3 border border-white/20 bg-white/5 text-slate-100 font-medium transition-colors hover:bg-white/10 hover:border-white/30"
+                >
+                  Pogledaj usluge
+                </a>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 relative">
+              <div className="relative">
+                <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-slate-950/60">
+                  <Image
+                    src={HERO_IMAGE_URL}
+                    alt="Advokatski ured u modernom poslovnom okruženju"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(min-width: 1024px) 40vw, 90vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+                </div>
+
+                <div className="hidden sm:block absolute -bottom-10 -left-8 w-40 sm:w-48 aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-xl shadow-slate-950/50">
+                  <Image
+                    src={GALLERY_IMAGE_ONE_URL}
+                    alt="Detalj iz kancelarije Andrić Law"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 12vw, 36vw"
+                  />
+                </div>
+
+                <div className="hidden sm:block absolute -top-8 right-6 w-36 sm:w-44 aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-xl shadow-slate-950/50">
+                  <Image
+                    src={GALLERY_IMAGE_TWO_URL}
+                    alt="Kancelarija Andrić Law"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 10vw, 34vw"
+                  />
+                </div>
+
+                <div className="absolute -bottom-6 right-4 rounded-2xl border border-white/10 bg-slate-900/90 px-4 py-3 text-xs text-slate-200 shadow-lg shadow-slate-950/60">
+                  Diskretno. Precizno. Fokusirano na rezultat.
+                </div>
+              </div>
             </div>
           </div>
         </div>

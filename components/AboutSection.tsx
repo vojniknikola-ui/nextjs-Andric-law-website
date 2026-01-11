@@ -1,4 +1,7 @@
+import Image from 'next/image';
 import { Award, Briefcase, GraduationCap, Users, Scale, TrendingUp } from 'lucide-react';
+
+const ABOUT_IMAGE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/nikola-andric-portrait-qx7Acm5ZzSSYFJEoZS1g25kTE3g6iD.jpg';
 
 export function AboutSection() {
   return (
@@ -10,13 +13,15 @@ export function AboutSection() {
             <div className="sticky top-24">
               {/* Profile Image */}
               <div className="relative mb-8">
-                <div className="aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-zinc-700/30 via-slate-800 to-slate-900">
-                  {/* Placeholder - zamijeni sa pravom slikom */}
-                  <div className="w-full h-full flex items-center justify-center">
-                    <div className="size-32 rounded-full bg-zinc-400/20 border-4 border-zinc-400/30 flex items-center justify-center">
-                      <span className="text-5xl font-bold text-zinc-300">NA</span>
-                    </div>
-                  </div>
+                <div className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10">
+                  <Image
+                    src={ABOUT_IMAGE_URL}
+                    alt="Nikola Andrić"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 35vw, 90vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
                 </div>
                 <div className="absolute -bottom-6 -right-6 size-24 rounded-2xl bg-zinc-400/90 border-4 border-slate-950 flex items-center justify-center">
                   <Scale className="size-12 text-slate-950" />

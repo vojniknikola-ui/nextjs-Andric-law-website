@@ -2,12 +2,14 @@
 
 import { list } from '@vercel/blob';
 
-if (!process.env.BLOB_READ_WRITE_TOKEN) {
-  console.error('❌ BLOB_READ_WRITE_TOKEN not found');
+const blobToken = process.env.BLOB_READ_WRITE_TOKEN ?? process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
+
+if (!blobToken) {
+  console.error('❌ BLOB_READ_WRITE_TOKEN or VERCEL_BLOB_READ_WRITE_TOKEN not found');
   process.exit(1);
 }
 
-list({ token: process.env.BLOB_READ_WRITE_TOKEN })
+list({ token: blobToken })
   .then(({ blobs }) => {
     console.log('\n📋 Uploaded blobs:\n');
     blobs.forEach((blob) => {
