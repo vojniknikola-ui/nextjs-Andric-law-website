@@ -258,3 +258,31 @@ body {
   pointer-events: none;
   animation: glow-loop 10s ease-in-out infinite;
 }
+
+.hero-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.12) 45%, transparent 60%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: sheen-move 8s ease-in-out infinite;
+}
+
+@keyframes sheen-move {
+  0% {
+    opacity: 0;
+    transform: translateX(-40%) skewX(-10deg);
+  }
+  20% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateX(20%) skewX(-10deg);
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(60%) skewX(-10deg);
+  }
+}

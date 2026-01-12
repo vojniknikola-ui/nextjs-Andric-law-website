@@ -15,6 +15,8 @@ const GALLERY_IMAGE_ONE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-stora
 const GALLERY_IMAGE_TWO_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/andric-law-office-alt-y7U1pIT9mru1GYj8FrQNlKxKiectag.jpg';
 
 export default function AndricLawLanding() {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
       <Header />
@@ -32,12 +34,27 @@ export default function AndricLawLanding() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-5 relative lg:pl-6 order-1 lg:order-2">
-              <div className="relative">
+              <div
+                className="relative group"
+                onMouseMove={(event) => {
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  const percentX = (event.clientX - rect.left) / rect.width - 0.5;
+                  const percentY = (event.clientY - rect.top) / rect.height - 0.5;
+                  setTilt({
+                    x: Math.max(-8, Math.min(8, percentY * -10)),
+                    y: Math.max(-8, Math.min(8, percentX * 10)),
+                  });
+                }}
+                onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+              >
                 <div
                   className="pointer-events-none absolute -inset-10 sm:-inset-12 rounded-[32px] bg-gradient-to-br from-cyan-400/12 via-white/6 to-transparent blur-3xl"
                   aria-hidden="true"
                 />
-                <div className="relative aspect-[4/5] rounded-[30px] overflow-hidden border border-white/12 bg-gradient-to-b from-slate-900/70 to-slate-950/70 shadow-2xl shadow-slate-950/70 hero-frame-animate">
+                <div
+                  className="relative aspect-[4/5] rounded-[30px] overflow-hidden border border-white/12 bg-gradient-to-b from-slate-900/70 to-slate-950/70 shadow-2xl shadow-slate-950/70 hero-frame-animate"
+                  style={{ transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateZ(0)` }}
+                >
                   <Image
                     src={HERO_IMAGE_URL}
                     alt="Advokatski ured u modernom poslovnom okruženju"
@@ -48,6 +65,7 @@ export default function AndricLawLanding() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent" />
                   <div className="absolute inset-0 ring-1 ring-white/10" aria-hidden="true" />
+                  <div className="hero-sheen" aria-hidden="true" />
                 </div>
 
                 <div className="hidden sm:block absolute -left-12 bottom-10 w-44 sm:w-52 lg:w-56 aspect-[5/6] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80 hero-float-slow">
