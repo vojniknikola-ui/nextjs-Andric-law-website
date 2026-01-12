@@ -37,7 +37,7 @@ export default function AndricLawLanding() {
                   className="pointer-events-none absolute -inset-10 sm:-inset-12 rounded-[32px] bg-gradient-to-br from-cyan-400/12 via-white/6 to-transparent blur-3xl"
                   aria-hidden="true"
                 />
-                <div className="relative aspect-[4/5] rounded-[30px] overflow-hidden border border-white/12 bg-gradient-to-b from-slate-900/70 to-slate-950/70 shadow-2xl shadow-slate-950/70">
+                <div className="relative aspect-[4/5] rounded-[30px] overflow-hidden border border-white/12 bg-gradient-to-b from-slate-900/70 to-slate-950/70 shadow-2xl shadow-slate-950/70 hero-frame-animate">
                   <Image
                     src={HERO_IMAGE_URL}
                     alt="Advokatski ured u modernom poslovnom okruženju"
@@ -50,7 +50,7 @@ export default function AndricLawLanding() {
                   <div className="absolute inset-0 ring-1 ring-white/10" aria-hidden="true" />
                 </div>
 
-                <div className="hidden sm:block absolute -left-12 bottom-10 w-44 sm:w-52 lg:w-56 aspect-[5/6] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80">
+                <div className="hidden sm:block absolute -left-12 bottom-10 w-44 sm:w-52 lg:w-56 aspect-[5/6] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80 hero-float-slow">
                   <Image
                     src={GALLERY_IMAGE_ONE_URL}
                     alt="Detalj iz kancelarije Andrić Law"
@@ -61,7 +61,7 @@ export default function AndricLawLanding() {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
                 </div>
 
-                <div className="hidden sm:block absolute -top-10 right-4 w-36 sm:w-44 lg:w-48 aspect-[3/4] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80">
+                <div className="hidden sm:block absolute -top-10 right-4 w-36 sm:w-44 lg:w-48 aspect-[3/4] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80 hero-float-slower">
                   <Image
                     src={GALLERY_IMAGE_TWO_URL}
                     alt="Kancelarija Andrić Law"
@@ -72,7 +72,7 @@ export default function AndricLawLanding() {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
                 </div>
 
-                <div className="absolute -bottom-6 right-2 sm:right-4 rounded-2xl border border-white/12 bg-slate-900/90 px-4 py-3 text-xs text-slate-200 shadow-lg shadow-slate-950/70 backdrop-blur">
+                <div className="absolute -bottom-6 right-2 sm:right-4 rounded-2xl border border-white/12 bg-slate-900/90 px-4 py-3 text-xs text-slate-200 shadow-lg shadow-slate-950/70 backdrop-blur badge-glow">
                   Diskretno. Precizno. Fokusirano na rezultat.
                 </div>
               </div>
@@ -91,7 +91,7 @@ export default function AndricLawLanding() {
               <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                 <Link
                   href="/kontakt"
-                  className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 cta-glow"
                 >
                   Zakaži konsultacije <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
