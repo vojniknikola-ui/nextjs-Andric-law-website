@@ -14,12 +14,19 @@ import Image from "next/image";
 const HERO_IMAGE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/hero-lawyer-office-7gAa7FO4H3gsBx4ym2BFeuXY1nWq0o.jpg';
 const GALLERY_IMAGE_ONE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/andric-law-office-YzE8kiDlZyAQvDy5IyKTNcddi0lqLU.jpg';
 const GALLERY_IMAGE_TWO_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/andric-law-office-alt-y7U1pIT9mru1GYj8FrQNlKxKiectag.jpg';
+const HOMEPAGE_BG_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/Andric%20Law%20Advokatska%20Kancelarija%20Sarajevo%20.jpg';
 
 export default function AndricLawLanding() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="relative min-h-screen bg-slate-950 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${HOMEPAGE_BG_URL})` }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/80 to-slate-950/85 backdrop-blur-[2px]" aria-hidden="true" />
       <Header />
 
       <section id="hero" className="relative overflow-hidden min-h-[600px] flex items-center">
