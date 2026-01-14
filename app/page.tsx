@@ -12,8 +12,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 const HERO_IMAGE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/hero-lawyer-office-7gAa7FO4H3gsBx4ym2BFeuXY1nWq0o.jpg';
-const GALLERY_IMAGE_ONE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/andric-law-office-YzE8kiDlZyAQvDy5IyKTNcddi0lqLU.jpg';
-const GALLERY_IMAGE_TWO_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/andric-law-office-alt-y7U1pIT9mru1GYj8FrQNlKxKiectag.jpg';
 const HOMEPAGE_BG_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/Andric%20Law%20Advokatska%20Kancelarija%20Sarajevo%20.jpg';
 
 export default function AndricLawLanding() {
@@ -65,7 +63,7 @@ export default function AndricLawLanding() {
                   aria-hidden="true"
                 />
                 <div
-                  className="relative aspect-[4/5] rounded-[30px] overflow-hidden border border-white/12 bg-gradient-to-b from-slate-900/70 to-slate-950/70 shadow-2xl shadow-slate-950/70 hero-frame-animate"
+                  className="relative aspect-[4/5] rounded-[30px] overflow-hidden border border-white/10 bg-gradient-to-b from-slate-900/70 to-slate-950/70 shadow-2xl shadow-slate-950/70"
                   style={{ transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateZ(0)` }}
                 >
                   <Image
@@ -78,33 +76,6 @@ export default function AndricLawLanding() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent" />
                   <div className="absolute inset-0 ring-1 ring-white/10" aria-hidden="true" />
-                  <div className="hero-sheen" aria-hidden="true" />
-                </div>
-
-                <div className="hidden sm:block absolute -left-12 bottom-10 w-44 sm:w-52 lg:w-56 aspect-[5/6] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80 hero-float-slow">
-                  <Image
-                    src={GALLERY_IMAGE_ONE_URL}
-                    alt="Detalj iz kancelarije Andrić Law"
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 15vw, 38vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
-                </div>
-
-                <div className="hidden sm:block absolute -top-10 right-4 w-36 sm:w-44 lg:w-48 aspect-[3/4] rounded-2xl overflow-hidden border border-white/12 shadow-xl shadow-slate-950/60 bg-slate-900/80 hero-float-slower">
-                  <Image
-                    src={GALLERY_IMAGE_TWO_URL}
-                    alt="Kancelarija Andrić Law"
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 13vw, 34vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
-                </div>
-
-                <div className="absolute -bottom-6 right-2 sm:right-4 rounded-2xl border border-white/12 bg-slate-900/90 px-4 py-3 text-xs text-slate-200 shadow-lg shadow-slate-950/70 backdrop-blur badge-glow">
-                  Diskretno. Precizno. Fokusirano na rezultat.
                 </div>
               </div>
             </div>
@@ -122,13 +93,13 @@ export default function AndricLawLanding() {
               <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                 <Link
                   href="/kontakt"
-                  className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 transition-all duration-300 ease-in-out hover:from-blue-500 hover:to-cyan-400 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 cta-glow"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-white text-slate-950 font-semibold px-6 py-3 transition-colors duration-200 hover:bg-slate-100"
                 >
                   Zakaži konsultacije <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
                 <Link
                   href="/usluge"
-                  className="inline-flex items-center gap-2 rounded-xl px-6 py-3 border border-white/20 bg-white/5 text-slate-100 font-medium transition-colors hover:bg-white/10 hover:border-white/30"
+                  className="inline-flex items-center gap-2 rounded-xl px-6 py-3 border border-white/20 bg-transparent text-slate-100 font-medium transition-colors hover:bg-white/5 hover:border-white/30"
                 >
                   Pogledaj usluge
                 </Link>

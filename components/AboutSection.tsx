@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Award, Briefcase, GraduationCap, Users, Scale, TrendingUp } from 'lucide-react';
+import { Award, Briefcase, GraduationCap, Users, TrendingUp } from 'lucide-react';
 
 const ABOUT_IMAGE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/nikola-andric-portrait-qx7Acm5ZzSSYFJEoZS1g25kTE3g6iD.jpg';
 
@@ -23,31 +23,23 @@ export function AboutSection() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
                 </div>
-                <div className="absolute -bottom-6 -right-6 size-24 rounded-2xl bg-zinc-400/90 border-4 border-slate-950 flex items-center justify-center">
-                  <Scale className="size-12 text-slate-950" />
-                </div>
               </div>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl border border-white/10 bg-white/5">
-                  <div className="text-3xl font-bold text-zinc-300 mb-1">15+</div>
-                  <div className="text-xs text-slate-400">Godina iskustva</div>
-                </div>
-                <div className="p-4 rounded-2xl border border-white/10 bg-white/5">
-                  <div className="text-3xl font-bold text-zinc-300 mb-1">500+</div>
-                  <div className="text-xs text-slate-400">Riješenih slučajeva</div>
-                </div>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-400">
+                <span>15+ godina iskustva</span>
+                <span className="text-slate-600">•</span>
+                <span>500+ riješenih slučajeva</span>
               </div>
             </div>
           </div>
 
           {/* Right - Content */}
           <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 mb-6">
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-4 flex items-center gap-2">
               <Award className="size-4" />
               Osnivač i advokat principal
-            </div>
+            </p>
 
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
               Nikola Andrić
@@ -94,12 +86,12 @@ export function AboutSection() {
                   <GraduationCap className="size-5 text-zinc-300" />
                   Obrazovanje i licence
                 </h3>
-                <div className="space-y-3">
-                  <div className="p-4 rounded-xl border border-white/10 bg-white/5">
+                <div className="space-y-3 text-sm text-slate-300">
+                  <div className="border-l border-white/10 pl-4">
                     <p className="font-medium text-slate-200">Pravni fakultet Univerziteta u Sarajevu</p>
                     <p className="text-sm text-slate-400">Magistar pravnih nauka</p>
                   </div>
-                  <div className="p-4 rounded-xl border border-white/10 bg-white/5">
+                  <div className="border-l border-white/10 pl-4">
                     <p className="font-medium text-slate-200">Advokatska komora FBiH</p>
                     <p className="text-sm text-slate-400">Licencirani advokat</p>
                   </div>
@@ -119,34 +111,26 @@ export function AboutSection() {
             </div>
 
             {/* Approach */}
-            <div className="p-6 rounded-2xl border border-zinc-400/20 bg-gradient-to-br from-zinc-400/5 to-transparent">
+            <div className="p-6 rounded-2xl border border-white/10 bg-white/5">
               <h3 className="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
                 <TrendingUp className="size-5 text-zinc-300" />
                 Pristup radu
               </h3>
               <ul className="space-y-3 text-sm text-slate-300">
                 <li className="flex items-start gap-3">
-                  <div className="size-5 rounded-md bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <div className="size-1.5 rounded-full bg-zinc-400" />
-                  </div>
+                  <div className="size-1.5 rounded-full bg-zinc-300 shrink-0 mt-2" />
                   <span><strong>Preventiva prije kuracije</strong> – Fokus na izbjegavanje problema, ne samo njihovo rješavanje</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="size-5 rounded-md bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <div className="size-1.5 rounded-full bg-zinc-400" />
-                  </div>
+                  <div className="size-1.5 rounded-full bg-zinc-300 shrink-0 mt-2" />
                   <span><strong>Jasna komunikacija</strong> – Bez pravnog žargona, razumljivo objašnjenje</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="size-5 rounded-md bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <div className="size-1.5 rounded-full bg-zinc-400" />
-                  </div>
+                  <div className="size-1.5 rounded-full bg-zinc-300 shrink-0 mt-2" />
                   <span><strong>Transparentne tarife</strong> – Znate cijenu prije nego što počnemo</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="size-5 rounded-md bg-zinc-400/10 border border-zinc-400/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <div className="size-1.5 rounded-full bg-zinc-400" />
-                  </div>
+                  <div className="size-1.5 rounded-full bg-zinc-300 shrink-0 mt-2" />
                   <span><strong>Brzi odgovori</strong> – 24h za email, 72h za pisano mišljenje</span>
                 </li>
               </ul>

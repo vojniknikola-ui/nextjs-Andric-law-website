@@ -29,7 +29,7 @@ body {
   width: clamp(240px, 42vw, 520px);
   height: clamp(240px, 42vw, 520px);
   transform: translateY(-50%);
-  opacity: 0.65;
+  opacity: 0.35;
   pointer-events: none;
 }
 
@@ -183,106 +183,4 @@ body {
 .prose li > p {
   display: inline;
   margin: 0;
-}
-
-/* Custom animation utilities */
-@keyframes float-soft {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes glow-loop {
-  0% {
-    opacity: 0.4;
-    transform: scale(0.98);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.02);
-  }
-  100% {
-    opacity: 0.4;
-    transform: scale(0.98);
-  }
-}
-
-.hero-frame-animate {
-  animation: float-soft 14s ease-in-out infinite;
-}
-
-.hero-float-slow {
-  animation: float-soft 16s ease-in-out infinite;
-}
-
-.hero-float-slower {
-  animation: float-soft 18s ease-in-out infinite;
-}
-
-.cta-glow {
-  position: relative;
-  isolation: isolate;
-}
-
-.cta-glow::after {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 9999px;
-  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.25), transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.25), transparent 45%),
-    radial-gradient(circle at 50% 80%, rgba(34, 211, 238, 0.25), transparent 45%);
-  opacity: 0.5;
-  filter: blur(14px);
-  z-index: -1;
-  animation: glow-loop 6s ease-in-out infinite;
-}
-
-.badge-glow {
-  position: relative;
-  overflow: hidden;
-}
-
-.badge-glow::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 30% 40%, rgba(59, 130, 246, 0.2), transparent 55%);
-  opacity: 0.8;
-  pointer-events: none;
-  animation: glow-loop 10s ease-in-out infinite;
-}
-
-.hero-sheen {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.12) 45%, transparent 60%);
-  mix-blend-mode: screen;
-  opacity: 0;
-  animation: sheen-move 8s ease-in-out infinite;
-}
-
-@keyframes sheen-move {
-  0% {
-    opacity: 0;
-    transform: translateX(-40%) skewX(-10deg);
-  }
-  20% {
-    opacity: 0.9;
-  }
-  50% {
-    transform: translateX(20%) skewX(-10deg);
-  }
-  80% {
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(60%) skewX(-10deg);
-  }
 }
