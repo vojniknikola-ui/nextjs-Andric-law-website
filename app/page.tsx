@@ -23,13 +23,18 @@ export default function AndricLawLanding() {
     <main
       id="main-content"
       tabIndex={-1}
-      className="relative min-h-screen bg-slate-950 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${HOMEPAGE_BG_URL})` }}
+      className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 selection:bg-zinc-300/30 selection:text-zinc-950"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/80 to-slate-950/85 backdrop-blur-[2px]" aria-hidden="true" />
       <Header />
 
       <section id="hero" className="relative overflow-hidden min-h-[600px] flex items-center">
+        <div className="absolute inset-0 -z-10">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${HOMEPAGE_BG_URL})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/85 to-slate-950/90" />
+        </div>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[120vw] h-[120vw] rounded-full bg-zinc-500/5 blur-3xl" />
           <div className="hero-kinetic" aria-hidden="true">
