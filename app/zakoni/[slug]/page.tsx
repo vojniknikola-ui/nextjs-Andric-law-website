@@ -6,7 +6,6 @@ import { fetchActSnapshot } from '@/lib/acts';
 import { loadFallbackLaw } from '@/lib/lawFallbacks';
 import { contactInfo } from '@/lib/contactInfo';
 import { Metadata } from 'next';
-import { ShareBar } from '@/components/ShareBar';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // 1h snapshot cache
@@ -135,18 +134,12 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
                 )}
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <Link
-                href="/zakoni"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-800/60 hover:border-slate-500"
-              >
-                &larr; Svi zakoni
-              </Link>
-              <ShareBar
-                title={fallbackRecord.act.title}
-                url={`https://andric.law/zakoni/${fallbackRecord.act.slug}`}
-              />
-            </div>
+            <Link
+              href="/zakoni"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-800/60 hover:border-slate-500"
+            >
+              &larr; Svi zakoni
+            </Link>
           </div>
         </section>
 

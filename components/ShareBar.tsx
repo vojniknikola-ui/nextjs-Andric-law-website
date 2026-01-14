@@ -1,6 +1,7 @@
 'use client';
 
-import { Facebook, Linkedin, Link as LinkIcon, MessageCircle } from 'lucide-react';
+import { Facebook, Linkedin, Link as LinkIcon, MessageCircle, Share2 } from 'lucide-react';
+import { useMemo } from 'react';
 
 interface ShareBarProps {
   title: string;
@@ -9,9 +10,14 @@ interface ShareBarProps {
 }
 
 export function ShareBar({ title, url, className }: ShareBarProps) {
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : url;
-  const encodedUrl = encodeURIComponent(currentUrl);
-  const encodedTitle = encodeURIComponent(title);
+  const { encodedUrl, encodedTitle, currentUrl } = useMemo(() => {
+    const href = typeof window !== 'undefined' ? window.location.href : url;
+    return {
+      currentUrl: href,
+      encodedUrl: encodeURIComponent(href),
+      encodedTitle: encodeURIComponent(title),
+    };
+  }, [title, url]);
 
   const links = [
     {
@@ -33,10 +39,27 @@ export function ShareBar({ title, url, className }: ShareBarProps) {
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(currentUrl);
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(currentUrl);
+      } else {
+        // Fallback na prompt ako clipboard API nije dostupno (lokalni dev/http)
+        window.prompt('Kopirajte link', currentUrl);
+      }
       alert('Link kopiran');
     } catch (error) {
       console.warn('Copy failed', error);
+    }
+  };
+
+  const nativeShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url: currentUrl });
+      } else {
+        copyLink();
+      }
+    } catch (error) {
+      console.warn('Native share cancelled or failed', error);
     }
   };
 
@@ -62,6 +85,14 @@ export function ShareBar({ title, url, className }: ShareBarProps) {
       >
         <LinkIcon className="size-4" />
         Kopiraj link
+      </button>
+      <button
+        type="button"
+        onClick={nativeShare}
+        className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-100 hover:bg-white/10 hover:border-white/20 transition"
+      >
+        <Share2 className="size-4" />
+        Native
       </button>
     </div>
   );

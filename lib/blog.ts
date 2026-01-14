@@ -10,76 +10,20 @@ const DEFAULT_AUTHOR = {
 
 const fallbackPosts: BlogPost[] = [
   {
-    slug: 'pregled-sudske-prakse-o-komunalnoj-naknadi-i-naknadi-za-koritenje-gradskog-graevinskog-zemljita-u-bih-20242025',
-    title:
-      'Pregled sudske prakse o komunalnoj naknadi i naknadi za korištenje gradskog građevinskog zemljišta u BiH (2024‑2025)',
+    slug: 'smjene-12h-vs-11h25-infografika',
+    title: 'Smjene od 12 sati vs blokovi 11.25h – interaktivna infografika',
     excerpt:
-      'Kompaktan pregled odluka i stavova sudova u BiH o komunalnoj naknadi i naknadi za korištenje gradskog građevinskog zemljišta – period 2024‑2025.',
-    content: `# Pregled sudske prakse (2024‑2025)
+      'Interaktivni prikaz dva modela smjena (48/36/36h naspram 45/33.75h) kroz 52 sedmice: ukupni sati, ritam i razlike.',
+    content: `# Smjene 12h vs blokovi 11.25h
 
-Sažetak recentne prakse sudova u BiH u vezi sa:
-
-- **Komunalnom naknadom** – obračun, oslobađanja i zastara
-- **Naknadom za korištenje gradskog građevinskog zemljišta** – dospijeće, visina i dokazivanje
-- **Postupovnim pitanjima** – teret dokazivanja, rokovi i žalbeni razlozi
-
-## Ključni nalazi
-
-1) **Dospijeće i zastara** – Sudovi potvrđuju da rok za potraživanje naknade teče od trenutka faktičnog korištenja, a ne samo od upisa prava.
-2) **Dokazivanje** – Obveznik koji osporava obračun mora ponuditi konkretne dokaze o nemogućnosti korištenja zemljišta (npr. objektivna zapreka).
-3) **Oslobađanja** – Privremena nemogućnost korištenja (radovi, zabrane) može opravdati umanjenje, ali ne i potpuno oslobađanje bez izričitog rješenja.
-4) **Kamate** – Zatezna kamata teče od dana dospijeća utvrđenog rješenjem, a ne unazad.
-
-## Praktične napomene
-
-- Provjeriti je li rješenje uredno dostavljeno (rokovi za žalbu).
-- Čuvati dokaz o fazama korištenja/nekorištenja zemljišta.
-- Pregovarati o reprogramu gdje je dug nesporan radi smanjenja kamate.
+U nastavku je interaktivna infografika koja poredi dva modela rada u 12-satnim i 11.25-satnim blokovima tokom 52 sedmice. Kliknite na tabove za graf ili tabelu.
 `,
-    date: '2025-03-01',
-    readMinutes: 6,
-    tags: ['Komunalna naknada', 'Građevinsko zemljište', 'BiH'],
+    date: '2025-03-02',
+    readMinutes: 4,
+    tags: ['Radno pravo', 'Radno vrijeme', 'HR'],
     author: DEFAULT_AUTHOR,
     featured: true,
-    image: 'https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=1200&h=675&fit=crop',
-  },
-  {
-    slug: 'bracna-stecevina-mit-automatska-podjela',
-    title: 'Bračna stečevina i mit o automatskoj podjeli “pola-pola”',
-    excerpt:
-      'Da li se bračna stečevina dijeli tačno 50/50? Pregled pravila, izuzetaka i dokaza koji utiču na podjelu.',
-    content: `# Bračna stečevina: nije uvijek 50/50
-
-Mit o automatskoj podjeli bračne stečevine na pola je čest, ali sudovi procjenjuju doprinos i konkretne okolnosti.
-
-## Šta ulazi u bračnu stečevinu
-
-- Zarada i imovina stečena tokom braka
-- Zajednička ulaganja u stan/kuću/posao
-- Ušteđevina, vozila, vrijednosni papiri stečeni u braku
-
-## Šta je izuzetak
-
-- Imovina stečena nasljeđem ili poklonom (ako nije “pomiješana”)
-- Lične stvari i odštete za povrede
-
-## Kako sud procjenjuje podjelu
-
-- **Doprinos** – finansijski, briga o djeci, vođenje domaćinstva
-- **Dokazi** – ugovori, uplate, svjedoci o ulaganjima
-- **Zajednički krediti** – dijele se uz imovinu na koju su utrošeni
-
-## Praktični savjeti
-
-- Vodite evidenciju o ulaganjima i kreditima.
-- Prije pokretanja spora, pokušajte sporazum s jasnim popisom imovine.
-- U bračnom/partnerskom ugovoru predvidite posebna pravila podjele.
-`,
-    date: '2025-02-18',
-    readMinutes: 5,
-    tags: ['Porodično pravo', 'Bračna stečevina', 'FBiH', 'RS'],
-    author: DEFAULT_AUTHOR,
-    image: 'https://images.unsplash.com/photo-1509099836639-18ba02e2e1ba?w=1200&h=675&fit=crop',
+    image: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?w=1200&h=675&fit=crop',
   },
 ];
 

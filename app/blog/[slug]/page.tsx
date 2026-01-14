@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { Calendar, Tag, Share2 } from 'lucide-react';
+import { Calendar, Tag } from 'lucide-react';
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { BlogCard } from '@/components/BlogCard';
 import ReactMarkdown from 'react-markdown';
@@ -14,6 +14,7 @@ import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { ShareBar } from '@/components/ShareBar';
+import { WorkHoursInfographic } from '@/components/WorkHoursInfographic';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -207,6 +208,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Content + Disclaimer */}
           <div className="mt-10 space-y-8">
+            {post.slug === 'smjene-12h-vs-11h25-infografika' && (
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
+                <WorkHoursInfographic />
+              </div>
+            )}
             <div className="prose prose-invert prose-slate max-w-none">
               <ReactMarkdown
                 rehypePlugins={[rehypeRaw]}
@@ -328,17 +334,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <LawTextSection text={lawText} />
           )}
 
-          <div className="mt-12 pt-8 border-t border-slate-800">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-slate-300">Podijelite ovaj članak</p>
-              <div className="flex gap-2">
-                <button className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 border border-slate-700/80 hover:bg-slate-800/50 transition text-sm font-medium">
-                  <Share2 className="size-4" />
-                  <span>Podijeli</span>
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </article>
 
