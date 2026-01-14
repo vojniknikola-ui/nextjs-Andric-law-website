@@ -13,6 +13,7 @@ import rehypeRaw from 'rehype-raw';
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { ShareBar } from '@/components/ShareBar';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -112,7 +113,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {post.title}
             </h1>
 
-            <div className="flex items-center gap-4 border-y border-slate-800 py-4">
+            <div className="flex items-center gap-4 border-y border-slate-800 py-4 flex-wrap">
               <div className="flex items-center gap-3">
                 <Image
                   src={post.author.image || '/fallbacks/author-placeholder.jpg'}
@@ -137,6 +138,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     day: 'numeric',
                   })}
                 </span>
+              </div>
+              <div className="ml-auto">
+                <ShareBar
+                  title={post.title}
+                  url={post.canonicalUrl ?? `https://andric.law/blog/${post.slug}`}
+                  className="gap-2"
+                />
               </div>
             </div>
           </div>

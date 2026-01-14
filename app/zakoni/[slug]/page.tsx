@@ -6,6 +6,7 @@ import { fetchActSnapshot } from '@/lib/acts';
 import { loadFallbackLaw } from '@/lib/lawFallbacks';
 import { contactInfo } from '@/lib/contactInfo';
 import { Metadata } from 'next';
+import { ShareBar } from '@/components/ShareBar';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // 1h snapshot cache
@@ -97,8 +98,8 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-slate-950 text-slate-100 bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.65),_rgba(2,6,23,1))]">
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <section className="rounded-3xl border border-slate-700/50 bg-gradient-to-br from-slate-800/40 to-slate-900/50 p-8 shadow-2xl shadow-black/40">
-          <div className="flex justify-between items-start">
-            <div>
+          <div className="flex justify-between items-start gap-4 flex-wrap">
+            <div className="min-w-[240px]">
               <p className="text-sm font-medium uppercase tracking-widest text-cyan-400">Digitalni Zakon</p>
               <h1 className="mt-4 text-4xl font-bold text-white lg:text-5xl">{fallbackRecord.act.title}</h1>
               <div className="mt-6 space-y-3 text-slate-300">
@@ -134,12 +135,18 @@ export default async function ActViewerPage({ params, searchParams }: Params) {
                 )}
               </div>
             </div>
-            <Link
-              href="/zakoni"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-800/60 hover:border-slate-500"
-            >
-              &larr; Svi zakoni
-            </Link>
+            <div className="flex items-start gap-3">
+              <Link
+                href="/zakoni"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-800/60 hover:border-slate-500"
+              >
+                &larr; Svi zakoni
+              </Link>
+              <ShareBar
+                title={fallbackRecord.act.title}
+                url={`https://andric.law/zakoni/${fallbackRecord.act.slug}`}
+              />
+            </div>
           </div>
         </section>
 
