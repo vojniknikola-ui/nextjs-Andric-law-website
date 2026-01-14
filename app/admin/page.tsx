@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { sql, desc } from 'drizzle-orm';
 import { getDb, acts, provisions, cmsPosts } from '@/db';
 import AdminPostsTable from './AdminPostsTable';
+import { getAllPosts } from '@/lib/blog';
 
 export default async function AdminDashboardPage() {
   unstable_noStore();
@@ -37,7 +38,19 @@ export default async function AdminDashboardPage() {
     .limit(5);
 
   const lastImport = recentActs[0]?.createdAt ? new Date(recentActs[0]!.createdAt as unknown as string) : null;
-  const postRows = posts;
+  const dbSlugs = new Set(posts.map((p) => p.slug));
+  const mergedPosts = await getAllPosts();
+  const postRows = mergedPosts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    tags: post.tags,
+    isLawDocument: post.isLawDocument ?? false,
+    featured: post.featured ?? false,
+    publishedAt: post.date ?? null,
+    lawSlug: post.lawSlug ?? null,
+    canDelete: dbSlugs.has(post.slug),
+  }));
 
   return (
     <div className="space-y-10">

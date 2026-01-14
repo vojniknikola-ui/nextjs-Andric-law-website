@@ -12,6 +12,7 @@ type PostRow = {
   featured: boolean | null;
   publishedAt: string | null;
   lawSlug?: string | null;
+  canDelete?: boolean;
 };
 
 export default function AdminPostsTable({ posts }: { posts: PostRow[] }) {
@@ -69,6 +70,7 @@ export default function AdminPostsTable({ posts }: { posts: PostRow[] }) {
               <th className="px-2 py-2">Slug</th>
               <th className="px-2 py-2">Tagovi</th>
               <th className="px-2 py-2">Tip</th>
+              <th className="px-2 py-2">Izvor</th>
               <th className="px-2 py-2 text-right">Akcija</th>
             </tr>
           </thead>
@@ -91,6 +93,9 @@ export default function AdminPostsTable({ posts }: { posts: PostRow[] }) {
                   {post.tags && post.tags.length > 3 ? '…' : ''}
                 </td>
                 <td className="px-2 py-2 text-xs">{post.isLawDocument ? 'Zakon' : 'Blog'}</td>
+                <td className="px-2 py-2 text-xs text-slate-400">
+                  {post.canDelete ? 'Baza' : 'Fallback'}
+                </td>
                 <td className="px-2 py-2 text-right space-x-3">
                   <Link
                     href={post.isLawDocument ? `/zakoni/${post.lawSlug ?? post.slug}` : `/blog/${post.slug}`}
@@ -99,13 +104,17 @@ export default function AdminPostsTable({ posts }: { posts: PostRow[] }) {
                     Otvori
                   </Link>
                   <Link href={`/admin/law-uploader?slug=${post.slug}`} className="text-cyan-300 hover:underline">Uredi</Link>
-                  <button
-                    type="button"
-                    onClick={() => removePost(post.slug)}
-                    className="text-red-300 hover:underline"
-                  >
-                    Obriši
-                  </button>
+                  {post.canDelete ? (
+                    <button
+                      type="button"
+                      onClick={() => removePost(post.slug)}
+                      className="text-red-300 hover:underline"
+                    >
+                      Obriši
+                    </button>
+                  ) : (
+                    <span className="text-slate-500">Nije u bazi</span>
+                  )}
                 </td>
               </tr>
             ))}
