@@ -14,7 +14,7 @@ import {
   AreaChart,
   Area,
   Cell,
-  ContentType,
+  TooltipProps,
 } from 'recharts';
 import { Calendar, Clock, TrendingUp, AlertCircle, FileText } from 'lucide-react';
 
@@ -44,7 +44,7 @@ const InfoCard = ({ title, value, caption, accent }: { title: string; value: str
   );
 };
 
-const CumulativeTooltip: ContentType<number, string> = ({ active, payload, label }) => {
+const renderCumulativeTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-3 border border-slate-200 shadow-lg rounded-lg text-xs z-50">
@@ -70,7 +70,7 @@ const CumulativeTooltip: ContentType<number, string> = ({ active, payload, label
   return null;
 };
 
-const DiffTooltip: ContentType<number, string> = ({ active, payload }) => {
+const renderDiffTooltip = ({ active, payload }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     const val = payload[0].value as number;
     const week = payload[0].payload?.week;
@@ -187,7 +187,7 @@ export function WorkHoursInfographic() {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
                     <XAxis dataKey="week" tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} interval={9} />
                     <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
-                    <Tooltip content={CumulativeTooltip} />
+                    <Tooltip content={renderCumulativeTooltip} />
                     <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px', color: '#e5e7eb' }} />
                     <Area type="monotone" dataKey="cum1" name="Op. 1 (12h)" stroke="#60a5fa" fillOpacity={1} fill="url(#colorOp1)" strokeWidth={2} />
                     <Area type="monotone" dataKey="cum2" name="Op. 2 (11.25h)" stroke="#34d399" fillOpacity={1} fill="url(#colorOp2)" strokeWidth={2} />
@@ -205,7 +205,7 @@ export function WorkHoursInfographic() {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
                     <XAxis dataKey="week" tickLine={false} axisLine={false} tick={{ fill: '#9ca3af', fontSize: 10 }} interval={9} />
                     <YAxis tickLine={false} axisLine={false} tick={{ fill: '#9ca3af', fontSize: 10 }} />
-                    <Tooltip cursor={{ fill: '#0f172a' }} content={DiffTooltip} />
+                    <Tooltip cursor={{ fill: '#0f172a' }} content={renderDiffTooltip} />
                     <ReferenceLine y={0} stroke="#4b5563" strokeWidth={1} />
                     <Bar dataKey="diff" name="Razlika">
                       {data.map((entry, index) => (
