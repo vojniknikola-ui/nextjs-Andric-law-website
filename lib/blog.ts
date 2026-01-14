@@ -8,24 +8,7 @@ const DEFAULT_AUTHOR = {
   image: '/fallbacks/author-placeholder.jpg',
 } as const;
 
-const fallbackPosts: BlogPost[] = [
-  {
-    slug: 'smjene-12h-vs-11h25-infografika',
-    title: 'Smjene od 12 sati vs blokovi 11.25h – interaktivna infografika',
-    excerpt:
-      'Interaktivni prikaz dva modela smjena (48/36/36h naspram 45/33.75h) kroz 52 sedmice: ukupni sati, ritam i razlike.',
-    content: `# Smjene 12h vs blokovi 11.25h
-
-U nastavku je interaktivna infografika koja poredi dva modela rada u 12-satnim i 11.25-satnim blokovima tokom 52 sedmice. Kliknite na tabove za graf ili tabelu.
-`,
-    date: '2025-03-02',
-    readMinutes: 4,
-    tags: ['Radno pravo', 'Radno vrijeme', 'HR'],
-    author: DEFAULT_AUTHOR,
-    featured: true,
-    image: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?w=1200&h=675&fit=crop',
-  },
-];
+const fallbackPosts: BlogPost[] = [];
 
 export async function getAllPosts(): Promise<BlogPost[]> {
   const posts = await getMergedPosts();

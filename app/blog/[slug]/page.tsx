@@ -84,6 +84,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const lawText = await loadLawText(post.lawFile);
   const content = stripDuplicateTitle(post.content, post.title);
+  const showWorkHoursInfographic =
+    post.slug.toLowerCase().includes('12') ||
+    post.slug.toLowerCase().includes('smjene') ||
+    post.tags.some((tag) => tag.toLowerCase().includes('radno vrijeme'));
 
   // Get related posts (same tags)
   const allPosts = await getAllPosts();
@@ -208,7 +212,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Content + Disclaimer */}
           <div className="mt-10 space-y-8">
-            {post.slug === 'smjene-12h-vs-11h25-infografika' && (
+            {showWorkHoursInfographic && (
               <div className="rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
                 <WorkHoursInfographic />
               </div>
