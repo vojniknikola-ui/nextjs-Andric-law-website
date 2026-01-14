@@ -14,7 +14,7 @@ import {
   AreaChart,
   Area,
   Cell,
-  TooltipProps,
+  ContentType,
 } from 'recharts';
 import { Calendar, Clock, TrendingUp, AlertCircle, FileText } from 'lucide-react';
 
@@ -44,7 +44,7 @@ const InfoCard = ({ title, value, caption, accent }: { title: string; value: str
   );
 };
 
-const CumulativeTooltip: React.FC<TooltipProps<number, string>> = ({ active, payload, label }) => {
+const CumulativeTooltip: ContentType<number, string> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-3 border border-slate-200 shadow-lg rounded-lg text-xs z-50">
@@ -70,7 +70,7 @@ const CumulativeTooltip: React.FC<TooltipProps<number, string>> = ({ active, pay
   return null;
 };
 
-const DiffTooltip: React.FC<TooltipProps<number, string>> = ({ active, payload }) => {
+const DiffTooltip: ContentType<number, string> = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const val = payload[0].value as number;
     const week = payload[0].payload?.week;
