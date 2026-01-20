@@ -1,6 +1,17 @@
 import { desc } from 'drizzle-orm';
 import { BlogPost } from '@/types/blog';
 import { getDb, cmsPosts } from '@/db';
+import { advokatskaTarifaFBiHPost } from '@/content/blog/advokatska-tarifa-fbih';
+import { advokatskaTarifaRSPort } from '@/content/blog/advokatska-tarifa-rs';
+import { kaznenZakonFBiH } from '@/content/blog/kazneni-zakon-fbih-procisceni-tekst';
+import { politikaDirektnihUlaganjaPost } from '@/content/blog/politika-direktnih-ulaganja';
+import { prestajeMiUgovorKvizPost } from '@/content/blog/prestaje-mi-ugovor-o-radu-fbih-kviz';
+import { ustavBiHPost } from '@/content/blog/ustav-bosne-i-hercegovine';
+import { zakonOAdvokaturiFBiHPost } from '@/content/blog/zakon-o-advokaturi-fbih';
+import { zakonONasljedjivanjuPost } from '@/content/blog/zakon-o-nasljedjivanju';
+import { pdvPost } from '@/content/blog/zakon-o-pdv';
+import { privremenaZabranaImovinePost } from '@/content/blog/zakon-o-privremenoj-zabrani-drzavne-imovine';
+import { zakonReprezentativnostiPost } from '@/content/blog/zakon-o-reprezentativnosti-sindikata-i-udruzenja-poslodavaca-fbih';
 
 const DEFAULT_AUTHOR = {
   name: 'Advokat Nikola Andrić',
@@ -8,7 +19,19 @@ const DEFAULT_AUTHOR = {
   image: '/fallbacks/author-placeholder.jpg',
 } as const;
 
-const fallbackPosts: BlogPost[] = [];
+const fallbackPosts: BlogPost[] = [
+  prestajeMiUgovorKvizPost,
+  advokatskaTarifaFBiHPost,
+  advokatskaTarifaRSPort,
+  kaznenZakonFBiH,
+  politikaDirektnihUlaganjaPost,
+  ustavBiHPost,
+  zakonOAdvokaturiFBiHPost,
+  zakonONasljedjivanjuPost,
+  pdvPost,
+  privremenaZabranaImovinePost,
+  zakonReprezentativnostiPost,
+];
 
 export async function getAllPosts(): Promise<BlogPost[]> {
   const posts = await getMergedPosts();
