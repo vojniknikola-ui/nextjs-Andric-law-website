@@ -213,15 +213,12 @@ export default function ContactPage() {
                     Pozovi odmah
                   </a>
                 </div>
-                <ul className="mt-4 grid gap-3 text-sm text-slate-300 sm:grid-cols-3">
+                <ul className="mt-4 grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
                   <li className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
                     Online ili u kancelariji
                   </li>
                   <li className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
                     Brza potvrda termina
-                  </li>
-                  <li className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                    Jasni sljedeći koraci
                   </li>
                 </ul>
               </div>

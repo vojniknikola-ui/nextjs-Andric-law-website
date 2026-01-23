@@ -1,23 +1,18 @@
 "use client";
 
-import { useState } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ServicesSection } from '@/components/ServicesSection';
 import { AboutSection } from '@/components/AboutSection';
-import { LegalJourney } from '@/components/LegalJourney';
 import {
   ChevronRight, Clock,
 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 const HERO_IMAGE_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/hero-lawyer-office-7gAa7FO4H3gsBx4ym2BFeuXY1nWq0o.jpg';
 const HOMEPAGE_BG_URL = 'https://6c173bpkbtxg84ji.public.blob.vercel-storage.com/site/Andric%20Law%20Advokatska%20Kancelarija%20Sarajevo%20.jpg';
 
 export default function AndricLawLanding() {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
   return (
     <main
       id="main-content"
@@ -35,8 +30,7 @@ export default function AndricLawLanding() {
           <div className="absolute inset-0 bg-slate-950" />
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-32 w-full">
-          <div className="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-12 items-start">
-            <div className="max-w-2xl">
+          <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-4 py-2 text-sm text-slate-300 mb-8">
                 <Clock className="size-4" /> Odgovor u 24h
               </div>
@@ -62,10 +56,6 @@ export default function AndricLawLanding() {
                 </Link>
               </div>
             </div>
-            <div className="mt-12 lg:mt-0">
-              <LegalJourney />
-            </div>
-          </div>
         </div>
       </section>
 

@@ -32,7 +32,6 @@ export const metadata: Metadata = {
 const highlights = [
   { label: 'Praksa', value: '9 specijalizacija', icon: Sparkles },
   { label: 'Odgovor', value: '24h e-mail', icon: Clock },
-  { label: 'Geo fokus', value: 'FBiH · RS · BD', icon: ShieldCheck },
 ];
 
 export default function ServicesPage() {
@@ -117,22 +116,6 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              'Odgovor na upit u 24h i pisano mišljenje u 72h.',
-              'Dokumentacija usklađena sa propisima FBiH/RS/Brčko i sektorom.',
-              '100% povjerljivo: brzi uvid u situaciju i jasni rokovi realizacije.',
-            ].map((item) => (
-              <div key={item} className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-5">
-                <div className="flex items-start gap-3">
-                  <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-zinc-200">
-                    <CheckCircle2 className="size-5" />
-                  </div>
-                  <p className="text-sm text-slate-200 leading-relaxed">{item}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
