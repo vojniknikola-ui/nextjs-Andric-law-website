@@ -67,11 +67,10 @@ export default function AndricLawLanding() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Česta pitanja</h2>
-            <p className="text-lg text-slate-600">Brzi odgovori na najvažnija pitanja</p>
           </div>
           <div className="space-y-3">
             <Faq q="Da li radite hitne predmete?" a="Da, uz prethodni dogovor." />
-            <Faq q="Da li pišete interne akte?" a="Da, pravilnike i politike usklađene sa propisima." />
+            <Faq q="Da li pišete interne akte?" a="Da, pravilnike i politike." />
             <Faq q="Možemo li sve online?" a="Može. Ugovori, sastanci i plaćanja digitalno." />
           </div>
         </div>

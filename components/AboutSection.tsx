@@ -21,11 +21,11 @@ export function AboutSection() {
             <div className="mt-6 flex items-center gap-8 text-sm text-slate-400">
               <div>
                 <div className="text-3xl font-bold text-white mb-1">15+</div>
-                <div>godina iskustva</div>
+                <div>godina</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-white mb-1">500+</div>
-                <div>riješenih slučajeva</div>
+                <div>slučajeva</div>
               </div>
             </div>
           </div>
@@ -44,14 +44,14 @@ export function AboutSection() {
             </p>
 
             <p className="text-slate-300 leading-relaxed mb-10">
-              Sa preko 15 godina iskustva u pravnoj praksi, fokusiram se na pružanje praktičnih pravnih rješenja koja štite interese klijenata.
+              Pravna rješenja koja štite interese klijenata.
             </p>
 
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                   <Briefcase className="size-5" />
-                  Oblasti specijalizacije
+                  Specijalizacije
                 </h3>
                 <div className="grid grid-cols-2 gap-3 text-sm text-slate-300">
                   {[
