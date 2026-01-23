@@ -25,85 +25,39 @@ export default function AndricLawLanding() {
     >
       <Header />
 
-      <section id="hero" className="relative overflow-hidden min-h-[600px] flex items-center">
+      <section id="hero" className="relative overflow-hidden min-h-[85vh] flex items-center">
         <div className="absolute inset-0 -z-10">
           <div
-            className="absolute inset-0 bg-cover bg-center"
+            className="absolute inset-0 bg-cover bg-center opacity-40"
             style={{ backgroundImage: `url(${HOMEPAGE_BG_URL})` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/85 to-slate-950/90" />
+          <div className="absolute inset-0 bg-slate-950" />
         </div>
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[120vw] h-[120vw] rounded-full bg-zinc-500/5 blur-3xl" />
-          <div className="hero-kinetic" aria-hidden="true">
-            <span className="hero-kinetic__orbit hero-kinetic__orbit--one" />
-            <span className="hero-kinetic__orbit hero-kinetic__orbit--two" />
-            <span className="hero-kinetic__orbit hero-kinetic__orbit--three" />
-            <span className="hero-kinetic__core" />
-          </div>
-        </div>
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-5 relative lg:pl-6 order-1 lg:order-2">
-              <div
-                className="relative group"
-                onMouseMove={(event) => {
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  const percentX = (event.clientX - rect.left) / rect.width - 0.5;
-                  const percentY = (event.clientY - rect.top) / rect.height - 0.5;
-                  setTilt({
-                    x: Math.max(-8, Math.min(8, percentY * -10)),
-                    y: Math.max(-8, Math.min(8, percentX * 10)),
-                  });
-                }}
-                onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-              >
-                <div
-                  className="pointer-events-none absolute -inset-10 sm:-inset-12 rounded-[32px] bg-gradient-to-br from-cyan-400/12 via-white/6 to-transparent blur-3xl"
-                  aria-hidden="true"
-                />
-                <div
-                  className="relative aspect-[4/5] rounded-[30px] overflow-hidden border border-white/10 bg-gradient-to-b from-slate-900/70 to-slate-950/70 shadow-2xl shadow-slate-950/70"
-                  style={{ transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateZ(0)` }}
-                >
-                  <Image
-                    src={HERO_IMAGE_URL}
-                    alt="Advokatski ured u modernom poslovnom okruženju"
-                    fill
-                    className="object-cover"
-                    priority
-                    sizes="(min-width: 1024px) 42vw, 92vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent" />
-                  <div className="absolute inset-0 ring-1 ring-white/10" aria-hidden="true" />
-                </div>
-              </div>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-32 w-full">
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-4 py-2 text-sm text-slate-300 mb-8">
+              <Clock className="size-4" /> Odgovor u 24h
             </div>
-
-            <div className="lg:col-span-7 flex flex-col items-center text-center lg:items-start lg:text-left gap-6 lg:gap-8 max-w-3xl order-2 lg:order-1">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-                <Clock className="size-3" /> Odgovor u 24h · Pisano mišljenje u 72h
-              </span>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-                Pravni partner za <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 to-zinc-400">biznis u BiH</span>
-              </h1>
-              <p className="text-slate-200 text-lg leading-relaxed">
-                Fokus na 9 specijalizacija: radno, porodično, imovinsko, nasljedno, privredno, porezno, bankarsko, IT/telekom i energetsko pravo. Jasni rokovi, povjerljivost i dokumenti usklađeni sa FBiH/RS/BD propisima.
-              </p>
-              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                <Link
-                  href="/kontakt"
-                  className="group inline-flex items-center gap-2 rounded-xl bg-white text-slate-950 font-semibold px-6 py-3 transition-colors duration-200 hover:bg-slate-100"
-                >
-                  Zakaži konsultacije <ChevronRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  href="/usluge"
-                  className="inline-flex items-center gap-2 rounded-xl px-6 py-3 border border-white/20 bg-transparent text-slate-100 font-medium transition-colors hover:bg-white/5 hover:border-white/30"
-                >
-                  Pogledaj usluge
-                </Link>
-              </div>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-8">
+              Pravni partner za
+              <span className="block text-white mt-2">biznis u BiH</span>
+            </h1>
+            <p className="text-xl text-slate-300 leading-relaxed mb-10 max-w-2xl">
+              Specijalizirani za radno, porodično, imovinsko i privredno pravo. Jasni rokovi, transparentne tarife.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/kontakt"
+                className="group inline-flex items-center gap-2 rounded-full bg-white text-slate-950 font-semibold px-8 py-4 text-lg transition-all duration-200 hover:bg-slate-100 hover:scale-105"
+              >
+                Zakaži konsultacije <ChevronRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+              <Link
+                href="/usluge"
+                className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg border border-white/30 bg-transparent text-white font-medium transition-all duration-200 hover:bg-white/10 hover:border-white/50"
+              >
+                Pogledaj usluge
+              </Link>
             </div>
           </div>
         </div>
@@ -113,10 +67,13 @@ export default function AndricLawLanding() {
 
       <AboutSection />
 
-      <section id="faq" className="py-16 md:py-24">
+      <section id="faq" className="py-24 md:py-32 bg-white text-slate-950">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Česta pitanja</h2>
-          <div className="mt-8 space-y-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Česta pitanja</h2>
+            <p className="text-lg text-slate-600">Brzi odgovori na najvažnija pitanja</p>
+          </div>
+          <div className="space-y-3">
             <Faq q="Da li radite hitne predmete?" a="Da, uz prethodni dogovor i hitni dodatak na tarifu. Procjenu dobijate odmah nakon uvodnog poziva." />
             <Faq q="Da li pišete interne akte (pravilnici, politike)?" a="Da. Uz konzultacije i usklađivanje sa važećim propisima FBiH/RS/Brčko i EU regulativom (GDPR)." />
             <Faq q="Možemo li sve online?" a="Može. Ugovori, sastanci i plaćanja idu digitalno, a originali naknadno po potrebi." />
@@ -131,12 +88,12 @@ export default function AndricLawLanding() {
 
 function Faq({ q, a }: { q: string; a: string }) {
   return (
-    <details className="group rounded-2xl border border-slate-700/50 bg-slate-800/30 p-6 transition-all duration-300 ease-in-out hover:bg-slate-800/50 open:bg-slate-800/60 open:border-slate-600">
+    <details className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-200 hover:border-slate-300 hover:shadow-sm open:border-slate-300 open:shadow-md">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-6">
-        <h3 className="font-semibold text-slate-100">{q}</h3>
-        <ChevronRight className="size-5 shrink-0 text-slate-400 transition-transform duration-300 group-open:rotate-90" />
+        <h3 className="font-semibold text-slate-950 text-lg">{q}</h3>
+        <ChevronRight className="size-5 shrink-0 text-slate-400 transition-transform duration-200 group-open:rotate-90" />
       </summary>
-      <p className="mt-4 text-slate-300 leading-relaxed">{a}</p>
+      <p className="mt-4 text-slate-600 leading-relaxed">{a}</p>
     </details>
   );
 }

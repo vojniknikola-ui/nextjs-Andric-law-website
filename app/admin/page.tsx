@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { sql, desc } from 'drizzle-orm';
 import { getDb, acts, provisions, cmsPosts } from '@/db';
 import AdminPostsTable from './AdminPostsTable';
+import PublishQuizButton from './PublishQuizButton';
 import { getAllPosts } from '@/lib/blog';
 
 export default async function AdminDashboardPage() {
@@ -76,6 +77,19 @@ export default async function AdminDashboardPage() {
           description="Unesi tekst, tagove i metapodatke za novi članak."
           href="/admin/law-uploader?type=blog"
         />
+      </section>
+
+      <section className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/30">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Brza objava</p>
+            <h2 className="mt-2 text-xl font-semibold text-white">Kviz: Prestaje mi ugovor o radu u FBiH</h2>
+            <p className="mt-1 text-sm text-slate-300">
+              Objavi unaprijed pripremljeni decision tree direktno u bazu.
+            </p>
+          </div>
+          <PublishQuizButton />
+        </div>
       </section>
 
       <section className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/30">
