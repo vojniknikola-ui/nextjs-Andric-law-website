@@ -21,61 +21,43 @@ export function ServiceCard({ href, icon, title, items, description, featured }:
     <Link
       href={href}
       aria-label={`Saznaj više o ${title}`}
-      className={`group relative text-left rounded-2xl border transition-colors duration-200 ${
-        featured ? 'border-white/20 bg-white/10 hover:border-white/30' : 'border-white/10 bg-white/5 hover:border-white/20'
-      }`}
+      className="group relative text-left rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 transition-all duration-200 hover:border-slate-300 hover:shadow-lg"
     >
-      <div className="relative p-6 sm:p-7">
-        {/* Icon & Title */}
-        <div className="flex items-start gap-4 mb-4">
-          <div className="shrink-0 size-12 rounded-xl border border-white/15 bg-white/5 flex items-center justify-center text-slate-200">
-            <div className="scale-125">
-              {icon}
-            </div>
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-xl font-bold text-slate-50 mb-2 group-hover:text-zinc-200 transition-colors">
-              {title}
-            </h3>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              {description}
-            </p>
-          </div>
+      <div className="flex items-start gap-4 mb-5">
+        <div className="shrink-0 size-12 rounded-xl bg-slate-950 flex items-center justify-center text-white">
+          {icon}
         </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-xl font-bold text-slate-950 mb-2">
+            {title}
+          </h3>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            {description}
+          </p>
+        </div>
+      </div>
 
-        {/* Divider */}
-        <div className="h-px bg-white/10 mb-4" />
+      <div className="h-px bg-slate-200 mb-5" />
 
-        {/* Items list */}
-        <ul className="space-y-2.5 mb-4">
-          {previewItems.map((item, index) => (
-            <li 
-              key={item} 
-              className="flex items-start gap-3 text-sm text-slate-300 group/item"
-              style={{ 
-                animationDelay: `${index * 50}ms`,
-              }}
-            >
-              <div className="shrink-0 mt-0.5">
-                <div className="size-5 rounded-md border border-white/15 flex items-center justify-center">
-                  <div className="size-1.5 rounded-full bg-zinc-300" />
-                </div>
+      <ul className="space-y-2.5 mb-5">
+        {previewItems.map((item) => (
+          <li key={item} className="flex items-start gap-3 text-sm text-slate-700">
+            <div className="shrink-0 mt-0.5">
+              <div className="size-5 rounded-md bg-slate-100 flex items-center justify-center">
+                <div className="size-1.5 rounded-full bg-slate-950" />
               </div>
-              <span className="leading-relaxed group-hover/item:text-slate-200 transition-colors">
-                {item}
-              </span>
-            </li>
-          ))}
-          {remainingCount > 0 && (
-            <li className="text-xs text-slate-400">+ {remainingCount} više</li>
-          )}
-        </ul>
+            </div>
+            <span className="leading-relaxed">{item}</span>
+          </li>
+        ))}
+        {remainingCount > 0 && (
+          <li className="text-xs text-slate-500">+ {remainingCount} više</li>
+        )}
+      </ul>
 
-        {/* CTA */}
-        <div className="flex items-center gap-2 pt-3 border-t border-white/10 text-sm font-medium text-slate-300 group-hover:text-slate-100 transition-colors">
-          Saznaj više
-          <ArrowRight className="size-4" />
-        </div>
+      <div className="flex items-center gap-2 pt-4 border-t border-slate-200 text-sm font-semibold text-slate-950 group-hover:gap-3 transition-all">
+        Saznaj više
+        <ArrowRight className="size-4" />
       </div>
     </Link>
   );
