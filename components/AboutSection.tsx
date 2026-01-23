@@ -40,17 +40,12 @@ export function AboutSection() {
               Nikola Andrić
             </h2>
             <p className="text-xl text-slate-300 mb-8">
-              Advokat specijaliziran za radno pravo, IT ugovore i privredno pravo
+              Advokat specijaliziran za radno i privredno pravo
             </p>
 
-            <div className="space-y-4 mb-10 text-slate-300 leading-relaxed">
-              <p>
-                Sa preko 15 godina iskustva u pravnoj praksi, fokusiram se na pružanje praktičnih pravnih rješenja koja štite interese klijenata i minimiziraju rizike.
-              </p>
-              <p>
-                Vjerujem u transparentnu komunikaciju, jasne rokove i preventivni pristup pravnim pitanjima. Svaki klijent dobija personalizovanu pažnju i stručno mišljenje zasnovano na aktuelnoj praksi.
-              </p>
-            </div>
+            <p className="text-slate-300 leading-relaxed mb-10">
+              Sa preko 15 godina iskustva u pravnoj praksi, fokusiram se na pružanje praktičnih pravnih rješenja koja štite interese klijenata.
+            </p>
 
             <div className="space-y-6">
               <div>

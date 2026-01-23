@@ -142,6 +142,97 @@ body {
   }
 }
 
+/* Legal journey animation */
+.legal-journey {
+  position: relative;
+}
+
+.legal-journey__rail {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  bottom: 20px;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0), rgba(148, 163, 184, 0.45), rgba(148, 163, 184, 0));
+}
+
+.legal-journey__dot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  box-shadow: 0 0 12px rgba(148, 163, 184, 0.6);
+  animation: legal-journey-dot 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.legal-icon-sway {
+  animation: legal-icon-sway 6s ease-in-out infinite;
+  transform-origin: 50% 15%;
+}
+
+.legal-icon-float {
+  animation: legal-icon-float 5.5s ease-in-out infinite;
+}
+
+.legal-icon-strike {
+  animation: legal-icon-strike 7.5s ease-in-out infinite;
+}
+
+@keyframes legal-journey-dot {
+  0% {
+    transform: translate(-50%, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, calc(100% - 8px));
+    opacity: 0;
+  }
+}
+
+@keyframes legal-icon-sway {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes legal-icon-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes legal-icon-strike {
+  0%,
+  64%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  72% {
+    transform: translateY(2px) rotate(2deg);
+  }
+  80% {
+    transform: translateY(-2px) rotate(-2deg);
+  }
+}
+
 .skip-link {
   position: absolute;
   left: 1rem;

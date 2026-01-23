@@ -5,6 +5,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ServicesSection } from '@/components/ServicesSection';
 import { AboutSection } from '@/components/AboutSection';
+import { LegalJourney } from '@/components/LegalJourney';
 import {
   ChevronRight, Clock,
 } from "lucide-react";
@@ -34,30 +35,35 @@ export default function AndricLawLanding() {
           <div className="absolute inset-0 bg-slate-950" />
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-32 w-full">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-4 py-2 text-sm text-slate-300 mb-8">
-              <Clock className="size-4" /> Odgovor u 24h
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-12 items-start">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-4 py-2 text-sm text-slate-300 mb-8">
+                <Clock className="size-4" /> Odgovor u 24h
+              </div>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-8">
+                Pravni partner za
+                <span className="block text-white mt-2">biznis u BiH</span>
+              </h1>
+              <p className="text-xl text-slate-300 leading-relaxed mb-10">
+                Pravna podrška za biznis i pojedince
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/kontakt"
+                  className="group inline-flex items-center gap-2 rounded-full bg-white text-slate-950 font-semibold px-8 py-4 text-lg transition-all duration-200 hover:bg-slate-100 hover:scale-105"
+                >
+                  Zakaži konsultacije <ChevronRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+                <Link
+                  href="/usluge"
+                  className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg border border-white/30 bg-transparent text-white font-medium transition-all duration-200 hover:bg-white/10 hover:border-white/50"
+                >
+                  Pogledaj usluge
+                </Link>
+              </div>
             </div>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-8">
-              Pravni partner za
-              <span className="block text-white mt-2">biznis u BiH</span>
-            </h1>
-            <p className="text-xl text-slate-300 leading-relaxed mb-10 max-w-2xl">
-              Specijalizirani za radno, porodično, imovinsko i privredno pravo. Jasni rokovi, transparentne tarife.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/kontakt"
-                className="group inline-flex items-center gap-2 rounded-full bg-white text-slate-950 font-semibold px-8 py-4 text-lg transition-all duration-200 hover:bg-slate-100 hover:scale-105"
-              >
-                Zakaži konsultacije <ChevronRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-              <Link
-                href="/usluge"
-                className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg border border-white/30 bg-transparent text-white font-medium transition-all duration-200 hover:bg-white/10 hover:border-white/50"
-              >
-                Pogledaj usluge
-              </Link>
+            <div className="mt-12 lg:mt-0">
+              <LegalJourney />
             </div>
           </div>
         </div>
@@ -74,9 +80,9 @@ export default function AndricLawLanding() {
             <p className="text-lg text-slate-600">Brzi odgovori na najvažnija pitanja</p>
           </div>
           <div className="space-y-3">
-            <Faq q="Da li radite hitne predmete?" a="Da, uz prethodni dogovor i hitni dodatak na tarifu. Procjenu dobijate odmah nakon uvodnog poziva." />
-            <Faq q="Da li pišete interne akte (pravilnici, politike)?" a="Da. Uz konzultacije i usklađivanje sa važećim propisima FBiH/RS/Brčko i EU regulativom (GDPR)." />
-            <Faq q="Možemo li sve online?" a="Može. Ugovori, sastanci i plaćanja idu digitalno, a originali naknadno po potrebi." />
+            <Faq q="Da li radite hitne predmete?" a="Da, uz prethodni dogovor." />
+            <Faq q="Da li pišete interne akte?" a="Da, pravilnike i politike usklađene sa propisima." />
+            <Faq q="Možemo li sve online?" a="Može. Ugovori, sastanci i plaćanja digitalno." />
           </div>
         </div>
       </section>
